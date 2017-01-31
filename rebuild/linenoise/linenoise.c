@@ -128,8 +128,8 @@ static struct termios orig_termios; /* In order to restore at exit.*/
 static int rawmode = 0; /* For atexit() function to check if restore is needed*/
 static int mlmode = 0;  /* Multi line mode. Default is single line. */
 static int atexit_registered = 0; /* Register atexit just 1 time. */
-static int history_max_len = LINENOISE_DEFAULT_HISTORY_MAX_LEN;
-static int history_len = 0;
+static  size_t history_max_len = LINENOISE_DEFAULT_HISTORY_MAX_LEN;
+static  size_t history_len = 0;
 static char **history = NULL;
 
 /* The linenoiseState structure represents the state during line editing.
@@ -259,9 +259,9 @@ static void disableRawMode(int fd) {
 /* Use the ESC [6n escape sequence to query the horizontal cursor position
  * and return it. On error -1 is returned, on success the position of the
  * cursor. */
-static int getCursorPosition(int ifd, int ofd) {
+static  size_t getCursorPosition(int ifd, int ofd) {
     char buf[32];
-    int cols, rows;
+     size_t cols, rows;
     unsigned int i = 0;
 
     /* Report cursor location */
@@ -277,18 +277,18 @@ static int getCursorPosition(int ifd, int ofd) {
 
     /* Parse it. */
     if (buf[0] != ESC || buf[1] != '[') return -1;
-    if (sscanf(buf+2,"%d;%d",&rows,&cols) != 2) return -1;
+    if (sscanf(buf+2,"%zd;%zd",&rows,&cols) != 2) return -1;
     return cols;
 }
 
 /* Try to get the number of columns in the current terminal, or assume 80
  * if it fails. */
-static int getColumns(int ifd, int ofd) {
+static  size_t getColumns(int ifd, int ofd) {
     struct winsize ws;
 
     if (ioctl(1, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0) {
         /* ioctl() failed. Try to query the terminal itself. */
-        int start, cols;
+         size_t start, cols;
 
         /* Get the initial position so we can restore it later. */
         start = getCursorPosition(ifd,ofd);
@@ -302,7 +302,7 @@ static int getColumns(int ifd, int ofd) {
         /* Restore position. */
         if (cols > start) {
             char seq[32];
-            snprintf(seq,32,"\x1b[%dD",cols-start);
+            snprintf(seq,32,"\x1b[%luD",cols-start);
             if (write(ofd,seq,strlen(seq)) == -1) {
                 /* Can't recover... */
             }
@@ -349,7 +349,7 @@ static void freeCompletions(linenoiseCompletions *lc) {
  * structure as described in the structure definition. */
 static int completeLine(struct linenoiseState *ls) {
     linenoiseCompletions lc = { 0, NULL };
-    int nread, nwritten;
+     size_t nread, nwritten;
     char c = 0;
 
     completionCallback(ls->buf,&lc);
@@ -450,7 +450,7 @@ void linenoiseAddCompletion(linenoiseCompletions *lc, const char *str) {
  * output in a single call, to avoid flickering effects. */
 struct abuf {
     char *b;
-    int len;
+     size_t len;
 };
 
 static void abInit(struct abuf *ab) {
@@ -458,7 +458,7 @@ static void abInit(struct abuf *ab) {
     ab->len = 0;
 }
 
-static void abAppend(struct abuf *ab, const char *s, int len) {
+static void abAppend(struct abuf *ab, const char *s,  size_t len) {
     char *new = realloc(ab->b,ab->len+len);
 
     if (new == NULL) return;
@@ -473,14 +473,14 @@ static void abFree(struct abuf *ab) {
 
 /* Helper of refreshSingleLine() and refreshMultiLine() to show hints
  * to the right of the prompt. */
-void refreshShowHints(struct abuf *ab, struct linenoiseState *l, int plen) {
+void refreshShowHints(struct abuf *ab, struct linenoiseState *l, size_t plen) {
     char seq[64];
     if (hintsCallback && plen+l->len < l->cols) {
         int color = -1, bold = 0;
         char *hint = hintsCallback(l->buf,&color,&bold);
         if (hint) {
-            int hintlen = strlen(hint);
-            int hintmaxlen = l->cols-(plen+l->len);
+             size_t hintlen = strlen(hint);
+             size_t hintmaxlen = l->cols-(plen+l->len);
             if (hintlen > hintmaxlen) hintlen = hintmaxlen;
             if (bold == 1 && color == -1) color = 37;
             if (color != -1 || bold != 0)
@@ -542,12 +542,12 @@ static void refreshSingleLine(struct linenoiseState *l) {
  * cursor position, and number of columns of the terminal. */
 static void refreshMultiLine(struct linenoiseState *l) {
     char seq[64];
-    int plen = strlen(l->prompt);
-    int rows = (plen+l->len+l->cols-1)/l->cols; /* rows used by current buf. */
-    int rpos = (plen+l->oldpos+l->cols)/l->cols; /* cursor relative row. */
-    int rpos2; /* rpos after refresh. */
-    int col; /* colum position, zero-based. */
-    int old_rows = l->maxrows;
+     size_t plen = strlen(l->prompt);
+     size_t rows = (plen+l->len+l->cols-1)/l->cols; /* rows used by current buf. */
+     size_t rpos = (plen+l->oldpos+l->cols)/l->cols; /* cursor relative row. */
+     size_t rpos2; /* rpos after refresh. */
+     size_t col; /* colum position, zero-based. */
+     size_t old_rows = l->maxrows;
     int fd = l->ofd, j;
     struct abuf ab;
 
@@ -559,7 +559,7 @@ static void refreshMultiLine(struct linenoiseState *l) {
     abInit(&ab);
     if (old_rows-rpos > 0) {
         lndebug("go down %d", old_rows-rpos);
-        snprintf(seq,64,"\x1b[%dB", old_rows-rpos);
+        snprintf(seq,64,"\x1b[%luB", old_rows-rpos);
         abAppend(&ab,seq,strlen(seq));
     }
 
@@ -603,7 +603,7 @@ static void refreshMultiLine(struct linenoiseState *l) {
     /* Go up till we reach the expected positon. */
     if (rows-rpos2 > 0) {
         lndebug("go-up %d", rows-rpos2);
-        snprintf(seq,64,"\x1b[%dA", rows-rpos2);
+        snprintf(seq,64,"\x1b[%luA", rows-rpos2);
         abAppend(&ab,seq,strlen(seq));
     }
 
@@ -611,7 +611,7 @@ static void refreshMultiLine(struct linenoiseState *l) {
     col = (plen+(int)l->pos) % (int)l->cols;
     lndebug("set col %d", 1+col);
     if (col)
-        snprintf(seq,64,"\r\x1b[%dC", col);
+        snprintf(seq,64,"\r\x1b[%zuC", col);
     else
         snprintf(seq,64,"\r");
     abAppend(&ab,seq,strlen(seq));
@@ -709,7 +709,7 @@ void linenoiseEditHistoryNext(struct linenoiseState *l, int dir) {
             l->history_index = 0;
             return;
         } else if (l->history_index >= history_len) {
-            l->history_index = history_len-1;
+            l->history_index = (int)history_len-1;
             return;
         }
         strncpy(l->buf,history[history_len - 1 - l->history_index],l->buflen);
@@ -765,7 +765,7 @@ void linenoiseEditDeletePrevWord(struct linenoiseState *l) {
  * when ctrl+d is typed.
  *
  * The function returns the length of the current buffer. */
-static int linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t buflen, const char *prompt)
+static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t buflen, const char *prompt)
 {
     struct linenoiseState l;
 
@@ -794,7 +794,7 @@ static int linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t buflen, 
     if (write(l.ofd,prompt,l.plen) == -1) return -1;
     while(1) {
         char c;
-        int nread;
+        size_t nread;
         char seq[3];
 
         nread = read(l.ifd,&c,1);
@@ -961,7 +961,7 @@ void linenoisePrintKeyCodes(void) {
     memset(quit,' ',4);
     while(1) {
         char c;
-        int nread;
+        size_t nread;
 
         nread = read(STDIN_FILENO,&c,1);
         if (nread <= 0) continue;
@@ -979,8 +979,8 @@ void linenoisePrintKeyCodes(void) {
 
 /* This function calls the line editing function linenoiseEdit() using
  * the STDIN file descriptor set in raw mode. */
-static int linenoiseRaw(char *buf, size_t buflen, const char *prompt) {
-    int count;
+static size_t linenoiseRaw(char *buf, size_t buflen, const char *prompt) {
+    size_t count;
 
     if (buflen == 0) {
         errno = EINVAL;
@@ -1037,7 +1037,7 @@ static char *linenoiseNoTTY(void) {
  * something even in the most desperate of the conditions. */
 char *linenoise(const char *prompt) {
     char buf[LINENOISE_MAX_LINE];
-    int count;
+    size_t count;
 
     if (!isatty(STDIN_FILENO)) {
         /* Not a tty: read from file / pipe. In this mode we don't want any
@@ -1135,7 +1135,7 @@ int linenoiseHistorySetMaxLen(int len) {
 
     if (len < 1) return 0;
     if (history) {
-        int tocopy = history_len;
+        size_t tocopy = history_len;
 
         new = malloc(sizeof(char*)*len);
         if (new == NULL) return 0;
