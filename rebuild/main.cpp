@@ -7,9 +7,29 @@
 //
 
 #include <iostream>
+#include <map>
+#include "Rebuild.hpp"
+
+
+
+
+
+
+
 
 int main(int argc, const char * argv[]) {
+    
+    Rebuild rebuild;
+    
+    
+    
     // insert code here...
     std::cout << "Hello, World!\n";
-    return 0;
+    
+    while (rebuild.IsAlive()) {
+        rebuild.RunStep();
+        
+    }
+    
+    return rebuild.GetExitStatus();
 }
