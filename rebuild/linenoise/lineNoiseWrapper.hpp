@@ -18,6 +18,8 @@ class LineNoiseWrapper {
 public:
     
     std::string getLine(std::string prompt);
+    ~LineNoiseWrapper();
+    LineNoiseWrapper();
     
 };
 #endif /* lineNoiseWrapper_hpp */

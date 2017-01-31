@@ -9,6 +9,9 @@
 
 #include "lineNoiseWrapper.hpp"
 #include "linenoise.h"
+#include <stdlib.h>
+
+
 
 std::string LineNoiseWrapper::getLine(std::string prompt)
 {
@@ -18,9 +21,36 @@ std::string LineNoiseWrapper::getLine(std::string prompt)
     if (result) {
         
         returnstring = result;
+        linenoiseHistoryAdd(result);
+        
     }
     
     linenoiseFree(result);
     return returnstring;
+
+}
+
+
+
+
+LineNoiseWrapper::LineNoiseWrapper()
+{
+    const char *homedir;
+    
+    if ((homedir = getenv("HOME")) == NULL) {
+    }
+
+    
+    linenoiseHistoryLoad((std::string("")+ homedir+"/.rebuild.linenoise.txt").c_str());
+    
+}
+
+LineNoiseWrapper::~LineNoiseWrapper()
+{
+    const char *homedir;
+    
+    if ((homedir = getenv("HOME")) == NULL) {
+    }
+    linenoiseHistorySave((std::string("")+ homedir+"/.rebuild.linenoise.txt").c_str());
 
 }

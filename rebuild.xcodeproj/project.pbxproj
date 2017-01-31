@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		533AE4E11E3CE896008910D4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4E01E3CE896008910D4 /* main.cpp */; };
+		533AE5021E3FB58B008910D4 /* linenoise.c in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4FC1E3FB180008910D4 /* linenoise.c */; };
+		53CB858A1E3FC04300E44564 /* Rebuild.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53CB85881E3FC04300E44564 /* Rebuild.cpp */; };
+		53CB858D1E403E8500E44564 /* lineNoiseWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53CB858B1E403E8500E44564 /* lineNoiseWrapper.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +28,12 @@
 /* Begin PBXFileReference section */
 		533AE4DD1E3CE896008910D4 /* rebuild */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = rebuild; sourceTree = BUILT_PRODUCTS_DIR; };
 		533AE4E01E3CE896008910D4 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		533AE4FC1E3FB180008910D4 /* linenoise.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = linenoise.c; sourceTree = "<group>"; };
+		533AE4FD1E3FB180008910D4 /* linenoise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = linenoise.h; sourceTree = "<group>"; };
+		53CB85881E3FC04300E44564 /* Rebuild.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Rebuild.cpp; sourceTree = "<group>"; };
+		53CB85891E3FC04300E44564 /* Rebuild.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Rebuild.hpp; sourceTree = "<group>"; };
+		53CB858B1E403E8500E44564 /* lineNoiseWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineNoiseWrapper.cpp; sourceTree = "<group>"; };
+		53CB858C1E403E8500E44564 /* lineNoiseWrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lineNoiseWrapper.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,9 +66,23 @@
 		533AE4DF1E3CE896008910D4 /* rebuild */ = {
 			isa = PBXGroup;
 			children = (
+				53CB85881E3FC04300E44564 /* Rebuild.cpp */,
+				53CB85891E3FC04300E44564 /* Rebuild.hpp */,
+				533AE4F71E3FB180008910D4 /* linenoise */,
 				533AE4E01E3CE896008910D4 /* main.cpp */,
 			);
 			path = rebuild;
+			sourceTree = "<group>";
+		};
+		533AE4F71E3FB180008910D4 /* linenoise */ = {
+			isa = PBXGroup;
+			children = (
+				533AE4FC1E3FB180008910D4 /* linenoise.c */,
+				533AE4FD1E3FB180008910D4 /* linenoise.h */,
+				53CB858B1E403E8500E44564 /* lineNoiseWrapper.cpp */,
+				53CB858C1E403E8500E44564 /* lineNoiseWrapper.hpp */,
+			);
+			path = linenoise;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -118,7 +141,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				53CB858D1E403E8500E44564 /* lineNoiseWrapper.cpp in Sources */,
+				533AE5021E3FB58B008910D4 /* linenoise.c in Sources */,
 				533AE4E11E3CE896008910D4 /* main.cpp in Sources */,
+				53CB858A1E3FC04300E44564 /* Rebuild.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,6 +265,7 @@
 				533AE4E61E3CE896008910D4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

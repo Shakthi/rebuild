@@ -22,7 +22,7 @@ Rebuild::Rebuild():exitStatus(exitStatusRIP),alive(true)
 
 void Rebuild::Load()
 {
-    std::clog<<"Loading"<<std::endl;
+    std::clog<<"Loading..."<<std::endl;
 }
 
 
@@ -37,11 +37,10 @@ Rebuild::~Rebuild()
 void Rebuild::RunStep()
 {
     
-    std::string answer=lineNoiseWrapper->getLine("rebuild");
+    std::string answer=lineNoiseWrapper->getLine("rebuild:");
     if(answer!="")
     {
         std::cout<<"rebuild>"<<answer<<std::endl;
-        
     }
     else
         alive = false;
