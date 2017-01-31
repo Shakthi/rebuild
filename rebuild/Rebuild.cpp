@@ -28,6 +28,7 @@ void Rebuild::Load()
 
 Rebuild::~Rebuild()
 {
+    delete lineNoiseWrapper;
 
 }
 
