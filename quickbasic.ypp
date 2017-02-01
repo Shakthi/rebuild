@@ -53,7 +53,7 @@ command : listCommand | runCommand;
 
 lineNumber :    NUMBER;
 
-runCommand : RUN    { /*interpreter.RunStatemnetList(); */}
+runCommand : RUN    {  std::cout<<"Run to be implemnted"<<std::endl;}
 ;
 
 statement   :    printStatement
@@ -73,26 +73,26 @@ remStatement : REM REMARK_RECORD {}
 ;
 
 
-gotoStament  : GOTO NUMBER {  /* interpreter.jumpAddress = (int)$2; */ }
+gotoStament  : GOTO NUMBER {  std::cout<<"GOTO to be implemnted"<<std::endl; }
 ;
 
-clearStatement : CLS { /*  DisplayConsole.Clear();  */}
+clearStatement : CLS { std::cout<<"CLS to be implemnted"<<std::endl;/*  DisplayConsole.Clear();  */}
 ;
-listCommand : LIST {  /*foreach(var aline in interpreter.statementRecord { interpreter.PrintBuffer(""+aline.Key +":");  interpreter.PrintLnBuffer(aline.Value);} */ }
-;
-
-ifstatment : IF boolExression THEN GOTO NUMBER {  /*if($2) interpreter.jumpAddress = (int)$5; */}
+listCommand : LIST { std::cout<<"LIST to be implemnted"<<std::endl;  /*foreach(var aline in interpreter.statementRecord { interpreter.PrintBuffer(""+aline.Key +":");  interpreter.PrintLnBuffer(aline.Value);} */ }
 ;
 
-printStatement : PRINT printlist    { /* interpreter.PrintBuffer("\n"); */}
+ifstatment : IF boolExression THEN GOTO NUMBER { std::cout<<"IF to be implemnted"<<std::endl; /*if($2) interpreter.jumpAddress = (int)$5; */}
+;
+
+printStatement : PRINT printlist    { std::cout<<std::endl;  /* interpreter.PrintBuffer("\n"); */}
 ;
 
 printlist   :   printItem
 |   printlist ';' printItem
 ;
 
-printItem   :   strexpr   {  /*interpreter.PrintBuffer($1);  */}
-|   numexpr        {  /*interpreter.PrintBuffer("" + $1);  */}
+printItem   :   strexpr   {  char * expr= $1; std::cout<<$1; free(expr);  }
+|   numexpr        {  std::cout<<$1;   }
 ;
 
 
@@ -203,7 +203,14 @@ strexpr     : '(' strexpr ')'
 }
 | strexpr '+' strexpr
 {
-   /* $$ = $1 + $3;*/
+    char * result=(char *)malloc(strlen($1)+strlen($3));
+    strcpy(result,$1);
+    strcat(result,$3);
+    free($1);
+    free($3);
+    $$=result;
+    
+    
 }
 | STRING_LITERAL
 | SVAR {/* $$ = interpreter.stringVarTable[$1]; */}
@@ -249,7 +256,10 @@ numexpr    :   '(' numexpr ')'
 void yyerror( const char *)
 {}
 
-extern "C" void yywrap(){}
+extern "C" int yywrap()
+{
+    return 1;
+}
 
 /*
  Parser(Scanner scanner,

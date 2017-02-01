@@ -58,7 +58,8 @@ L			[a-zA-Z]
 				return((int)REAL_NUMBER); }
 
 
-\"(\\.|[^\\"])*\"	{ char * temp = strdup(yytext); strncpy(yylval.stringVal,temp+1,yyleng-2); return((int)STRING_LITERAL); }
+\"(\\.|[^\\"])*\"	{ char * temp = strdup(yytext); strncpy(temp,yytext+1,yyleng-2); yylval.stringVal=temp;
+temp[yyleng-2]='\0'; return((int)STRING_LITERAL); }
 
 "..."			{  return((int)ELLIPSIS); }
 ";"			{  return yytext[0]; }

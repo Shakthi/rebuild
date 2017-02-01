@@ -32,12 +32,22 @@ Rebuild::~Rebuild()
 
 }
 
+typedef struct yy_buffer_state * YY_BUFFER_STATE;
+extern int yyparse();
+extern YY_BUFFER_STATE yy_scan_string(const char * str);
+extern void yy_delete_buffer(YY_BUFFER_STATE buffer);
+
 
 
 void Rebuild::RunStep()
 {
     
+    
+    
     std::string answer=lineNoiseWrapper->getLine("rebuild:");
+    yy_scan_string(answer.c_str());
+    yyparse();
+    
     if(answer!="")
     {
         std::cout<<"rebuild>"<<answer<<std::endl;
