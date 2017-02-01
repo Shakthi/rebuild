@@ -1,6 +1,37 @@
 %{
     
 #include<string>
+#include<cstring>
+#include<iostream>
+#include<map>
+
+
+struct Value
+{
+    enum class Evaluetype
+    {
+        stringtype,
+        booltype,
+        floattype,
+        inttype,
+        chartype,
+    
+    };
+    Evaluetype valutype;
+    
+    union valueunion
+    {
+        float   numVal;
+        int     intVal;
+        bool    boolVal;
+        char    charVal;
+    };
+    valueunion data;
+    std::string stringData;
+};
+
+
+std::map<std::string,Value> vartable;
 
 
 #if YYBISON
