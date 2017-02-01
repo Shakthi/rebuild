@@ -1,0 +1,262 @@
+%{
+    
+#include<string>
+
+
+#if YYBISON
+int yylex();
+void yyerror(const char *);
+#endif
+%}
+
+%start line
+%union
+{
+    char * stringVal;
+     bool  boolVal;
+     float   numVal;
+     char * varName;
+    
+}
+
+
+%token PRINT INPUT LET IF ELSE THEN GOTO FOR NEXT TO END  STEP
+ELLIPSIS REM CLS LIST RUN
+%token <varName> VAR SVAR
+%token <stringVal> STRING_LITERAL STATEMENT_RECORD REMARK_RECORD
+%token <numVal> NUMBER REAL_NUMBER
+
+%type <numVal> numexpr lineNumber
+%type <stringVal> strexpr
+%type <boolVal> boolExression
+
+
+%left '='  '>' '<'
+%left '+' '-'
+%left '*' '/'
+%left '%'
+
+
+
+
+%%
+
+line    :   lineNumber STATEMENT_RECORD { /*interpreter.statementRecord[(int)$1] = $2;*/}
+        |   statement
+                                        
+        |   command
+        ;
+
+command : listCommand | runCommand;
+
+
+
+lineNumber :    NUMBER;
+
+runCommand : RUN    { /*interpreter.RunStatemnetList(); */}
+;
+
+statement   :    printStatement
+|   letStatement
+|   inputStatement
+|   endstatement
+|  ifstatment
+|  forStataement
+|  nextStatement
+| remStatement
+|   clearStatement
+| gotoStament
+;
+
+
+remStatement : REM REMARK_RECORD {}
+;
+
+
+gotoStament  : GOTO NUMBER {  /* interpreter.jumpAddress = (int)$2; */ }
+;
+
+clearStatement : CLS { /*  DisplayConsole.Clear();  */}
+;
+listCommand : LIST {  /*foreach(var aline in interpreter.statementRecord { interpreter.PrintBuffer(""+aline.Key +":");  interpreter.PrintLnBuffer(aline.Value);} */ }
+;
+
+ifstatment : IF boolExression THEN GOTO NUMBER {  /*if($2) interpreter.jumpAddress = (int)$5; */}
+;
+
+printStatement : PRINT printlist    { /* interpreter.PrintBuffer("\n"); */}
+;
+
+printlist   :   printItem
+|   printlist ';' printItem
+;
+
+printItem   :   strexpr   {  /*interpreter.PrintBuffer($1);  */}
+|   numexpr        {  /*interpreter.PrintBuffer("" + $1);  */}
+;
+
+
+
+letStatement     : LET VAR '=' numexpr  { /* std::string varName = $2;
+    interpreter.varTable[varName] =  $4;*/}
+| LET SVAR '=' strexpr { /*std::string varName = $2;
+    interpreter.stringVarTable[varName] =  $4; */}
+
+;
+
+inputStatement  : INPUT inputList
+| INPUT STRING_LITERAL ';'  inputList   {/*interpreter.PrintBuffer($2); */}
+;
+
+inputList       : inputItem
+| inputList ';' inputItem
+;
+
+inputItem       :
+VAR   {
+    std::string varName = $1;
+    /*interpreter.readVarList.Add(varName);*/
+    
+}
+| SVAR {
+    std::string varName = $1;
+    //interpreter.readStringVarList.Add(varName);
+    
+}
+
+;
+
+forStataement 	: FOR VAR '=' numexpr TO numexpr  {
+    std::string varName = $2;
+    float step = 1;
+   /* Interpreter.forPoints fr;
+    fr.lineNo = interpreter.currentAddress;
+    fr.variable = varName;
+    interpreter.varTable[varName] = $4;
+    fr.finalValue = $6;
+    fr.step = step;
+    interpreter.forRegister.Add(fr);*/
+    
+}
+| FOR VAR '=' numexpr TO numexpr STEP numexpr
+{
+    /*std::string varName = $2;
+    float step = $8;
+    Interpreter.forPoints fr;
+    fr.lineNo = interpreter.currentAddress;
+    fr.variable = varName;
+    interpreter.varTable[varName] = $4;
+    fr.finalValue = $6;
+    fr.step = step;
+    interpreter.forRegister.Add(fr);
+     */
+    
+}
+;
+
+
+
+nextStatement   : NEXT VAR {
+  /*  List<Interpreter.forPoints> newList = new List<Interpreter.forPoints>(interpreter.forRegister);
+    newList.Reverse();
+    bool found=false;
+    std::string varName = $2;
+    foreach(var fr in newList)
+    {
+        if(fr.variable == $2)
+        {
+            found = true;
+            if(fr.finalValue >=  interpreter.varTable[varName] )
+            break;
+            interpreter.varTable[varName]  +=fr.step;
+            interpreter.jumpAddress =  fr.lineNo+1;
+            break;
+        }
+        
+        
+    }
+    if(!found)
+    interpreter.PrintBuffer("Error in search of I");
+    */
+}
+;
+
+
+
+
+
+endstatement    : END { /*interpreter.finishExecution = true; */}
+;
+
+boolExression : numexpr '=' numexpr {   $$ = ($1 == $3); }
+| numexpr '>' numexpr {   $$ = ($1 > $3); }
+| numexpr '<' numexpr {   $$ = ($1 < $3); }
+| strexpr '=' strexpr {   $$ = ($1 == $3); }
+;
+
+
+
+
+strexpr     : '(' strexpr ')'
+{
+    $$ = $2;
+}
+| strexpr '+' strexpr
+{
+   /* $$ = $1 + $3;*/
+}
+| STRING_LITERAL
+| SVAR {/* $$ = interpreter.stringVarTable[$1]; */}
+;
+
+
+
+
+
+numexpr    :   '(' numexpr ')'
+{
+    $$ = $2;
+}
+|   numexpr '*' numexpr
+{
+    $$ = $1 * $3;
+}
+|   numexpr '/' numexpr
+{
+    $$ = $1 / $3;
+}
+|   numexpr '%' numexpr
+{
+ //   $$ = $1 % $3;
+}
+|   numexpr '+' numexpr
+{
+    $$ = $1 + $3;
+}
+|   numexpr '-' numexpr
+{
+    $$ = $1 - $3;
+}
+
+|NUMBER
+|REAL_NUMBER
+|VAR    { /*$$ = interpreter.varTable[$1];*/ }
+;
+
+
+
+%%
+void yyerror( const char *)
+{}
+
+extern "C" void yywrap(){}
+
+/*
+ Parser(Scanner scanner,
+Interpreter interpreter)
+: base(scanner)
+{
+    this.interpreter = interpreter;
+    
+}
+*/

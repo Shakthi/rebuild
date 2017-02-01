@@ -1,0 +1,86 @@
+
+D			[0-9]
+L			[a-zA-Z]
+
+
+
+%x REMARK
+
+
+%{
+    #include <string>
+    #include "y.tab.h"
+
+
+%}
+
+
+
+
+%%
+
+
+
+"step"		{  return((int)STEP); }
+"print"		{  return((int)PRINT); }
+"input"			{  return((int)INPUT); }
+"let"			{  return((int)LET); }
+"if"			{  return((int)IF); }
+"else"			{  return((int)ELSE); }
+"then"		{  return((int)THEN); }
+"goto"		{  return((int)GOTO); }
+"for"			{  return((int)FOR); }
+"next"		{  return((int)NEXT); }
+"to"			{  return((int)TO); }
+"end"			{  return((int)END); }
+"rem"			{ BEGIN(REMARK); return((int)REM); }
+"cls"			{  return((int)CLS); }
+"list"			{  return((int)LIST); }
+"run"			{  return((int)RUN); }
+
+
+
+<REMARK>"\n" { BEGIN(0); }
+<REMARK>.* {  yylval.stringVal = strdup(yytext);
+				return((int)REMARK_RECORD);  }
+"#"			{ BEGIN(REMARK); return((int)REM); }
+
+{L}		{  yylval.stringVal = strdup(yytext);
+    return((int)VAR); }
+
+{L}"$"	{    yylval.varName  = strdup(yytext);
+    return((int)SVAR); }
+
+{D}+		{  yylval.numVal = atoi(yytext);
+    return((int)NUMBER); }
+
+{D}*"."{D}+		{yylval.numVal = atof(yytext);
+				return((int)REAL_NUMBER); }
+
+
+\"(\\.|[^\\"])*\"	{ char * temp = strdup(yytext); strncpy(yylval.stringVal,temp+1,yyleng-2); return((int)STRING_LITERAL); }
+
+"..."			{  return((int)ELLIPSIS); }
+";"			{  return yytext[0]; }
+","			{  return yytext[0]; }
+"="			{  return yytext[0]; }
+"("			{  return yytext[0]; }
+")"			{  return yytext[0]; }
+
+
+"-"			{  return yytext[0]; }
+"+"			{  return yytext[0]; }
+"*"			{  return yytext[0]; }
+"/"			{  return yytext[0]; }
+"%"			{  return yytext[0]; }
+"<"			{  return yytext[0]; }
+">"			{  return yytext[0]; }
+"^"			{  return yytext[0]; }
+
+
+[ \t\v\n\f]		{  }
+.			{ /* ignore bad characters */ }
+
+%%
+
+
