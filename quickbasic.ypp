@@ -31,7 +31,7 @@ struct Value
 };
 
 
-std::map<std::string,Value> vartable;
+std::map<std::string,Value> varTable;
 
 
 #if YYBISON

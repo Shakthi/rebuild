@@ -9,7 +9,8 @@
 #ifndef Rebuild_hpp
 #define Rebuild_hpp
 
-#include <stdio.h>
+#include <stack>
+#include "StepProcessor.hpp"
 
 class Rebuild {
     
@@ -27,9 +28,12 @@ class Rebuild {
     
     
     
+    std::stack<StepProcessor*> processorStack;
+    
+    
+public:
     class LineNoiseWrapper * lineNoiseWrapper;
-    
-    
+
     
 public:
     
@@ -43,6 +47,7 @@ public:
     
     
     void RunStep();
+    void exitProcessing(StepProcessor*);
     
     
 };
