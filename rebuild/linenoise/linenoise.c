@@ -124,6 +124,8 @@ static linenoiseCompletionCallback *completionCallback = NULL;
 static linenoiseHintsCallback *hintsCallback = NULL;
 static linenoiseFreeHintsCallback *freeHintsCallback = NULL;
 
+static linenoiseHistoryCallback *historyCallback = NULL;
+
 static struct termios orig_termios; /* In order to restore at exit.*/
 static int rawmode = 0; /* For atexit() function to check if restore is needed*/
 static int mlmode = 0;  /* Multi line mode. Default is single line. */
@@ -131,6 +133,8 @@ static int atexit_registered = 0; /* Register atexit just 1 time. */
 static  size_t history_max_len = LINENOISE_DEFAULT_HISTORY_MAX_LEN;
 static  size_t history_len = 0;
 static char **history = NULL;
+
+
 
 /* The linenoiseState structure represents the state during line editing.
  * We pass this state to functions implementing specific editing
@@ -422,6 +426,16 @@ void linenoiseSetFreeHintsCallback(linenoiseFreeHintsCallback *fn) {
     freeHintsCallback = fn;
 }
 
+
+
+/* Register a function to free the hints returned by the hints callback
+ * registered with linenoiseSetHintsCallback(). */
+void linenoiseSetHistoryCallback(linenoiseHistoryCallback *fn) {
+    historyCallback = fn;
+}
+
+
+
 /* This function is used by the callback function registered by the user
  * in order to add completion options given the input string when the
  * user typed <tab>. See the example.c source code for a very easy to
@@ -698,7 +712,18 @@ void linenoiseEditMoveEnd(struct linenoiseState *l) {
 #define LINENOISE_HISTORY_NEXT 0
 #define LINENOISE_HISTORY_PREV 1
 void linenoiseEditHistoryNext(struct linenoiseState *l, int dir) {
-    if (history_len > 1) {
+    if(historyCallback!=NULL)
+    {
+        const char * historyrecord = historyCallback(dir,l->buf);
+        if(historyrecord)
+        {
+            strncpy(l->buf,historyrecord,l->buflen);
+            l->buf[l->buflen-1] = '\0';
+            l->len = l->pos = strlen(l->buf);
+            refreshLine(l);
+        
+        }
+    }else if (history_len > 1) {
         /* Update the current history entry before to
          * overwrite it with the next one. */
         free(history[history_len - 1 - l->history_index]);
