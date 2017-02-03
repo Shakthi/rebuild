@@ -18,12 +18,17 @@
 std::string LineNoiseWrapper::getLine(std::string prompt)
 {
     std::string returnstring;
+    history.Reset();
     char * result=linenoise(prompt.c_str());
-    
+    history.ResetEnd();
+
     if (result) {
         
         returnstring = result;
-        linenoiseHistoryAdd(result);
+        if(returnstring!="")
+            history.Add(result);
+       // linenoiseHistoryAdd(result);
+        
         
     }
     
@@ -33,9 +38,15 @@ std::string LineNoiseWrapper::getLine(std::string prompt)
 }
 
 
-const char * LineNoiseWrapper::linenoiseHistoryCallback(int direction, const char * oldline)
+const char * LineNoiseWrapper::linenoiseHistoryCallback(int direction, const char * oldline,void * context)
 {
-    return NULL;
+    LineHistory * history = static_cast<LineHistory *>(context);
+    bool success;
+    std::string result =history->Edit(oldline,(direction==1)?
+                                     LineHistory::MoveDirection::prev
+                                     :LineHistory::MoveDirection::next,success);
+    
+    return (success)?result.c_str():nullptr;
     
 }
 
@@ -45,11 +56,13 @@ LineNoiseWrapper::LineNoiseWrapper()
     
     if ((homedir = getenv("HOME")) == NULL) {
     }
-
     
-    linenoiseHistoryLoad((std::string("")+ homedir+"/.rebuild.linenoise.txt").c_str());
     
-    linenoiseSetHistoryCallback(LineNoiseWrapper::linenoiseHistoryCallback);
+    history.Load(std::string("")+ homedir+"/.rebuild.linenoise.txt");
+    
+    //linenoiseHistoryLoad((std::string("")+ homedir+"/.rebuild.linenoise.txt").c_str());
+    
+    linenoiseSetHistoryCallback(LineNoiseWrapper::linenoiseHistoryCallback,this);
 }
 
 LineNoiseWrapper::~LineNoiseWrapper()
@@ -59,5 +72,8 @@ LineNoiseWrapper::~LineNoiseWrapper()
     if ((homedir = getenv("HOME")) == NULL) {
     }
     //linenoiseHistorySave((std::string("")+ homedir+"/.rebuild.linenoise.txt").c_str());
+    
+    history.Save(std::string("")+ homedir+"/.rebuild.linenoise.txt");
+
 
 }

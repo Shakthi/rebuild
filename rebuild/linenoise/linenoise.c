@@ -125,6 +125,7 @@ static linenoiseHintsCallback *hintsCallback = NULL;
 static linenoiseFreeHintsCallback *freeHintsCallback = NULL;
 
 static linenoiseHistoryCallback *historyCallback = NULL;
+static void * linenoiseHistoryCallbackContext  = NULL;
 
 static struct termios orig_termios; /* In order to restore at exit.*/
 static int rawmode = 0; /* For atexit() function to check if restore is needed*/
@@ -430,8 +431,9 @@ void linenoiseSetFreeHintsCallback(linenoiseFreeHintsCallback *fn) {
 
 /* Register a function to free the hints returned by the hints callback
  * registered with linenoiseSetHintsCallback(). */
-void linenoiseSetHistoryCallback(linenoiseHistoryCallback *fn) {
+void linenoiseSetHistoryCallback(linenoiseHistoryCallback *fn,void * context) {
     historyCallback = fn;
+    linenoiseHistoryCallbackContext = context;
 }
 
 
@@ -714,7 +716,7 @@ void linenoiseEditMoveEnd(struct linenoiseState *l) {
 void linenoiseEditHistoryNext(struct linenoiseState *l, int dir) {
     if(historyCallback!=NULL)
     {
-        const char * historyrecord = historyCallback(dir,l->buf);
+        const char * historyrecord = historyCallback(dir,l->buf,linenoiseHistoryCallbackContext);
         if(historyrecord)
         {
             strncpy(l->buf,historyrecord,l->buflen);
