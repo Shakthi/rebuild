@@ -10,8 +10,8 @@
 		533AE4E11E3CE896008910D4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4E01E3CE896008910D4 /* main.cpp */; };
 		533AE5021E3FB58B008910D4 /* linenoise.c in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4FC1E3FB180008910D4 /* linenoise.c */; };
 		535FF2581E4117FB00EF0E51 /* quickbasic.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 535FF2571E4117FB00EF0E51 /* quickbasic.lpp */; };
-		535FF25A1E411F6D00EF0E51 /* quickbasic.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 535FF2591E411F6D00EF0E51 /* quickbasic.ypp */; };
 		535FF25D1E42EA2600EF0E51 /* StepProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 535FF25B1E42EA2600EF0E51 /* StepProcessor.cpp */; };
+		53A1E3EF1E4503CC0071C220 /* quickbasic.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 53A1E3EE1E4503CC0071C220 /* quickbasic.ypp */; };
 		53CB858A1E3FC04300E44564 /* Rebuild.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53CB85881E3FC04300E44564 /* Rebuild.cpp */; };
 		53CB858D1E403E8500E44564 /* lineNoiseWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53CB858B1E403E8500E44564 /* lineNoiseWrapper.cpp */; };
 /* End PBXBuildFile section */
@@ -34,9 +34,10 @@
 		533AE4FC1E3FB180008910D4 /* linenoise.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = linenoise.c; sourceTree = "<group>"; };
 		533AE4FD1E3FB180008910D4 /* linenoise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = linenoise.h; sourceTree = "<group>"; };
 		535FF2571E4117FB00EF0E51 /* quickbasic.lpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; name = quickbasic.lpp; path = rebuild/quickbasic.lpp; sourceTree = "<group>"; };
-		535FF2591E411F6D00EF0E51 /* quickbasic.ypp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.yacc; path = quickbasic.ypp; sourceTree = "<group>"; };
 		535FF25B1E42EA2600EF0E51 /* StepProcessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StepProcessor.cpp; sourceTree = "<group>"; };
 		535FF25C1E42EA2600EF0E51 /* StepProcessor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StepProcessor.hpp; sourceTree = "<group>"; };
+		53A1E3E91E44FBF60071C220 /* json.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
+		53A1E3EE1E4503CC0071C220 /* quickbasic.ypp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.yacc; name = quickbasic.ypp; path = rebuild/quickbasic.ypp; sourceTree = "<group>"; };
 		53CB85881E3FC04300E44564 /* Rebuild.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Rebuild.cpp; sourceTree = "<group>"; };
 		53CB85891E3FC04300E44564 /* Rebuild.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Rebuild.hpp; sourceTree = "<group>"; };
 		53CB858B1E403E8500E44564 /* lineNoiseWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineNoiseWrapper.cpp; sourceTree = "<group>"; };
@@ -57,6 +58,7 @@
 		533AE4D41E3CE895008910D4 = {
 			isa = PBXGroup;
 			children = (
+				53A1E3E81E44FBF60071C220 /* json */,
 				535FF2561E410FE600EF0E51 /* quickBasic */,
 				533AE4DF1E3CE896008910D4 /* rebuild */,
 				533AE4DE1E3CE896008910D4 /* Products */,
@@ -98,10 +100,19 @@
 		535FF2561E410FE600EF0E51 /* quickBasic */ = {
 			isa = PBXGroup;
 			children = (
+				53A1E3EE1E4503CC0071C220 /* quickbasic.ypp */,
 				535FF2571E4117FB00EF0E51 /* quickbasic.lpp */,
-				535FF2591E411F6D00EF0E51 /* quickbasic.ypp */,
 			);
 			name = quickBasic;
+			sourceTree = "<group>";
+		};
+		53A1E3E81E44FBF60071C220 /* json */ = {
+			isa = PBXGroup;
+			children = (
+				53A1E3E91E44FBF60071C220 /* json.hpp */,
+			);
+			name = json;
+			path = rebuild/json;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -162,11 +173,11 @@
 			files = (
 				53CB858D1E403E8500E44564 /* lineNoiseWrapper.cpp in Sources */,
 				533AE5021E3FB58B008910D4 /* linenoise.c in Sources */,
-				535FF25A1E411F6D00EF0E51 /* quickbasic.ypp in Sources */,
 				535FF25D1E42EA2600EF0E51 /* StepProcessor.cpp in Sources */,
 				535FF2581E4117FB00EF0E51 /* quickbasic.lpp in Sources */,
 				533AE4E11E3CE896008910D4 /* main.cpp in Sources */,
 				53CB858A1E3FC04300E44564 /* Rebuild.cpp in Sources */,
+				53A1E3EF1E4503CC0071C220 /* quickbasic.ypp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
