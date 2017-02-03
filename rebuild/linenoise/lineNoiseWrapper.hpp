@@ -20,6 +20,6 @@ public:
     std::string getLine(std::string prompt);
     ~LineNoiseWrapper();
     LineNoiseWrapper();
-    
+    static  const char * linenoiseHistoryCallback(int direction, const char * oldline);
 };
 #endif /* lineNoiseWrapper_hpp */
