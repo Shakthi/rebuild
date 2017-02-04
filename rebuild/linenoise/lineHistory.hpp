@@ -20,6 +20,11 @@ class LineHistory {
    
     int historyIndex;
     
+    void ReInit();
+    void ReInitDone();
+    friend class LineNoiseWrapper;
+    
+    
 public:
     enum class MoveDirection
     {
@@ -35,10 +40,11 @@ public:
     void Add(std::string entry);
     std::string Edit(std::string currentBuffer,MoveDirection direction, bool & success);
     
+   
     
-    void Reset();
-    void ResetEnd();
-    void Clear(std::string entry);
+    
+    
+    void Clear();
     
     std::string HistoryAt(int i);
     

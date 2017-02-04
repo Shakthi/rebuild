@@ -9,6 +9,7 @@
 #include "lineHistory.hpp"
 #include "json.hpp"
 #include <ctime>
+#include <sstream>
 
 
 
@@ -30,6 +31,7 @@ LineHistory::LineHistory():historyIndex(0)
 }
 
 
+
 void LineHistory::Save(std::string filename)
 {
     using namespace nlohmann;
@@ -42,7 +44,7 @@ void LineHistory::Save(std::string filename)
     
     std::ofstream stream(filename);
     stream<<root.dump(4);
- 
+    
 }
 
 
@@ -51,7 +53,7 @@ void LineHistory::Load(std::string filename)
     using namespace nlohmann;
     std::ifstream stream(filename);
     json root;
-
+    
     try {
         stream>>root;
         
@@ -67,6 +69,7 @@ void LineHistory::Load(std::string filename)
 }
 
 
+
 void LineHistory::Add(std::string entry)
 {
     if(!history.empty())
@@ -79,12 +82,12 @@ void LineHistory::Add(std::string entry)
 
 
 
-void LineHistory::ResetEnd()
+void LineHistory::ReInit()
 {
     history.pop_back();
 
 }
-void LineHistory::Reset()
+void LineHistory::ReInitDone()
 {
     Add("");
     historyIndex=0;
@@ -121,7 +124,45 @@ std::string LineHistory::Edit(std::string currentBuffer,MoveDirection direction,
 }
 
 
+void LineHistory::Clear()
+{
+    history.clear();
+}
 
-void Clear(std::string entry);
+std::string LineHistory::HistoryAt(int i)
+{
+    return history[history.size() - 1 - i];
 
-std::string HistoryAt(int i);
+}
+
+
+
+
+std::string LineHistory::ToString()
+{
+    using namespace nlohmann;
+    
+    json root;
+    root["content"] = history;
+    root["timestamp"]=nowTime();
+    root["type"]="historyfile";
+    root["creator"]="rebuild";
+    
+    
+    
+    return root.dump(4);
+    
+}
+void LineHistory::FromString(std::string string)
+{
+    using namespace nlohmann;
+
+    
+    json root=json::parse(string);
+    json content = root["content"];
+    for (int i=0; i<content.size(); i++) {
+        Add(content[i]);
+    }
+    
+}
+

@@ -18,9 +18,9 @@
 std::string LineNoiseWrapper::getLine(std::string prompt)
 {
     std::string returnstring;
-    history.Reset();
+    history.ReInit();
     char * result=linenoise(prompt.c_str());
-    history.ResetEnd();
+    history.ReInitDone();
 
     if (result) {
         
