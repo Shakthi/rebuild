@@ -84,13 +84,14 @@ void LineHistory::Add(std::string entry)
 
 void LineHistory::ReInit()
 {
-    history.pop_back();
+    Add("");
+    historyIndex=0;
 
 }
 void LineHistory::ReInitDone()
 {
-    Add("");
-    historyIndex=0;
+    history.pop_back();
+
 }
 
 

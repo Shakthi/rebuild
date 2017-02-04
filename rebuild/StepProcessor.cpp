@@ -13,10 +13,11 @@
 
 void EchoProcessor::RunStep()
 {
-    std::string answer=rebuild->lineNoiseWrapper->getLine("rebuild:");
+    std::string answer = rebuild->lineNoiseWrapper->getLine("rebuild:");
     //    yy_scan_string(answer.c_str());
     //    yyparse();
     //
+    
     if(answer!="")
     {
         std::cout<<"rebuild>"<<answer<<std::endl;
