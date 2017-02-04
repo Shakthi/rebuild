@@ -24,6 +24,9 @@ namespace  {
         return buf;
     }
     
+    
+    std::string version = "1.0";
+    
 }
 
 LineHistory::LineHistory():historyIndex(0)
@@ -41,6 +44,9 @@ void LineHistory::Save(std::string filename)
     root["timestamp"]=nowTime();
     root["type"]="historyfile";
     root["creator"]="rebuild";
+    root["version"]=version;
+
+    
     
     std::ofstream stream(filename);
     stream<<root.dump(4);
@@ -54,16 +60,14 @@ void LineHistory::Load(std::string filename)
     std::ifstream stream(filename);
     json root;
     
-    try {
-        stream>>root;
-        
+     stream>>root;
+    
+    assert(root["version"] == version);
+
         json content = root["content"];
         for (int i=0; i<content.size(); i++) {
             Add(content[i]);
         }
-    } catch (std::invalid_argument exception) {
-        
-    }
     
     
 }
@@ -103,7 +107,6 @@ std::string LineHistory::Edit(std::string currentBuffer,MoveDirection direction,
     success =true;
     if(history.size()>1) {
         
-        history[history.size()-1 - historyIndex] = currentBuffer;
         historyIndex += (direction == MoveDirection::prev) ? 1 : -1;
         
         if (historyIndex < 0) {

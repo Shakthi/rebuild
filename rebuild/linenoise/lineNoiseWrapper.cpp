@@ -58,7 +58,13 @@ LineNoiseWrapper::LineNoiseWrapper()
     }
     
     
-    history.Load(std::string("")+ homedir+"/.rebuild.linenoise.txt");
+    try {
+        history.Load(std::string("")+ homedir+"/.rebuild.linenoise.txt");
+        
+    } catch (...) {
+        
+    }
+    
     
     //linenoiseHistoryLoad((std::string("")+ homedir+"/.rebuild.linenoise.txt").c_str());
     
