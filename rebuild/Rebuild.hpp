@@ -47,7 +47,9 @@ public:
     
     
     void RunStep();
-    void exitProcessing(StepProcessor*);
+    void exitProcessing();
+    void addNewProcessing(StepProcessor*);
+
     
     
 };

@@ -9,9 +9,8 @@ L			[a-zA-Z]
 
 %{
     #include <string>
+    #include "quickbasic.h"
     #include "y.tab.h"
-
-
 %}
 
 
@@ -41,14 +40,14 @@ L			[a-zA-Z]
 
 
 <REMARK>"\n" { BEGIN(0); }
-<REMARK>.* {  yylval.stringVal = strdup(yytext);
+<REMARK>.* {  yylval.stringVal = yytext;
 				return((int)REMARK_RECORD);  }
 "#"			{ BEGIN(REMARK); return((int)REM); }
 
-{L}		{  yylval.stringVal = strdup(yytext);
+{L}		{  yylval.stringVal = yytext;
     return((int)VAR); }
 
-{L}"$"	{    yylval.varName  = strdup(yytext);
+{L}"$"	{    yylval.stringVal  = yytext;
     return((int)SVAR); }
 
 {D}+		{  yylval.numVal = atoi(yytext);
@@ -58,8 +57,7 @@ L			[a-zA-Z]
 				return((int)REAL_NUMBER); }
 
 
-\"(\\.|[^\\"])*\"	{ char * temp = strdup(yytext); strncpy(temp,yytext+1,yyleng-2); yylval.stringVal=temp;
-temp[yyleng-2]='\0'; return((int)STRING_LITERAL); }
+\"(\\.|[^\\"])*\"	{ std::string temp = yytext; yylval.stringVal=temp.substr(1,temp.size()-2); return((int)STRING_LITERAL); }
 
 "..."			{  return((int)ELLIPSIS); }
 ";"			{  return yytext[0]; }

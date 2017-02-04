@@ -13,10 +13,8 @@
 
 void EchoProcessor::RunStep()
 {
-    std::string answer = rebuild->lineNoiseWrapper->getLine("rebuild:");
-    //    yy_scan_string(answer.c_str());
-    //    yyparse();
-    //
+    std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild]:");
+    
     
     if(answer!="")
     {
@@ -32,5 +30,10 @@ void EchoProcessor::RunStep()
 
 void StepProcessor::exitProcessing()
 {
-    rebuild->exitProcessing(this);
+    rebuild->exitProcessing();
 }
+
+
+
+
+

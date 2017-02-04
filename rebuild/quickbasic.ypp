@@ -3,37 +3,17 @@
 #include<string>
 #include<cstring>
 #include<iostream>
+#include<vector>
 #include<map>
 
 
-struct Value
-{
-    enum class Evaluetype
-    {
-        stringtype,
-        booltype,
-        floattype,
-        inttype,
-        chartype,
-    
-    };
-    Evaluetype valutype;
-    
-    union valueunion
-    {
-        float   numVal;
-        int     intVal;
-        bool    boolVal;
-        char    charVal;
-    };
-    valueunion data;
-    std::string stringData;
-};
-
-
+#include "quickbasic.h"
 std::map<std::string,Value> varTable;
+std::list<std::map<std::string,Value>::iterator> varReadList;
 
 
+
+#define YYERROR_VERBOSE 1
 #if YYBISON
 int yylex();
 void yyerror(const char *);
@@ -41,19 +21,12 @@ void yyerror(const char *);
 %}
 
 %start line
-%union
-{
-    char * stringVal;
-     bool  boolVal;
-     float   numVal;
-     char * varName;
-    
-}
+
 
 
 %token PRINT INPUT LET IF ELSE THEN GOTO FOR NEXT TO END  STEP
 ELLIPSIS REM CLS LIST RUN
-%token <varName> VAR SVAR
+%token <stringVal> VAR SVAR
 %token <stringVal> STRING_LITERAL STATEMENT_RECORD REMARK_RECORD
 %token <numVal> NUMBER REAL_NUMBER
 
@@ -83,7 +56,6 @@ command : listCommand | runCommand;
 
 
 lineNumber :    NUMBER;
-
 runCommand : RUN    {  std::cout<<"Run to be implemnted"<<std::endl;}
 ;
 
@@ -122,21 +94,34 @@ printlist   :   printItem
 |   printlist ';' printItem
 ;
 
-printItem   :   strexpr   {  char * expr= $1; std::cout<<$1; free(expr);  }
+printItem   :   strexpr   {   std::cout<<$1;   }
 |   numexpr        {  std::cout<<$1;   }
 ;
 
 
 
-letStatement     : LET VAR '=' numexpr  { /* std::string varName = $2;
-    interpreter.varTable[varName] =  $4;*/}
-| LET SVAR '=' strexpr { /*std::string varName = $2;
-    interpreter.stringVarTable[varName] =  $4; */}
+letStatement     : LET VAR '=' numexpr  {
+    
+    Value value;
+    value.valutype = Value::Evaluetype::floattype;
+    value.numVal = $4;
+    varTable[$2]=value;
+    printf("///let %s = %f\n",$2.c_str(),$4);
+    
+}
+| LET SVAR '=' strexpr {
+    Value value;
+    value.valutype = Value::Evaluetype::stringtype;
+    value.stringVal = $4;
+    varTable[$2]=value;
+    printf("///let %s = \"%s\"\n",$2.c_str(),$4.c_str());
+
+}
 
 ;
 
 inputStatement  : INPUT inputList
-| INPUT STRING_LITERAL ';'  inputList   {/*interpreter.PrintBuffer($2); */}
+| INPUT STRING_LITERAL ';'  inputList   { std::cout<<$2<<std::endl; }
 ;
 
 inputList       : inputItem
@@ -145,13 +130,26 @@ inputList       : inputItem
 
 inputItem       :
 VAR   {
-    std::string varName = $1;
-    /*interpreter.readVarList.Add(varName);*/
+    
+    
+    
+    Value value;
+    value.valutype = Value::Evaluetype::floattype;
+    value.numVal = 0;
+    varTable[$1]=value;
+   
+    varReadList.push_back(varTable.find($1));
     
 }
 | SVAR {
     std::string varName = $1;
-    //interpreter.readStringVarList.Add(varName);
+    Value value;
+    value.valutype = Value::Evaluetype::stringtype;
+    value.stringVal = "";
+    varTable[$1]=value;
+    
+    varReadList.push_back(varTable.find($1));
+    
     
 }
 
@@ -234,17 +232,14 @@ strexpr     : '(' strexpr ')'
 }
 | strexpr '+' strexpr
 {
-    char * result=(char *)malloc(strlen($1)+strlen($3));
-    strcpy(result,$1);
-    strcat(result,$3);
-    free($1);
-    free($3);
-    $$=result;
+    
+    $$=$1+$3;
     
     
 }
 | STRING_LITERAL
-| SVAR {/* $$ = interpreter.stringVarTable[$1]; */}
+| SVAR { $$ =  varTable[$1].stringVal;  }
+
 ;
 
 
@@ -278,14 +273,17 @@ numexpr    :   '(' numexpr ')'
 
 |NUMBER
 |REAL_NUMBER
-|VAR    { /*$$ = interpreter.varTable[$1];*/ }
+|VAR    { $$ = varTable[$1].numVal;  }
 ;
 
 
 
 %%
-void yyerror( const char *)
-{}
+void yyerror( const char * error)
+{
+    printf("%s\n",error);
+
+}
 
 extern "C" int yywrap()
 {

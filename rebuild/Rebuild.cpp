@@ -9,6 +9,7 @@
 #include "Rebuild.hpp"
 
 #include "lineNoiseWrapper.hpp"
+#include "BasicStepProccessor.hpp"
 
 #include <iostream>
 
@@ -17,7 +18,7 @@ Rebuild::Rebuild():exitStatus(exitStatusRIP),alive(true)
 {
     Load();
     lineNoiseWrapper = new LineNoiseWrapper();
-    processorStack.push(new EchoProcessor(this));
+    processorStack.push(new BasicStepProcessor(this));
 
 }
 
@@ -34,18 +35,20 @@ Rebuild::~Rebuild()
 
 }
 
-typedef struct yy_buffer_state * YY_BUFFER_STATE;
-extern int yyparse();
-extern YY_BUFFER_STATE yy_scan_string(const char * str);
-extern void yy_delete_buffer(YY_BUFFER_STATE buffer);
 
-
-
-void Rebuild::exitProcessing(StepProcessor* stepProcessor)
+void Rebuild::exitProcessing()
 {
+    StepProcessor * last = processorStack.top();
     processorStack.pop();
-
+    delete last;
 }
+
+void Rebuild::addNewProcessing(StepProcessor* stepProcessor)
+{
+    processorStack.push(stepProcessor);
+}
+
+
 
 void Rebuild::RunStep()
 {
@@ -60,21 +63,7 @@ void Rebuild::RunStep()
     StepProcessor  * stepProcessor = processorStack.top();
     
     stepProcessor->RunStep();
-    
-//    std::string answer=lineNoiseWrapper->getLine("rebuild:");
-//    yy_scan_string(answer.c_str());
-//    yyparse();
-//    
-//    if(answer!="")
-//    {
-//        std::cout<<"rebuild>"<<answer<<std::endl;
-//    }
-//    else
-//        alive = false;
-    
-    
-    
-    
+     
 
 }
 
