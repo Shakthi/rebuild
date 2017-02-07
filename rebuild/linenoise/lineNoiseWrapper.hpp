@@ -13,15 +13,34 @@
 #include "lineHistory.hpp"
 
 
-class LineNoiseWrapper {
+class LineNoiseWrapper :public Rebuild::Serialised{
     
     LineHistory history;
     
 public:
+    enum class EStatus
+    {
+        ok,
+        ctrl_c,
+        ctrl_d
+    } ;
+private:
+    EStatus status;
+public:
+    
+    
     
     std::string getLine(std::string prompt);
+    EStatus  GetStatus(){ return status;}
     ~LineNoiseWrapper();
     LineNoiseWrapper();
     static  const char * linenoiseHistoryCallback(int direction, const char * oldline,void * context);
+    
+    
+    
+    nlohmann::json ToJson();
+    void FromJson(nlohmann::json);
+    
+
 };
 #endif /* lineNoiseWrapper_hpp */

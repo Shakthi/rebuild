@@ -12,8 +12,11 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include "json.hpp"
+#include "Rebuild.hpp"
 
-class LineHistory {
+
+class LineHistory : public Rebuild::Serialised {
     
     std::vector<std::string> history;
     
@@ -51,8 +54,8 @@ public:
     
     
     
-    std::string ToString();
-    void FromString(std::string);
+    nlohmann::json ToJson();
+    void FromJson(nlohmann::json);
     
     
     

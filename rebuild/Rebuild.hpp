@@ -10,7 +10,8 @@
 #define Rebuild_hpp
 
 #include <stack>
-#include "StepProcessor.hpp"
+
+#include "json.hpp"
 
 class Rebuild {
     
@@ -27,15 +28,27 @@ class Rebuild {
     
     
     
+    std::string GetSavePath();
     
-    std::stack<StepProcessor*> processorStack;
+    std::stack<class StepProcessor*> processorStack;
     
     
 public:
     class LineNoiseWrapper * lineNoiseWrapper;
+    
+    nlohmann::json lastStepProcessorData;
 
     
 public:
+    
+    
+    struct Serialised
+    {
+        virtual nlohmann::json ToJson() = 0;
+        virtual void FromJson(nlohmann::json) = 0;
+    
+    };
+    
     
     bool IsAlive() { return alive;}
     ExitStatus GetExitStatus() { return exitStatus;}
@@ -43,13 +56,16 @@ public:
     Rebuild();
     ~Rebuild();
     void Save();
+    void SaveIfLatest();
     void Load();
     
     
     void RunStep();
     void exitProcessing();
     void addNewProcessing(StepProcessor*);
-
+    
+    
+    
     
     
 };

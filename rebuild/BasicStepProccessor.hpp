@@ -9,6 +9,8 @@
 #ifndef BasicStepProccessor_hpp
 #define BasicStepProccessor_hpp
 #include "StepProcessor.hpp"
+#include "Rebuild.hpp"
+
 class BasicStepProcessor:public StepProcessor {
     
     
@@ -24,6 +26,11 @@ public:
     BasicStepProcessor(Rebuild * aRebuild):StepProcessor(aRebuild)
     {
     }
+    
+
+    nlohmann::json ToJson();
+    void FromJson(nlohmann::json) ;
+    
 
     
     

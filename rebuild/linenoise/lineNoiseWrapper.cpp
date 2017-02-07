@@ -27,10 +27,13 @@ std::string LineNoiseWrapper::getLine(std::string prompt)
         returnstring = result;
         if(returnstring!="")
             history.Add(result);
-       // linenoiseHistoryAdd(result);
-        
-        
+    
     }
+    
+    
+    if(errno == EAGAIN)
+        status = EStatus::ctrl_c;
+        
     
     linenoiseFree(result);
     return returnstring;
@@ -40,9 +43,9 @@ std::string LineNoiseWrapper::getLine(std::string prompt)
 
 const char * LineNoiseWrapper::linenoiseHistoryCallback(int direction, const char * oldline,void * context)
 {
-    LineHistory * history = static_cast<LineHistory *>(context);
+    LineHistory  & history = static_cast<LineNoiseWrapper *>(context)->history;
     bool success;
-    std::string result =history->Edit(oldline,(direction==1)?
+    std::string result =history.Edit(oldline,(direction==1)?
                                      LineHistory::MoveDirection::prev
                                      :LineHistory::MoveDirection::next,success);
     
@@ -52,34 +55,22 @@ const char * LineNoiseWrapper::linenoiseHistoryCallback(int direction, const cha
 
 LineNoiseWrapper::LineNoiseWrapper()
 {
-    const char *homedir;
-    
-    if ((homedir = getenv("HOME")) == NULL) {
-    }
-    
-    
-    try {
-        history.Load(std::string("")+ homedir+"/.rebuild.linenoise.txt");
-        
-    } catch (...) {
-        
-    }
-    
-    
-    //linenoiseHistoryLoad((std::string("")+ homedir+"/.rebuild.linenoise.txt").c_str());
     
     linenoiseSetHistoryCallback(LineNoiseWrapper::linenoiseHistoryCallback,this);
 }
 
 LineNoiseWrapper::~LineNoiseWrapper()
 {
-    const char *homedir;
-    
-    if ((homedir = getenv("HOME")) == NULL) {
-    }
-    //linenoiseHistorySave((std::string("")+ homedir+"/.rebuild.linenoise.txt").c_str());
-    
-    history.Save(std::string("")+ homedir+"/.rebuild.linenoise.txt");
-
-
 }
+
+
+
+nlohmann::json LineNoiseWrapper::ToJson()
+{
+    return history.ToJson();
+}
+void LineNoiseWrapper::FromJson(nlohmann::json input)
+{
+    history.FromJson(input);
+}
+

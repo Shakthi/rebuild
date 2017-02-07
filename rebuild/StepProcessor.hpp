@@ -10,9 +10,10 @@
 #define StepProcessor_hpp
 
 #include <stdio.h>
+#include "Rebuild.hpp"
 
 
-class StepProcessor {
+class StepProcessor  : public Rebuild::Serialised{
     
 protected:
     class Rebuild * rebuild;
@@ -29,6 +30,8 @@ public:
     
     }
     void exitProcessing();
+    virtual ~StepProcessor()
+    {}
     
     
 };

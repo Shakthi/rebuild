@@ -7,27 +7,10 @@
 //
 
 #include "lineHistory.hpp"
-#include "json.hpp"
 #include <ctime>
 #include <sstream>
 
 
-
-namespace  {
-    
-    std::string nowTime()
-    {
-        time_t now;
-        time(&now);
-        char buf[sizeof "2011-10-08T07:07:09Z"];
-        strftime(buf, sizeof buf, "%FT%TZ", gmtime(&now));
-        return buf;
-    }
-    
-    
-    std::string version = "1.0";
-    
-}
 
 LineHistory::LineHistory():historyIndex(0)
 {
@@ -41,10 +24,8 @@ void LineHistory::Save(std::string filename)
     
     json root;
     root["content"] = history;
-    root["timestamp"]=nowTime();
     root["type"]="historyfile";
     root["creator"]="rebuild";
-    root["version"]=version;
 
     
     
@@ -62,7 +43,6 @@ void LineHistory::Load(std::string filename)
     
      stream>>root;
     
-    assert(root["version"] == version);
 
         json content = root["content"];
         for (int i=0; i<content.size(); i++) {
@@ -143,27 +123,25 @@ std::string LineHistory::HistoryAt(int i)
 
 
 
-std::string LineHistory::ToString()
+nlohmann::json LineHistory::ToJson()
 {
     using namespace nlohmann;
     
     json root;
     root["content"] = history;
-    root["timestamp"]=nowTime();
     root["type"]="historyfile";
     root["creator"]="rebuild";
     
     
     
-    return root.dump(4);
+    return root;
     
 }
-void LineHistory::FromString(std::string string)
+void LineHistory::FromJson(nlohmann::json root)
 {
     using namespace nlohmann;
 
     
-    json root=json::parse(string);
     json content = root["content"];
     for (int i=0; i<content.size(); i++) {
         Add(content[i]);

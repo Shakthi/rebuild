@@ -10,7 +10,7 @@
 #include "quickbasic.h"
 std::map<std::string,Value> varTable;
 std::list<std::map<std::string,Value>::iterator> varReadList;
-
+bool parserQuits = false;
 
 
 #define YYERROR_VERBOSE 1
@@ -214,7 +214,7 @@ nextStatement   : NEXT VAR {
 
 
 
-endstatement    : END { /*interpreter.finishExecution = true; */}
+endstatement    : END { parserQuits = true; }
 ;
 
 boolExression : numexpr '=' numexpr {   $$ = ($1 == $3); }

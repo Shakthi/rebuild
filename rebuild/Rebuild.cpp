@@ -14,23 +14,120 @@
 #include <iostream>
 
 
+
+namespace  {
+    
+    std::string nowTime()
+    {
+        time_t now;
+        time(&now);
+        char buf[sizeof "2011-10-08T07:07:09Z"];
+        strftime(buf, sizeof buf, "%FT%TZ", gmtime(&now));
+        return buf;
+    }
+    
+    
+    std::string version = "1.0";
+    
+}
+
+
+
 Rebuild::Rebuild():exitStatus(exitStatusRIP),alive(true)
 {
-    Load();
     lineNoiseWrapper = new LineNoiseWrapper();
     processorStack.push(new BasicStepProcessor(this));
+    Load();
+
 
 }
 
+std::string Rebuild::GetSavePath()
+{
+
+    const char *homedir = getenv("HOME");
+    
+    return std::string("")+ homedir+"/.rebuild.alldb.txt";
+}
+
+void Rebuild::SaveIfLatest()
+{
+    std::string savepath = GetSavePath();
+    
+    std::ifstream stream(savepath);
+    if (stream.good()) {
+        nlohmann::json root;
+        stream>>root;
+        if(root["timestampepoch"].is_number())
+        {   long int  timestampepoch = root["timestampepoch"];
+            if (timestampepoch < std::time(0)) {
+                
+                Save();
+            }
+        }else
+        {
+            Save();
+        }
+        
+        
+    }
+
+}
 
 void Rebuild::Load()
 {
-    std::clog<<"Loading..."<<std::endl;
+    
+   std::string savepath = GetSavePath();
+    std::clog<<"Loading..."<<savepath<<std::endl;
+    
+    
+    std::ifstream stream(savepath);
+    if (stream.good()) {
+        
+        nlohmann::json root;
+        stream>>root;
+        
+        
+        
+        assert(root["version"] == version);
+        lineNoiseWrapper->FromJson(root["history"]);
+        processorStack.top()->FromJson(root["processor"]);
+        
+    }
+    
+    
+    
+   
+    
+    
 }
+
+void Rebuild::Save()
+{
+    std::clog<<"Saving..."<<std::endl;
+    nlohmann::json root;
+
+    root["history"]=lineNoiseWrapper->ToJson();
+    
+    root["timestampepoch"]=std::time(0);
+    root["timestamp"]=nowTime();
+    root["type"]="rebuildalldb";
+    root["creator"]="rebuild";
+    root["version"]=version;
+    
+    
+    root["processor"]=lastStepProcessorData;
+
+    std::ofstream stream(GetSavePath());
+    stream<<root.dump(4);
+    
+}
+
 
 
 Rebuild::~Rebuild()
 {
+    SaveIfLatest();
     delete lineNoiseWrapper;
 
 }
@@ -40,6 +137,7 @@ void Rebuild::exitProcessing()
 {
     StepProcessor * last = processorStack.top();
     processorStack.pop();
+    lastStepProcessorData = last->ToJson();
     delete last;
 }
 

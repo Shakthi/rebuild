@@ -26,6 +26,22 @@ public:
         list = alist;
     }
     
+    
+    
+    
+    nlohmann::json ToJson()
+    {
+        
+        nlohmann::json j;
+        return j;
+        
+    }
+    
+    void FromJson(nlohmann::json j)
+    {
+    }
+
+    
     void RunStep()
     {
         
@@ -108,6 +124,66 @@ extern YY_BUFFER_STATE yy_scan_string(const char * str);
 extern void yy_delete_buffer(YY_BUFFER_STATE buffer);
 
 
+nlohmann::json BasicStepProcessor::ToJson()
+{
+    
+    nlohmann::json j;
+    
+    for (auto  varaible : varTable)
+    {
+        if(varaible.second.valutype == Value::Evaluetype::floattype)
+        {
+            nlohmann::json item;
+            item["key"] = varaible.first;
+            item["value"] = varaible.second.numVal;
+            j.push_back(item);
+        }else if(varaible.second.valutype == Value::Evaluetype::stringtype)
+        {
+            nlohmann::json item;
+            item["key"] = varaible.first;
+            item["value"] = varaible.second.stringVal;
+            j.push_back(item);
+        }
+            
+    }
+    
+    nlohmann::json basicStep;
+    basicStep["varablelist"]=j;
+    
+    return basicStep;
+    
+}
+
+void BasicStepProcessor::FromJson(nlohmann::json j)
+{
+    
+    nlohmann::json varablelist = j["varablelist"];
+    for (nlohmann::json  item : varablelist)
+    {
+        if(item["value"].is_number())
+        {
+            Value value;
+            value.valutype = Value::Evaluetype::floattype;
+            value.numVal = item["value"];
+            varTable[item["key"]]=value;
+        
+        }else if(item["value"].is_string())
+        {
+            Value value;
+            value.valutype = Value::Evaluetype::stringtype;
+            value.stringVal = item["value"];
+            varTable[item["key"]]=value;
+
+        
+        }
+    }
+
+    
+    
+    
+}
+
+
 void BasicStepProcessor::RunStep()
 {
     
@@ -116,12 +192,19 @@ void BasicStepProcessor::RunStep()
     
     if(answer=="") {
         
-        //exitProcessing();
-    }else{
+        if(rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::EStatus::ctrl_c )
+            exitProcessing();
+        }
+    
+    else{
         
         //parse the input
         yy_scan_string(answer.c_str());
         yyparse();
+        
+        if(parserQuits)
+            exitProcessing();
+            
         
         if (!varReadList.empty()) {
         

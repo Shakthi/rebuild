@@ -39,5 +39,21 @@ extern std::map<std::string,Value> varTable;
 extern varTableIteratorList varReadList;
 ;
 
+extern bool parserQuits;
+
+struct ForBlock
+{
+    std::string forVar;
+    float  forBegin;
+    float  forEnd;
+    
+    float  forStep;
+    
+ 
+};
+
+
+
+
 
 #endif /* quickbasic_h */
