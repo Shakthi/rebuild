@@ -29,6 +29,7 @@ class Rebuild {
     
     
     std::string GetSavePath();
+    std::string LocalSavePath();
     
     std::stack<class StepProcessor*> processorStack;
     

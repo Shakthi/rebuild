@@ -29,6 +29,17 @@ namespace  {
     
     std::string version = "1.0";
     
+    
+    bool replace(std::string& str, const std::string& from, const std::string& to) {
+        size_t start_pos = str.find(from);
+        if(start_pos == std::string::npos)
+            return false;
+        str.replace(start_pos, from.length(), to);
+        return true;
+    }
+    
+   
+    
 }
 
 
@@ -42,11 +53,23 @@ Rebuild::Rebuild():exitStatus(exitStatusRIP),alive(true)
 
 }
 
+std::string Rebuild::LocalSavePath()
+{
+    
+    const char *localPth = __FILE__;
+    std::string original = localPth;
+    replace(original,"rebuild/Rebuild.cpp","");
+    return original+"rebuild.alldb.txt";
+}
+
+
+
 std::string Rebuild::GetSavePath()
 {
+    
+    
 
     const char *homedir = getenv("HOME");
-    
     return std::string("")+ homedir+"/.rebuild.alldb.txt";
 }
 
@@ -57,7 +80,15 @@ void Rebuild::SaveIfLatest()
     std::ifstream stream(savepath);
     if (stream.good()) {
         nlohmann::json root;
-        stream>>root;
+        try
+        {
+            stream>>root;
+        }
+        catch (...)
+        {
+            
+        }
+        
         if(root["timestampepoch"].is_number())
         {   long int  timestampepoch = root["timestampepoch"];
             if (timestampepoch < std::time(0)) {
@@ -85,13 +116,29 @@ void Rebuild::Load()
     if (stream.good()) {
         
         nlohmann::json root;
-        stream>>root;
+        try {
+            stream>>root;
+            if(root["version"] != version)
+                throw version;
+            
+            
+            lineNoiseWrapper->FromJson(root["history"]);
+            processorStack.top()->FromJson(root["processor"]);
+            
+            //successfull read lets save backup
+            std::ofstream stream2(LocalSavePath());
+            stream2<<root.dump(4);
+            
+
+            
+        } catch ( ...)
+        {
+            
+        }
         
         
         
-        assert(root["version"] == version);
-        lineNoiseWrapper->FromJson(root["history"]);
-        processorStack.top()->FromJson(root["processor"]);
+        
         
     }
     
@@ -120,6 +167,9 @@ void Rebuild::Save()
 
     std::ofstream stream(GetSavePath());
     stream<<root.dump(4);
+    
+    
+    
     
 }
 
