@@ -44,7 +44,7 @@
 		53A1E3F11E4504870071C220 /* lineHistory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lineHistory.hpp; sourceTree = "<group>"; };
 		53A1E3F31E45A0010071C220 /* BasicStepProccessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BasicStepProccessor.cpp; sourceTree = "<group>"; };
 		53A1E3F41E45A0010071C220 /* BasicStepProccessor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BasicStepProccessor.hpp; sourceTree = "<group>"; };
-		53A1E3F61E45BB830071C220 /* quickbasic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = quickbasic.h; sourceTree = "<group>"; };
+		53A1E3F71E4973630071C220 /* quickbasic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = quickbasic.h; path = rebuild/quickbasic.h; sourceTree = "<group>"; };
 		53CB85881E3FC04300E44564 /* Rebuild.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Rebuild.cpp; sourceTree = "<group>"; };
 		53CB85891E3FC04300E44564 /* Rebuild.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Rebuild.hpp; sourceTree = "<group>"; };
 		53CB858B1E403E8500E44564 /* lineNoiseWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineNoiseWrapper.cpp; sourceTree = "<group>"; };
@@ -112,8 +112,8 @@
 			isa = PBXGroup;
 			children = (
 				53A1E3EE1E4503CC0071C220 /* quickbasic.ypp */,
+				53A1E3F71E4973630071C220 /* quickbasic.h */,
 				535FF2571E4117FB00EF0E51 /* quickbasic.lpp */,
-				53A1E3F61E45BB830071C220 /* quickbasic.h */,
 			);
 			name = quickBasic;
 			sourceTree = "<group>";
