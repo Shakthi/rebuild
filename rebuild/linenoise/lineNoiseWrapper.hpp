@@ -41,6 +41,6 @@ public:
     nlohmann::json ToJson();
     void FromJson(nlohmann::json);
     
-
+    
 };
 #endif /* lineNoiseWrapper_hpp */

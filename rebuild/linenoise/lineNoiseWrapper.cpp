@@ -21,23 +21,23 @@ std::string LineNoiseWrapper::getLine(std::string prompt)
     history.ReInit();
     char * result=linenoise(prompt.c_str());
     history.ReInitDone();
-
+    
     if (result) {
         
         returnstring = result;
         if(returnstring!="")
             history.Add(result);
-    
+        
     }
     
     
     if(errno == EAGAIN)
         status = EStatus::ctrl_c;
-        
+    
     
     linenoiseFree(result);
     return returnstring;
-
+    
 }
 
 

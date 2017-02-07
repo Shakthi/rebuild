@@ -27,7 +27,7 @@ public:
     
     virtual void RunStep()
     {
-    
+        
     }
     void exitProcessing();
     virtual ~StepProcessor()
@@ -46,7 +46,7 @@ public:
     EchoProcessor(Rebuild * aRebuild):StepProcessor(aRebuild)
     {
     }
-
+    
     
 };
 

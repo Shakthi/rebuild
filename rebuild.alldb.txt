@@ -10,7 +10,12 @@
             "input s$",
             "Shakthi prasad",
             "print s$",
-            "end"
+            "end",
+            "print s$",
+            "end",
+            "print s$",
+            "input a",
+            "666"
         ],
         "creator": "rebuild",
         "type": "historyfile"
@@ -19,7 +24,7 @@
         "varablelist": [
             {
                 "key": "a",
-                "value": 0.0
+                "value": 666
             },
             {
                 "key": "s$",
@@ -27,8 +32,8 @@
             }
         ]
     },
-    "timestamp": "2017-02-07T03:36:26Z",
-    "timestampepoch": 1486438586,
+    "timestamp": "2017-02-07T17:17:09Z",
+    "timestampepoch": 1486487829,
     "type": "rebuildalldb",
     "version": "1.0"
 }

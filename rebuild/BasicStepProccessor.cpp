@@ -40,31 +40,31 @@ public:
     void FromJson(nlohmann::json j)
     {
     }
-
+    
     
     void RunStep()
     {
         
-            //create the prompt for reading
-            std::string readprompt = "[rebuild>input ";
-            bool firstParam = true;
-            for (auto i=list.begin() ; i!=list.end(); i++) {
-                
-                if(!firstParam)
-                    readprompt += " ";
-                
-                auto aVarTableiter = *i;
-                std::string varName = aVarTableiter->first;
-                readprompt += varName;
-                
-                firstParam = false;
-            }
-            readprompt += "]:";
+        //create the prompt for reading
+        std::string readprompt = "[rebuild>input ";
+        bool firstParam = true;
+        for (auto i=list.begin() ; i!=list.end(); i++) {
             
+            if(!firstParam)
+                readprompt += " ";
             
+            auto aVarTableiter = *i;
+            std::string varName = aVarTableiter->first;
+            readprompt += varName;
+            
+            firstParam = false;
+        }
+        readprompt += "]:";
+        
+        
         std::string answer = rebuild->lineNoiseWrapper->getLine(readprompt);
         std::istringstream stream(answer);
-
+        
         
         for (auto i=list.begin() ; i!=list.end(); i++) {
             
@@ -76,7 +76,7 @@ public:
                 stream>>value.numVal;
                 std::string varname =  aVarTableiter->first;
                 varTable[varname] = value;
-                          
+                
             }else if (value.valutype == Value::Evaluetype::stringtype){
                 
                 stream>>value.stringVal;
@@ -91,7 +91,7 @@ public:
             
             
         }
-
+        
         
         
         if(answer == ""){
@@ -100,16 +100,16 @@ public:
         }
         
         if (list.empty()) {
-
+            
             exitProcessing();
-
+            
         }
         
-
         
-            
-            
-            
+        
+        
+        
+        
         
         
         
@@ -144,7 +144,7 @@ nlohmann::json BasicStepProcessor::ToJson()
             item["value"] = varaible.second.stringVal;
             j.push_back(item);
         }
-            
+        
     }
     
     nlohmann::json basicStep;
@@ -166,18 +166,18 @@ void BasicStepProcessor::FromJson(nlohmann::json j)
             value.valutype = Value::Evaluetype::floattype;
             value.numVal = item["value"];
             varTable[item["key"]]=value;
-        
+            
         }else if(item["value"].is_string())
         {
             Value value;
             value.valutype = Value::Evaluetype::stringtype;
             value.stringVal = item["value"];
             varTable[item["key"]]=value;
-
-        
+            
+            
         }
     }
-
+    
     
     
     
@@ -194,7 +194,7 @@ void BasicStepProcessor::RunStep()
         
         if(rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::EStatus::ctrl_c )
             exitProcessing();
-        }
+    }
     
     else{
         
@@ -204,14 +204,14 @@ void BasicStepProcessor::RunStep()
         
         if(parserQuits)
             exitProcessing();
-            
+        
         
         if (!varReadList.empty()) {
-        
-        ReadStepProcessor * readStepProcessor =  new ReadStepProcessor(rebuild,varReadList);
-        rebuild->addNewProcessing(readStepProcessor);
-       
-        
+            
+            ReadStepProcessor * readStepProcessor =  new ReadStepProcessor(rebuild,varReadList);
+            rebuild->addNewProcessing(readStepProcessor);
+            
+            
         }
     }
     

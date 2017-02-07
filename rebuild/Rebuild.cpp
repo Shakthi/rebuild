@@ -38,7 +38,7 @@ namespace  {
         return true;
     }
     
-   
+    
     
 }
 
@@ -49,8 +49,8 @@ Rebuild::Rebuild():exitStatus(exitStatusRIP),alive(true)
     lineNoiseWrapper = new LineNoiseWrapper();
     processorStack.push(new BasicStepProcessor(this));
     Load();
-
-
+    
+    
 }
 
 std::string Rebuild::LocalSavePath()
@@ -68,7 +68,7 @@ std::string Rebuild::GetSavePath()
 {
     
     
-
+    
     const char *homedir = getenv("HOME");
     return std::string("")+ homedir+"/.rebuild.alldb.txt";
 }
@@ -102,13 +102,13 @@ void Rebuild::SaveIfLatest()
         
         
     }
-
+    
 }
 
 void Rebuild::Load()
 {
     
-   std::string savepath = GetSavePath();
+    std::string savepath = GetSavePath();
     std::clog<<"Loading..."<<savepath<<std::endl;
     
     
@@ -116,7 +116,8 @@ void Rebuild::Load()
     if (stream.good()) {
         
         nlohmann::json root;
-        try {
+        try
+        {
             stream>>root;
             if(root["version"] != version)
                 throw version;
@@ -129,7 +130,7 @@ void Rebuild::Load()
             std::ofstream stream2(LocalSavePath());
             stream2<<root.dump(4);
             
-
+            
             
         } catch ( ...)
         {
@@ -144,7 +145,7 @@ void Rebuild::Load()
     
     
     
-   
+    
     
     
 }
@@ -153,7 +154,7 @@ void Rebuild::Save()
 {
     std::clog<<"Saving..."<<std::endl;
     nlohmann::json root;
-
+    
     root["history"]=lineNoiseWrapper->ToJson();
     
     root["timestampepoch"]=std::time(0);
@@ -164,7 +165,7 @@ void Rebuild::Save()
     
     
     root["processor"]=lastStepProcessorData;
-
+    
     std::ofstream stream(GetSavePath());
     stream<<root.dump(4);
     
@@ -179,7 +180,7 @@ Rebuild::~Rebuild()
 {
     SaveIfLatest();
     delete lineNoiseWrapper;
-
+    
 }
 
 
@@ -211,7 +212,7 @@ void Rebuild::RunStep()
     StepProcessor  * stepProcessor = processorStack.top();
     
     stepProcessor->RunStep();
-     
-
+    
+    
 }
 

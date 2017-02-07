@@ -38,7 +38,7 @@ public:
     class LineNoiseWrapper * lineNoiseWrapper;
     
     nlohmann::json lastStepProcessorData;
-
+    
     
 public:
     
@@ -47,7 +47,7 @@ public:
     {
         virtual nlohmann::json ToJson() = 0;
         virtual void FromJson(nlohmann::json) = 0;
-    
+        
     };
     
     

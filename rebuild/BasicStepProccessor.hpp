@@ -14,24 +14,24 @@
 class BasicStepProcessor:public StepProcessor {
     
     
-        
+    
     
     
 public:
     
     
     void RunStep();
-
+    
     
     BasicStepProcessor(Rebuild * aRebuild):StepProcessor(aRebuild)
     {
     }
     
-
+    
     nlohmann::json ToJson();
     void FromJson(nlohmann::json) ;
     
-
+    
     
     
 };

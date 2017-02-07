@@ -20,7 +20,7 @@ class LineHistory : public Rebuild::Serialised {
     
     std::vector<std::string> history;
     
-   
+    
     int historyIndex;
     
     void ReInit();
@@ -43,7 +43,7 @@ public:
     void Add(std::string entry);
     std::string Edit(std::string currentBuffer,MoveDirection direction, bool & success);
     
-   
+    
     
     
     
