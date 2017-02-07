@@ -8,32 +8,17 @@
 
 #ifndef BasicStepProccessor_hpp
 #define BasicStepProccessor_hpp
-#include "StepProcessor.hpp"
 #include "Rebuild.hpp"
+#include "StepProcessor.hpp"
 
-class BasicStepProcessor:public StepProcessor {
-    
-    
-    
-    
-    
+class BasicStepProcessor : public StepProcessor {
+
 public:
-    
-    
-    void RunStep();
-    
-    
-    BasicStepProcessor(Rebuild * aRebuild):StepProcessor(aRebuild)
-    {
-    }
-    
-    
-    nlohmann::json ToJson();
-    void FromJson(nlohmann::json) ;
-    
-    
-    
-    
+  void RunStep();
+
+  BasicStepProcessor(Rebuild *aRebuild) : StepProcessor(aRebuild) {}
+
+  nlohmann::json ToJson();
+  void FromJson(nlohmann::json);
 };
 #endif /* BasicStepProccessor_hpp */
-

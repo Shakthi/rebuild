@@ -9,46 +9,28 @@
 #ifndef StepProcessor_hpp
 #define StepProcessor_hpp
 
-#include <stdio.h>
 #include "Rebuild.hpp"
+#include <stdio.h>
 
+class StepProcessor : public Rebuild::Serialised {
 
-class StepProcessor  : public Rebuild::Serialised{
-    
 protected:
-    class Rebuild * rebuild;
+  class Rebuild *rebuild;
+
 public:
-    
-    StepProcessor(Rebuild * aRebuild):rebuild(aRebuild)
-    {
-    }
-    
-    
-    
-    virtual void RunStep()
-    {
-        
-    }
-    void exitProcessing();
-    virtual ~StepProcessor()
-    {}
-    
-    
+  StepProcessor(Rebuild *aRebuild) : rebuild(aRebuild) {}
+
+  virtual void RunStep() {}
+  void exitProcessing();
+  virtual ~StepProcessor() {}
 };
 
+class EchoProcessor : public StepProcessor {
 
-class EchoProcessor:public StepProcessor {
-    
-    
-    void RunStep();
+  void RunStep();
+
 public:
-    
-    EchoProcessor(Rebuild * aRebuild):StepProcessor(aRebuild)
-    {
-    }
-    
-    
+  EchoProcessor(Rebuild *aRebuild) : StepProcessor(aRebuild) {}
 };
-
 
 #endif /* StepProcessor_hpp */
