@@ -16,32 +16,32 @@
 #include <vector>
 
 class LineHistory : public Rebuild::Serialised {
+    std::vector<std::string> history;
 
-  std::vector<std::string> history;
+    int historyIndex;
 
-  int historyIndex;
-
-  void ReInit();
-  void ReInitDone();
-  friend class LineNoiseWrapper;
+    void ReInit();
+    void ReInitDone();
+    friend class LineNoiseWrapper;
 
 public:
-  enum class MoveDirection { prev, next };
+    enum class MoveDirection { prev,
+        next };
 
-  LineHistory();
+    LineHistory();
 
-  void Save(std::string filename);
-  void Load(std::string filename);
-  void Add(std::string entry);
-  std::string Edit(std::string currentBuffer, MoveDirection direction,
-                   bool &success);
+    void Save(std::string filename);
+    void Load(std::string filename);
+    void Add(std::string entry);
+    std::string Edit(std::string currentBuffer, MoveDirection direction,
+        bool& success);
 
-  void Clear();
+    void Clear();
 
-  std::string HistoryAt(int i);
+    std::string HistoryAt(int i);
 
-  nlohmann::json ToJson();
-  void FromJson(nlohmann::json);
+    nlohmann::json ToJson();
+    void FromJson(nlohmann::json);
 };
 
 #endif /* lineHistory_hpp */

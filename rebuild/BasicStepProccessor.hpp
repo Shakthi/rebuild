@@ -12,13 +12,15 @@
 #include "StepProcessor.hpp"
 
 class BasicStepProcessor : public StepProcessor {
-
 public:
-  void RunStep();
+    void RunStep();
 
-  BasicStepProcessor(Rebuild *aRebuild) : StepProcessor(aRebuild) {}
+    BasicStepProcessor(Rebuild* aRebuild)
+        : StepProcessor(aRebuild)
+    {
+    }
 
-  nlohmann::json ToJson();
-  void FromJson(nlohmann::json);
+    nlohmann::json ToJson();
+    void FromJson(nlohmann::json);
 };
 #endif /* BasicStepProccessor_hpp */

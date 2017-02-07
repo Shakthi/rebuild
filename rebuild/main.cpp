@@ -10,16 +10,16 @@
 #include <iostream>
 #include <map>
 
-int main(int argc, const char *argv[]) {
+int main(int argc, const char* argv[])
+{
+    Rebuild rebuild;
 
-  Rebuild rebuild;
+    // insert code here...
+    std::cout << "Hello, World!\n";
 
-  // insert code here...
-  std::cout << "Hello, World!\n";
+    while (rebuild.IsAlive()) {
+        rebuild.RunStep();
+    }
 
-  while (rebuild.IsAlive()) {
-    rebuild.RunStep();
-  }
-
-  return rebuild.GetExitStatus();
+    return rebuild.GetExitStatus();
 }

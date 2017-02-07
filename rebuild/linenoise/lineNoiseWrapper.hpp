@@ -13,24 +13,26 @@
 #include <string>
 
 class LineNoiseWrapper : public Rebuild::Serialised {
-
-  LineHistory history;
+    LineHistory history;
 
 public:
-  enum class EStatus { ok, ctrl_c, ctrl_d };
+    enum class EStatus { ok,
+        ctrl_c,
+        ctrl_d };
 
 private:
-  EStatus status;
+    EStatus status;
 
 public:
-  std::string getLine(std::string prompt);
-  EStatus GetStatus() { return status; }
-  ~LineNoiseWrapper();
-  LineNoiseWrapper();
-  static const char *
-  linenoiseHistoryCallback(int direction, const char *oldline, void *context);
+    std::string getLine(std::string prompt);
+    EStatus GetStatus() { return status; }
+    ~LineNoiseWrapper();
+    LineNoiseWrapper();
+    static const char* linenoiseHistoryCallback(int direction,
+        const char* oldline,
+        void* context);
 
-  nlohmann::json ToJson();
-  void FromJson(nlohmann::json);
+    nlohmann::json ToJson();
+    void FromJson(nlohmann::json);
 };
 #endif /* lineNoiseWrapper_hpp */

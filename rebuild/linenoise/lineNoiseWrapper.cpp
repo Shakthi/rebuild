@@ -11,47 +11,55 @@
 #include "linenoise.h"
 #include <stdlib.h>
 
-std::string LineNoiseWrapper::getLine(std::string prompt) {
-  std::string returnstring;
-  history.ReInit();
-  char *result = linenoise(prompt.c_str());
-  history.ReInitDone();
+std::string
+LineNoiseWrapper::getLine(std::string prompt)
+{
+    std::string returnstring;
+    history.ReInit();
+    char* result = linenoise(prompt.c_str());
+    history.ReInitDone();
 
-  if (result) {
+    if (result) {
+        returnstring = result;
+        if (returnstring != "")
+            history.Add(result);
+    }
 
-    returnstring = result;
-    if (returnstring != "")
-      history.Add(result);
-  }
+    if (errno == EAGAIN)
+        status = EStatus::ctrl_c;
 
-  if (errno == EAGAIN)
-    status = EStatus::ctrl_c;
-
-  linenoiseFree(result);
-  return returnstring;
+    linenoiseFree(result);
+    return returnstring;
 }
 
-const char *LineNoiseWrapper::linenoiseHistoryCallback(int direction,
-                                                       const char *oldline,
-                                                       void *context) {
-  LineHistory &history = static_cast<LineNoiseWrapper *>(context)->history;
-  bool success;
-  std::string result =
-      history.Edit(oldline, (direction == 1) ? LineHistory::MoveDirection::prev
-                                             : LineHistory::MoveDirection::next,
-                   success);
+const char*
+LineNoiseWrapper::linenoiseHistoryCallback(int direction, const char* oldline,
+    void* context)
+{
+    LineHistory& history = static_cast<LineNoiseWrapper*>(context)->history;
+    bool success;
+    std::string result = history.Edit(oldline, (direction == 1) ? LineHistory::MoveDirection::prev
+                                                                : LineHistory::MoveDirection::next,
+        success);
 
-  return (success) ? result.c_str() : nullptr;
+    return (success) ? result.c_str() : nullptr;
 }
 
-LineNoiseWrapper::LineNoiseWrapper() {
-
-  linenoiseSetHistoryCallback(LineNoiseWrapper::linenoiseHistoryCallback, this);
+LineNoiseWrapper::LineNoiseWrapper()
+{
+    linenoiseSetHistoryCallback(LineNoiseWrapper::linenoiseHistoryCallback, this);
 }
 
-LineNoiseWrapper::~LineNoiseWrapper() {}
+LineNoiseWrapper::~LineNoiseWrapper()
+{
+}
 
-nlohmann::json LineNoiseWrapper::ToJson() { return history.ToJson(); }
-void LineNoiseWrapper::FromJson(nlohmann::json input) {
-  history.FromJson(input);
+nlohmann::json
+LineNoiseWrapper::ToJson()
+{
+    return history.ToJson();
+}
+void LineNoiseWrapper::FromJson(nlohmann::json input)
+{
+    history.FromJson(input);
 }

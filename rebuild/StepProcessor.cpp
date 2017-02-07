@@ -11,14 +11,18 @@
 #include "lineNoiseWrapper.hpp"
 #include <iostream>
 
-void EchoProcessor::RunStep() {
-  std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild]:");
+void EchoProcessor::RunStep()
+{
+    std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild]:");
 
-  if (answer != "") {
-    std::cout << "rebuild>" << answer << std::endl;
-  } else {
-    exitProcessing();
-  }
+    if (answer != "") {
+        std::cout << "rebuild>" << answer << std::endl;
+    } else {
+        exitProcessing();
+    }
 }
 
-void StepProcessor::exitProcessing() { rebuild->exitProcessing(); }
+void StepProcessor::exitProcessing()
+{
+    rebuild->exitProcessing();
+}

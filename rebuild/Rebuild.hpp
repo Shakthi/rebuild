@@ -14,42 +14,41 @@
 #include "json.hpp"
 
 class Rebuild {
+    bool alive;
+    enum ExitStatus {
+        exitStatusRIP = 0,
+        exitStatusLowMemory = 3
 
-  bool alive;
-  enum ExitStatus {
-    exitStatusRIP = 0,
-    exitStatusLowMemory = 3
+    } exitStatus;
 
-  } exitStatus;
+    std::string GetSavePath();
+    std::string LocalSavePath();
 
-  std::string GetSavePath();
-  std::string LocalSavePath();
-
-  std::stack<class StepProcessor *> processorStack;
-
-public:
-  class LineNoiseWrapper *lineNoiseWrapper;
-
-  nlohmann::json lastStepProcessorData;
+    std::stack<class StepProcessor*> processorStack;
 
 public:
-  struct Serialised {
-    virtual nlohmann::json ToJson() = 0;
-    virtual void FromJson(nlohmann::json) = 0;
-  };
+    class LineNoiseWrapper* lineNoiseWrapper;
 
-  bool IsAlive() { return alive; }
-  ExitStatus GetExitStatus() { return exitStatus; }
+    nlohmann::json lastStepProcessorData;
 
-  Rebuild();
-  ~Rebuild();
-  void Save();
-  void SaveIfLatest();
-  void Load();
+public:
+    struct Serialised {
+        virtual nlohmann::json ToJson() = 0;
+        virtual void FromJson(nlohmann::json) = 0;
+    };
 
-  void RunStep();
-  void exitProcessing();
-  void addNewProcessing(StepProcessor *);
+    bool IsAlive() { return alive; }
+    ExitStatus GetExitStatus() { return exitStatus; }
+
+    Rebuild();
+    ~Rebuild();
+    void Save();
+    void SaveIfLatest();
+    void Load();
+
+    void RunStep();
+    void exitProcessing();
+    void addNewProcessing(StepProcessor*);
 };
 
 #endif /* Rebuild_hpp */
