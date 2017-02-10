@@ -5,76 +5,77 @@ L			[a-zA-Z]
 
 
 %x REMARK
+%option noyywrap nounput batch debug noinput
 
 
 %{
     #include <string>
     #include "quickbasic.h"
-    #include "y.tab.h"
+    #include "quickbasic.tab.h"
+    #include "location.hh"
+
+
+    #define RETTOKEN(X) return( yy::parser::token::X);
+    
+    
+    # define YY_DECL					\
+    yy::parser::token_type                         \
+    yylex (yy::parser::semantic_type * yylval,      \
+    yy::parser::location_type* yylloc)
+    // ... and declare it for the parser's sake.
+    
+    
+    /* define yyterminate as this instead of NULL */
+    #define yyterminate() return( yy::parser::token_type::END )
 %}
 
-
+%{
+    // Code run each time yylex is called.
+%}
 
 
 %%
 
 
 
-"step"		{  return((int)STEP); }
-"print"		{  return((int)PRINT); }
-"input"			{  return((int)INPUT); }
-"let"			{  return((int)LET); }
-"if"			{  return((int)IF); }
-"else"			{  return((int)ELSE); }
-"then"		{  return((int)THEN); }
-"goto"		{  return((int)GOTO); }
-"for"			{  return((int)FOR); }
-"next"		{  return((int)NEXT); }
-"to"			{  return((int)TO); }
-"end"			{  return((int)END); }
-"rem"			{ BEGIN(REMARK); return((int)REM); }
-"cls"			{  return((int)CLS); }
-"list"			{  return((int)LIST); }
-"run"			{  return((int)RUN); }
+"step"		{   RETTOKEN(STEP); }
+"print"		{   RETTOKEN(PRINT); }
+"input"		{   RETTOKEN(INPUT); }
+"let"		{   RETTOKEN(LET); }
+"if"		{   RETTOKEN(IF); }
+"else"		{   RETTOKEN(ELSE); }
+"then"		{   RETTOKEN(THEN); }
+"goto"		{   RETTOKEN(GOTO); }
+"for"			{  RETTOKEN(FOR); }
+"next"		{  RETTOKEN(NEXT); }
+"to"			{  RETTOKEN(TO); }
+"end"			{  RETTOKEN(END); }
+"rem"			{ BEGIN(REMARK); RETTOKEN(REM); }
+"cls"			{  RETTOKEN(CLS); }
+"list"			{  RETTOKEN(LIST); }
+"run"			{  RETTOKEN(RUN); }
 
 
 
 <REMARK>"\n" { BEGIN(0); }
-<REMARK>.* {  yylval.stringVal = yytext;
-				return((int)REMARK_RECORD);  }
-"#"			{ BEGIN(REMARK); return((int)REM); }
+<REMARK>.* {  yylval->stringVal = yytext;
+				RETTOKEN(REMARK_RECORD);  }
+"#"			{ BEGIN(REMARK); RETTOKEN(REM); }
 
-{L}		{  yylval.stringVal = yytext;
-    return((int)VAR); }
+{L}		{  yylval->stringVal = yytext;
+    RETTOKEN(VAR); }
 
-{L}"$"	{    yylval.stringVal  = yytext;
-    return((int)SVAR); }
+{L}"$"	{    yylval->stringVal  = yytext;
+    RETTOKEN(SVAR); }
 
-{D}+		{  yylval.numVal = atoi(yytext);
-    return((int)NUMBER); }
+{D}+		{  yylval->numVal = atoi(yytext);
+    RETTOKEN(NUMBER); }
 
-{D}*"."{D}+		{yylval.numVal = atof(yytext);
-				return((int)REAL_NUMBER); }
-
-
-\"(\\.|[^\\"])*\"	{ std::string temp = yytext; yylval.stringVal=temp.substr(1,temp.size()-2); return((int)STRING_LITERAL); }
-
-"..."			{  return((int)ELLIPSIS); }
-";"			{  return yytext[0]; }
-","			{  return yytext[0]; }
-"="			{  return yytext[0]; }
-"("			{  return yytext[0]; }
-")"			{  return yytext[0]; }
+{D}*"."{D}+		{yylval->numVal = atof(yytext);
+				RETTOKEN(REAL_NUMBER); }
 
 
-"-"			{  return yytext[0]; }
-"+"			{  return yytext[0]; }
-"*"			{  return yytext[0]; }
-"/"			{  return yytext[0]; }
-"%"			{  return yytext[0]; }
-"<"			{  return yytext[0]; }
-">"			{  return yytext[0]; }
-"^"			{  return yytext[0]; }
+\"(\\.|[^\\"])*\"	{ std::string temp = yytext; yylval->stringVal=temp.substr(1,temp.size()-2); RETTOKEN(STRING_LITERAL); }
 
 
 [ \t\v\n\f]		{  }

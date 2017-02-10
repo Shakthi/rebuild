@@ -9,7 +9,7 @@
 #include "BasicStepProccessor.hpp"
 #include "Rebuild.hpp"
 #include "lineNoiseWrapper.hpp"
-//#include "quickbasic.h"
+#include "quickbasic.h"
 #include <iostream>
 #include <map>
 #include <sstream>
