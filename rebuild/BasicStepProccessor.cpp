@@ -86,6 +86,43 @@ public:
     }
 };
 
+
+
+
+
+
+
+
+
+class ForStepProcessor : public StepProcessor {
+    const ForBlock thisForBlock;
+    size_t forLevel;
+    
+    std::vector<std::string> statements;
+    
+public:
+    ForStepProcessor(Rebuild* aRebuild, const ForBlock & forblock)
+    : StepProcessor(aRebuild)
+    ,thisForBlock(forblock)
+    {
+    }
+    
+    nlohmann::json ToJson()
+    {
+        nlohmann::json j;
+        return j;
+    }
+    
+    void FromJson(nlohmann::json j) {}
+    
+    void RunStep();
+    
+    
+    
+};
+
+
+
 typedef struct yy_buffer_state* YY_BUFFER_STATE;
 extern int yyparse();
 extern YY_BUFFER_STATE yy_scan_string(const char* str);
@@ -135,6 +172,7 @@ void BasicStepProcessor::FromJson(nlohmann::json j)
     }
 }
 
+
 void BasicStepProcessor::RunStep()
 {
     std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild]:");
@@ -158,3 +196,35 @@ void BasicStepProcessor::RunStep()
         }
     }
 }
+
+
+
+
+void ForStepProcessor::RunStep()
+{
+    std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild>for "+ thisForBlock.forVar+"]:");
+    
+
+        // parse the input
+        yy_scan_string(answer.c_str());
+        int status= yyparse();
+        
+        if (parserQuits)
+            exitProcessing();
+        else
+            
+        
+        if (!varReadList.empty()) {
+            ReadStepProcessor* readStepProcessor = new ReadStepProcessor(rebuild, varReadList);
+            rebuild->addNewProcessing(readStepProcessor);
+        }
+    
+    
+    
+    
+}
+
+
+
+
+

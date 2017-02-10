@@ -10,7 +10,9 @@
 #include "quickbasic.h"
 std::map<std::string,Value> varTable;
 std::list<std::map<std::string,Value>::iterator> varReadList;
+std::list<ForBlock> forBlockList;
 bool parserQuits = false;
+
 
 
 #define YYERROR_VERBOSE 1
@@ -158,34 +160,55 @@ VAR   {
 forStataement 	: FOR VAR '=' numexpr TO numexpr  {
     std::string varName = $2;
     float step = 1;
-   /* Interpreter.forPoints fr;
-    fr.lineNo = interpreter.currentAddress;
-    fr.variable = varName;
-    interpreter.varTable[varName] = $4;
-    fr.finalValue = $6;
-    fr.step = step;
-    interpreter.forRegister.Add(fr);*/
+    
+    ForBlock forBlock;
+    
+    forBlock.forVar = varName;
+    forBlock.forBegin = $4;
+    forBlock.forStep = step;
+    forBlock.forEnd = $6;
+    forBlockList.push_back(forBlock);
+
+
     
 }
 | FOR VAR '=' numexpr TO numexpr STEP numexpr
 {
-    /*std::string varName = $2;
+    std::string varName = $2;
     float step = $8;
-    Interpreter.forPoints fr;
-    fr.lineNo = interpreter.currentAddress;
-    fr.variable = varName;
-    interpreter.varTable[varName] = $4;
-    fr.finalValue = $6;
-    fr.step = step;
-    interpreter.forRegister.Add(fr);
-     */
     
+    ForBlock forBlock;
+    
+    forBlock.forVar = varName;
+    forBlock.forBegin = $4;
+    forBlock.forStep = step;
+    forBlock.forEnd = $6;
+    
+    forBlockList.push_back(forBlock);
 }
 ;
 
 
 
 nextStatement   : NEXT VAR {
+    
+    
+    if(forBlockList.size()==0)
+        std::cout<<"For without next "<<$2<<std::endl;
+    else
+    {
+        ForBlock fb =*(forBlockList.rbegin());
+        
+        if(fb.forVar!=$2)
+            std::cout<<"Unmatching for "<<$2<<std::endl;
+        else
+        forBlockList.pop_back();
+        
+    }
+    
+    
+    
+    
   /*  List<Interpreter.forPoints> newList = new List<Interpreter.forPoints>(interpreter.forRegister);
     newList.Reverse();
     bool found=false;

@@ -33,13 +33,7 @@ struct Value
     std::string stringVal;
 };
 
-#define YYSTYPE struct Value
-typedef std::list<std::map<std::string,Value>::iterator> varTableIteratorList;
-extern std::map<std::string,Value> varTable;
-extern varTableIteratorList varReadList;
-;
 
-extern bool parserQuits;
 
 struct ForBlock
 {
@@ -49,8 +43,21 @@ struct ForBlock
     
     float  forStep;
     
- 
+    bool foundNext;
+    
+    
 };
+
+
+#define YYSTYPE struct Value
+typedef std::list<std::map<std::string,Value>::iterator> varTableIteratorList;
+
+extern std::map<std::string,Value> varTable;
+extern std::list<ForBlock> forBlockList;
+extern varTableIteratorList varReadList;
+;
+
+extern bool parserQuits;
 
 
 
