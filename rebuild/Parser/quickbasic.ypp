@@ -19,12 +19,13 @@ bool parserQuits = false;
 #if YYBISON
 int yylex();
 void yyerror(const char *);
+//%output="qbasic"
+//%file-prefix="qq"
+
 #endif
 %}
 %skeleton "lalr1.cc"
 %start line
-
-
 
 %token PRINT INPUT LET IF ELSE THEN GOTO FOR NEXT TO END  STEP
 ELLIPSIS REM CLS LIST RUN

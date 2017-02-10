@@ -9,9 +9,7 @@
 /* Begin PBXBuildFile section */
 		533AE4E11E3CE896008910D4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4E01E3CE896008910D4 /* main.cpp */; };
 		533AE5021E3FB58B008910D4 /* linenoise.c in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4FC1E3FB180008910D4 /* linenoise.c */; };
-		535FF2581E4117FB00EF0E51 /* quickbasic.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 535FF2571E4117FB00EF0E51 /* quickbasic.lpp */; };
 		535FF25D1E42EA2600EF0E51 /* StepProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 535FF25B1E42EA2600EF0E51 /* StepProcessor.cpp */; };
-		53A1E3EF1E4503CC0071C220 /* quickbasic.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 53A1E3EE1E4503CC0071C220 /* quickbasic.ypp */; };
 		53A1E3F21E4504870071C220 /* lineHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53A1E3F01E4504870071C220 /* lineHistory.cpp */; };
 		53A1E3F51E45A0010071C220 /* BasicStepProccessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53A1E3F31E45A0010071C220 /* BasicStepProccessor.cpp */; };
 		53CB858A1E3FC04300E44564 /* Rebuild.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53CB85881E3FC04300E44564 /* Rebuild.cpp */; };
@@ -35,23 +33,19 @@
 		533AE4E01E3CE896008910D4 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		533AE4FC1E3FB180008910D4 /* linenoise.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = linenoise.c; sourceTree = "<group>"; };
 		533AE4FD1E3FB180008910D4 /* linenoise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = linenoise.h; sourceTree = "<group>"; };
-		535FF2571E4117FB00EF0E51 /* quickbasic.lpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; name = quickbasic.lpp; path = rebuild/quickbasic.lpp; sourceTree = "<group>"; };
 		535FF25B1E42EA2600EF0E51 /* StepProcessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StepProcessor.cpp; sourceTree = "<group>"; };
 		535FF25C1E42EA2600EF0E51 /* StepProcessor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StepProcessor.hpp; sourceTree = "<group>"; };
 		53A1E3E91E44FBF60071C220 /* json.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
-		53A1E3EE1E4503CC0071C220 /* quickbasic.ypp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.yacc; name = quickbasic.ypp; path = rebuild/quickbasic.ypp; sourceTree = "<group>"; };
 		53A1E3F01E4504870071C220 /* lineHistory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineHistory.cpp; sourceTree = "<group>"; };
 		53A1E3F11E4504870071C220 /* lineHistory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lineHistory.hpp; sourceTree = "<group>"; };
 		53A1E3F31E45A0010071C220 /* BasicStepProccessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BasicStepProccessor.cpp; sourceTree = "<group>"; };
 		53A1E3F41E45A0010071C220 /* BasicStepProccessor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BasicStepProccessor.hpp; sourceTree = "<group>"; };
-		53A1E3F71E4973630071C220 /* quickbasic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = quickbasic.h; path = rebuild/quickbasic.h; sourceTree = "<group>"; };
 		53CB85881E3FC04300E44564 /* Rebuild.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Rebuild.cpp; sourceTree = "<group>"; };
 		53CB85891E3FC04300E44564 /* Rebuild.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Rebuild.hpp; sourceTree = "<group>"; };
 		53CB858B1E403E8500E44564 /* lineNoiseWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineNoiseWrapper.cpp; sourceTree = "<group>"; };
 		53CB858C1E403E8500E44564 /* lineNoiseWrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lineNoiseWrapper.hpp; sourceTree = "<group>"; };
-		53CE7ED91E4D6FFB00774CB7 /* location.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = location.hh; path = rebuild/location.hh; sourceTree = "<group>"; };
-		53CE7EDA1E4D6FFB00774CB7 /* position.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = position.hh; path = rebuild/position.hh; sourceTree = "<group>"; };
-		53CE7EDB1E4D6FFB00774CB7 /* stack.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = stack.hh; path = rebuild/stack.hh; sourceTree = "<group>"; };
+		53CE7EEB1E4E451D00774CB7 /* quickbasic.lpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.lex; path = quickbasic.lpp; sourceTree = "<group>"; };
+		53CE7EEC1E4E451D00774CB7 /* quickbasic.ypp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.yacc; path = quickbasic.ypp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,7 +63,6 @@
 			isa = PBXGroup;
 			children = (
 				53A1E3E81E44FBF60071C220 /* json */,
-				535FF2561E410FE600EF0E51 /* quickBasic */,
 				533AE4DF1E3CE896008910D4 /* rebuild */,
 				533AE4DE1E3CE896008910D4 /* Products */,
 			);
@@ -86,6 +79,7 @@
 		533AE4DF1E3CE896008910D4 /* rebuild */ = {
 			isa = PBXGroup;
 			children = (
+				53CE7EEA1E4E451D00774CB7 /* Parser */,
 				53CB85881E3FC04300E44564 /* Rebuild.cpp */,
 				535FF25B1E42EA2600EF0E51 /* StepProcessor.cpp */,
 				535FF25C1E42EA2600EF0E51 /* StepProcessor.hpp */,
@@ -111,19 +105,6 @@
 			path = linenoise;
 			sourceTree = "<group>";
 		};
-		535FF2561E410FE600EF0E51 /* quickBasic */ = {
-			isa = PBXGroup;
-			children = (
-				53A1E3EE1E4503CC0071C220 /* quickbasic.ypp */,
-				53CE7ED91E4D6FFB00774CB7 /* location.hh */,
-				53CE7EDA1E4D6FFB00774CB7 /* position.hh */,
-				53CE7EDB1E4D6FFB00774CB7 /* stack.hh */,
-				53A1E3F71E4973630071C220 /* quickbasic.h */,
-				535FF2571E4117FB00EF0E51 /* quickbasic.lpp */,
-			);
-			name = quickBasic;
-			sourceTree = "<group>";
-		};
 		53A1E3E81E44FBF60071C220 /* json */ = {
 			isa = PBXGroup;
 			children = (
@@ -131,6 +112,15 @@
 			);
 			name = json;
 			path = rebuild/json;
+			sourceTree = "<group>";
+		};
+		53CE7EEA1E4E451D00774CB7 /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				53CE7EEB1E4E451D00774CB7 /* quickbasic.lpp */,
+				53CE7EEC1E4E451D00774CB7 /* quickbasic.ypp */,
+			);
+			path = Parser;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -143,6 +133,7 @@
 				533AE4D91E3CE895008910D4 /* Sources */,
 				533AE4DA1E3CE895008910D4 /* Frameworks */,
 				533AE4DB1E3CE895008910D4 /* CopyFiles */,
+				53CE7EE51E4E430500774CB7 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -184,6 +175,22 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		53CE7EE51E4E430500774CB7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		533AE4D91E3CE895008910D4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -193,11 +200,9 @@
 				533AE5021E3FB58B008910D4 /* linenoise.c in Sources */,
 				53A1E3F21E4504870071C220 /* lineHistory.cpp in Sources */,
 				535FF25D1E42EA2600EF0E51 /* StepProcessor.cpp in Sources */,
-				535FF2581E4117FB00EF0E51 /* quickbasic.lpp in Sources */,
 				53A1E3F51E45A0010071C220 /* BasicStepProccessor.cpp in Sources */,
 				533AE4E11E3CE896008910D4 /* main.cpp in Sources */,
 				53CB858A1E3FC04300E44564 /* Rebuild.cpp in Sources */,
-				53A1E3EF1E4503CC0071C220 /* quickbasic.ypp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
