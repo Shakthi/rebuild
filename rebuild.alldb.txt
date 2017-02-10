@@ -15,7 +15,12 @@
             "end",
             "print s$",
             "input a",
-            "666"
+            "666",
+            "input a",
+            "5555",
+            "input a",
+            "print a",
+            "end"
         ],
         "creator": "rebuild",
         "type": "historyfile"
@@ -24,7 +29,7 @@
         "varablelist": [
             {
                 "key": "a",
-                "value": 666
+                "value": 0.0
             },
             {
                 "key": "s$",
@@ -32,8 +37,8 @@
             }
         ]
     },
-    "timestamp": "2017-02-07T17:17:09Z",
-    "timestampepoch": 1486487829,
+    "timestamp": "2017-02-08T16:42:32Z",
+    "timestampepoch": 1486572152,
     "type": "rebuildalldb",
     "version": "1.0"
 }

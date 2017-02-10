@@ -21,7 +21,7 @@ int yylex();
 void yyerror(const char *);
 #endif
 %}
-
+%skeleton "lalr1.cc"
 %start line
 
 

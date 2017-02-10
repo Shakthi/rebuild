@@ -49,6 +49,9 @@
 		53CB85891E3FC04300E44564 /* Rebuild.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Rebuild.hpp; sourceTree = "<group>"; };
 		53CB858B1E403E8500E44564 /* lineNoiseWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineNoiseWrapper.cpp; sourceTree = "<group>"; };
 		53CB858C1E403E8500E44564 /* lineNoiseWrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lineNoiseWrapper.hpp; sourceTree = "<group>"; };
+		53CE7ED91E4D6FFB00774CB7 /* location.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = location.hh; path = rebuild/location.hh; sourceTree = "<group>"; };
+		53CE7EDA1E4D6FFB00774CB7 /* position.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = position.hh; path = rebuild/position.hh; sourceTree = "<group>"; };
+		53CE7EDB1E4D6FFB00774CB7 /* stack.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = stack.hh; path = rebuild/stack.hh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +115,9 @@
 			isa = PBXGroup;
 			children = (
 				53A1E3EE1E4503CC0071C220 /* quickbasic.ypp */,
+				53CE7ED91E4D6FFB00774CB7 /* location.hh */,
+				53CE7EDA1E4D6FFB00774CB7 /* position.hh */,
+				53CE7EDB1E4D6FFB00774CB7 /* stack.hh */,
 				53A1E3F71E4973630071C220 /* quickbasic.h */,
 				535FF2571E4117FB00EF0E51 /* quickbasic.lpp */,
 			);
