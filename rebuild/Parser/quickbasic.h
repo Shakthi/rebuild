@@ -49,7 +49,6 @@ struct ForBlock
 };
 
 
-#define YYSTYPE struct Value
 typedef std::list<std::map<std::string,Value>::iterator> varTableIteratorList;
 
 extern std::map<std::string,Value> varTable;
@@ -60,12 +59,7 @@ extern varTableIteratorList varReadList;
 extern bool parserQuits;
 
 
-
-# define YY_DECL					\
-yy::parser::token_type                         \
-yylex (yy::parser::semantic_type * yylval,      \
-yy::parser::location_type* yylloc)
-// ... and declare it for the parser's sake.
+#define YYSTYPE struct Value
 
 
 #endif /* quickbasic_h */

@@ -35,8 +35,8 @@ ELLIPSIS REM CLS LIST RUN
 %left '%'
 
 %union{
-    
-%}
+    ;
+    %}
 
 %{
     yy::parser::token_type                         \

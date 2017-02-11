@@ -5,28 +5,42 @@ L			[a-zA-Z]
 
 
 %x REMARK
-%option noyywrap nounput batch debug noinput
+%option c++
+%option yyclass="yy::basicscanner"
+%option nodefault
+%option noyywrap
+
 
 
 %{
     #include <string>
-    #include "quickbasic.h"
-    #include "quickbasic.tab.h"
-    #include "location.hh"
-
-
-    #define RETTOKEN(X) return( yy::parser::token::X);
-    
-    
-    # define YY_DECL					\
+    #undef YY_DECL
+    #define YY_DECL					\
     yy::parser::token_type                         \
-    yylex (yy::parser::semantic_type * yylval,      \
+    yy::basicscanner::yylex (yy::parser::semantic_type * yylval,      \
     yy::parser::location_type* yylloc)
     // ... and declare it for the parser's sake.
     
+
+    #include "quickbasic.h"
     
-    /* define yyterminate as this instead of NULL */
-    #define yyterminate() return( yy::parser::token_type::END )
+    #include "quickbasic.hpp"
+    
+    
+    
+    #include "location.hh"
+    
+
+
+    
+    
+    
+    // define yyterminate as this instead of NULL
+    #define RETTOKEN(X) return( yy::parser::token::X);
+    #include "quickbasic.tab.h"
+
+
+    #define yyterminate() return( yy::parser::token_type::END);
 %}
 
 %{
