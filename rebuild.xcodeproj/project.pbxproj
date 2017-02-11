@@ -49,10 +49,10 @@
 		53CE7EEB1E4E451D00774CB7 /* quickbasic.lpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.lex; path = quickbasic.lpp; sourceTree = "<group>"; };
 		53CE7EEC1E4E451D00774CB7 /* quickbasic.ypp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.yacc; path = quickbasic.ypp; sourceTree = "<group>"; };
 		53CE7EF71E4E777E00774CB7 /* quickbasic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = quickbasic.h; sourceTree = "<group>"; };
-		53CE7EFB1E4E788700774CB7 /* location.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = location.hh; sourceTree = "<group>"; };
-		53CE7EFC1E4E788700774CB7 /* position.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = position.hh; sourceTree = "<group>"; };
-		53CE7EFD1E4E788700774CB7 /* stack.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = stack.hh; sourceTree = "<group>"; };
 		53CE7F151E4EC9EE00774CB7 /* quickbasic.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = quickbasic.hpp; sourceTree = "<group>"; };
+		53CE7F171E4EE0A600774CB7 /* location.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = location.hh; sourceTree = "<group>"; };
+		53CE7F181E4EE0A600774CB7 /* position.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = position.hh; sourceTree = "<group>"; };
+		53CE7F191E4EE0A600774CB7 /* stack.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = stack.hh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,14 +125,22 @@
 			isa = PBXGroup;
 			children = (
 				53CE7EF71E4E777E00774CB7 /* quickbasic.h */,
-				53CE7EFB1E4E788700774CB7 /* location.hh */,
-				53CE7EFC1E4E788700774CB7 /* position.hh */,
-				53CE7EFD1E4E788700774CB7 /* stack.hh */,
+				53CE7F161E4EE0A600774CB7 /* internal */,
 				53CE7EEB1E4E451D00774CB7 /* quickbasic.lpp */,
 				53CE7F151E4EC9EE00774CB7 /* quickbasic.hpp */,
 				53CE7EEC1E4E451D00774CB7 /* quickbasic.ypp */,
 			);
 			path = Parser;
+			sourceTree = "<group>";
+		};
+		53CE7F161E4EE0A600774CB7 /* internal */ = {
+			isa = PBXGroup;
+			children = (
+				53CE7F171E4EE0A600774CB7 /* location.hh */,
+				53CE7F181E4EE0A600774CB7 /* position.hh */,
+				53CE7F191E4EE0A600774CB7 /* stack.hh */,
+			);
+			path = internal;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

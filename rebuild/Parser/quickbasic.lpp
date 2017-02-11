@@ -14,33 +14,17 @@ L			[a-zA-Z]
 
 %{
     #include <string>
-    #undef YY_DECL
-    #define YY_DECL					\
-    yy::parser::token_type                         \
-    yy::basicscanner::yylex (yy::parser::semantic_type * yylval,      \
-    yy::parser::location_type* yylloc)
-    // ... and declare it for the parser's sake.
-    
 
     #include "quickbasic.h"
-    
     #include "quickbasic.hpp"
-    
-    
-    
     #include "location.hh"
-    
-
-
-    
-    
-    
-    // define yyterminate as this instead of NULL
-    #define RETTOKEN(X) return( yy::parser::token::X);
     #include "quickbasic.tab.h"
 
-
+    // define yyterminate as this instead of NULL
+    #define RETTOKEN(X) return( yy::parser::token::X);
     #define yyterminate() return( yy::parser::token_type::END);
+    
+    
 %}
 
 %{

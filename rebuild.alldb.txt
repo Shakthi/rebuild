@@ -20,7 +20,13 @@
             "5555",
             "input a",
             "print a",
-            "end"
+            "end",
+            "print a",
+            "print a$",
+            "print s$",
+            "end",
+            "print \"hello c++\"",
+            "print \"hai\""
         ],
         "creator": "rebuild",
         "type": "historyfile"
@@ -32,13 +38,17 @@
                 "value": 0.0
             },
             {
+                "key": "a$",
+                "value": ""
+            },
+            {
                 "key": "s$",
                 "value": "Shakthi"
             }
         ]
     },
-    "timestamp": "2017-02-08T16:42:32Z",
-    "timestampepoch": 1486572152,
+    "timestamp": "2017-02-11T07:01:03Z",
+    "timestampepoch": 1486796463,
     "type": "rebuildalldb",
     "version": "1.0"
 }

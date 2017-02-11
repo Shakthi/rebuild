@@ -10,6 +10,7 @@
 #include "Rebuild.hpp"
 #include "lineNoiseWrapper.hpp"
 #include "quickbasic.h"
+#include "quickbasic.hpp"
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -123,10 +124,10 @@ public:
 
 
 
-typedef struct yy_buffer_state* YY_BUFFER_STATE;
-extern int yyparse();
-extern YY_BUFFER_STATE yy_scan_string(const char* str);
-extern void yy_delete_buffer(YY_BUFFER_STATE buffer);
+//typedef struct yy_buffer_state* YY_BUFFER_STATE;
+//extern int yyparse();
+//extern YY_BUFFER_STATE yy_scan_string(const char* str);
+//extern void yy_delete_buffer(YY_BUFFER_STATE buffer);
 
 nlohmann::json
 BasicStepProcessor::ToJson()
@@ -184,8 +185,21 @@ void BasicStepProcessor::RunStep()
 
     else {
         // parse the input
-        yy_scan_string(answer.c_str());
-        yyparse();
+        //yy_scan_string(answer.c_str());
+        //yyparse();
+        
+        std::stringstream a(answer);
+        
+        
+        yy::basicscanner  ba =  yy::basicscanner( &a );
+        yy::parser pa =yy::parser(ba,this);
+        
+        pa.parse();
+        
+        
+
+        
+        
 
         if (parserQuits)
             exitProcessing();
@@ -205,10 +219,14 @@ void ForStepProcessor::RunStep()
     std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild>for "+ thisForBlock.forVar+"]:");
     
 
-        // parse the input
-        yy_scan_string(answer.c_str());
-        int status= yyparse();
-        
+    std::stringstream a(answer);
+
+    
+    yy::basicscanner  ba =  yy::basicscanner( &a );
+    yy::parser pa =yy::parser(ba,NULL);
+    
+    pa.parse();
+    
         if (parserQuits)
             exitProcessing();
         else

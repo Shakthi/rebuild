@@ -9,7 +9,12 @@
 
 #include "quickbasic.h"
 
+namespace yy
+{
+class basicscanner;
+}
 
+class BasicStepProcessor;
 
 
 %}
@@ -34,28 +39,29 @@ ELLIPSIS REM CLS LIST RUN
 %left '*' '/'
 %left '%'
 
+%parse-param { basicscanner  &scanner  }
+%parse-param { BasicStepProcessor  *driver  }
+
+
 %union{
-    ;
-    %}
+%}
 
 %{
-    yy::parser::token_type                         \
-    yylex (yy::parser::semantic_type * yylval,      \
-    yy::parser::location_type* yylloc);
-    
+    #include "quickbasic.hpp"
+
     std::map<std::string,Value> varTable;
     std::list<std::map<std::string,Value>::iterator> varReadList;
     std::list<ForBlock> forBlockList;
     bool parserQuits = false;
 
-    
-    
+    #undef yylex
+    #define yylex scanner.yylex
 %}
 
 
 %%
 
-line    :   lineNumber STATEMENT_RECORD { /*interpreter.statementRecord[(int)$1] = $2;*/}
+line    :    STATEMENT_RECORD { /*interpreter.statementRecord[(int)$1] = $2;*/}
         |   statement
                                         
         |   command

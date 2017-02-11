@@ -60,6 +60,14 @@ extern bool parserQuits;
 
 
 #define YYSTYPE struct Value
+#undef YY_DECL
+#define YY_DECL					\
+yy::parser::token_type                         \
+yy::basicscanner::yylex (yy::parser::semantic_type * yylval,      \
+yy::parser::location_type* yylloc)
+// ... and declare it for the parser's sake.
+
+
 
 
 #endif /* quickbasic_h */
