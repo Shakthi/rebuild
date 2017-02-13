@@ -10,15 +10,18 @@
 #define quickbasic_h
 #include<list>
 #include<map>
+#include "AST.hpp"
 struct Value
 {
     enum class Evaluetype
     {
+        emptyType,
         stringtype,
         booltype,
         floattype,
         inttype,
         chartype,
+        nodeType
         
     };
     Evaluetype valutype;
@@ -31,6 +34,11 @@ struct Value
         char    charVal;
     };
     std::string stringVal;
+    Statement * statement;
+    
+    Value():valutype(Evaluetype::emptyType){}
+    ~Value(){ if(valutype == Evaluetype::nodeType ) delete (statement); }
+    
 };
 
 

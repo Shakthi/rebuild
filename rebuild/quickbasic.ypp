@@ -8,10 +8,10 @@
 
 
 #include "quickbasic.h"
+#include "AST.hpp"
+
 std::map<std::string,Value> varTable;
-std::list<std::map<std::string,Value>::iterator> varReadList;
 std::list<ForBlock> forBlockList;
-bool parserQuits = false;
 
 
 
@@ -19,14 +19,14 @@ bool parserQuits = false;
 #define YYERROR_VERBOSE 1
 #if YYBISON
 int yylex();
-void yyerror(const char *);
+void yyerror(Statement ** statementOut,const char *);
 
 #endif
 %}
 
 %start line
 
-
+%parse-param { Statement ** statementOut}
 
 %token PRINT INPUT LET IF ELSE THEN GOTO FOR NEXT TO END  STEP
 ELLIPSIS REM CLS LIST RUN
@@ -239,7 +239,7 @@ nextStatement   : NEXT VAR {
 
 
 
-endstatement    : END { parserQuits = true; }
+endstatement    : END { *statementOut = new EndStatement(); }
 ;
 
 boolExression : numexpr '=' numexpr {   $$ = ($1 == $3); }
@@ -304,9 +304,10 @@ numexpr    :   '(' numexpr ')'
 
 
 %%
-void yyerror( const char * error)
+void yyerror( Statement** statement, const char * error)
 {
-    printf("%s\n",error);
+    *statement = new ErrorStatement(error);
+    
 
 }
 

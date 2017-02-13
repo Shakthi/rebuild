@@ -11,30 +11,24 @@
 
 
 typedef struct yy_buffer_state* YY_BUFFER_STATE;
-extern int yyparse();
+extern int yyparse(Statement**);
 extern YY_BUFFER_STATE yy_scan_string(const char* str);
 extern void yy_delete_buffer(YY_BUFFER_STATE buffer);
 
 
 
-Statement  Parser::Parse(std::string data)
+const Statement * Parser::Parse(std::string data)
 {
     yy_scan_string(data.c_str());
-    
-    if(yyparse()){
+    Statement * outStatment;
+    if(yyparse(&outStatment)){
         
-        return Statement();
+        return new Statement();
         
     } else {
-        return ErrorStatement();
+        return new ErrorStatement("");
         
     }
-    
-    
-    
-        
-    
-    
     
     
 }

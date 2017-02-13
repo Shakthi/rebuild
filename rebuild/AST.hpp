@@ -17,20 +17,21 @@ struct Statement {
     
     
 public:
-    
+    virtual std::string Describe(){return "";}
 };
 
 
 struct ErrorStatement:public Statement {
-    
-    
+    std::string description;
+    ErrorStatement(std::string aDescription):description(aDescription){}
 public:
     
 };
 
 
 
-
+struct EndStatement:public  Statement{
+};
 
 struct ReadStatement:public  Statement{
     

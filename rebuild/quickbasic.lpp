@@ -10,7 +10,7 @@ L			[a-zA-Z]
 %{
     #include <string>
     #include "quickbasic.h"
-    #include "y.tab.h"
+    #include "quickbasic.tab.h"
 %}
 
 

@@ -173,26 +173,37 @@ void BasicStepProcessor::RunStep()
     std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild]:");
     
 
-    if (answer == "") {
-        if (rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::EStatus::ctrl_c)
-            exitProcessing();
+    
+    if (answer == "" && rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::EStatus::ctrl_c){
+        exitProcessing();
+        return;
     }
 
-    else {
+    
+    BasicParser parser;
+    const Statement * result =  parser.Parse(answer);
+    
+    auto endStatemnt = dynamic_cast<const EndStatement*>(result);
+    if (endStatemnt) {
+        exitProcessing();
+        return;
+    }
+    
+    
         
-        BasicParser parser;
-        parser.Parse(answer);
+            
+        
+        
         // parse the input
        
 
         if (parserQuits)
-            exitProcessing();
 
         if (!varReadList.empty()) {
             ReadStepProcessor* readStepProcessor = new ReadStepProcessor(rebuild, varReadList);
             rebuild->addNewProcessing(readStepProcessor);
         }
-    }
+    
 }
 
 
