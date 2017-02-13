@@ -34,10 +34,10 @@ struct Value
         char    charVal;
     };
     std::string stringVal;
-    Statement * statement;
+    Statement * node;
     
     Value():valutype(Evaluetype::emptyType){}
-    ~Value(){ if(valutype == Evaluetype::nodeType ) delete (statement); }
+    ~Value(){ if(valutype == Evaluetype::nodeType ) delete (node); }
     
 };
 

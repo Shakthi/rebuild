@@ -124,40 +124,17 @@ letStatement     : LET VAR '=' numexpr  {
 
 ;
 
-inputStatement  : INPUT inputList
+inputStatement  : INPUT inputList {std::cout<<"sd";}
 | INPUT STRING_LITERAL ';'  inputList   { std::cout<<$2<<std::endl; }
 ;
 
-inputList       : inputItem
+inputList       : inputItem {  auto readnode = new ReadStatement(); readnode->variableList->push_back($1);
+    
 | inputList ';' inputItem
 ;
 
-inputItem       :
-VAR   {
-    
-    
-    
-    Value value;
-    value.valutype = Value::Evaluetype::floattype;
-    value.numVal = 0;
-    varTable[$1]=value;
-   
-    varReadList.push_back(varTable.find($1));
-    
-}
-| SVAR {
-    std::string varName = $1;
-    Value value;
-    value.valutype = Value::Evaluetype::stringtype;
-    value.stringVal = "";
-    varTable[$1]=value;
-    
-    varReadList.push_back(varTable.find($1));
-    
-    
-}
+inputItem       : VAR|SVAR;
 
-;
 
 forStataement 	: FOR VAR '=' numexpr TO numexpr  {
     std::string varName = $2;
