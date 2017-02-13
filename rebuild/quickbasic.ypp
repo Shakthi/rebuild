@@ -15,10 +15,12 @@ bool parserQuits = false;
 
 
 
+
 #define YYERROR_VERBOSE 1
 #if YYBISON
 int yylex();
 void yyerror(const char *);
+
 #endif
 %}
 
@@ -57,7 +59,7 @@ command : listCommand | runCommand;
 
 
 
-lineNumber :    NUMBER;
+lineNumber : NUMBER;
 runCommand : RUN    {  std::cout<<"Run to be implemnted"<<std::endl;}
 ;
 

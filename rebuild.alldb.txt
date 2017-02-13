@@ -15,7 +15,22 @@
             "end",
             "print s$",
             "input a",
-            "666"
+            "666",
+            "input a",
+            "5555",
+            "input a",
+            "print a",
+            "end",
+            "print a",
+            "print a$",
+            "print s$",
+            "end",
+            "print \"hello c++\"",
+            "print \"hai\"",
+            "print \"Hello\"",
+            "print $s",
+            "print s$",
+            "end"
         ],
         "creator": "rebuild",
         "type": "historyfile"
@@ -24,7 +39,15 @@
         "varablelist": [
             {
                 "key": "a",
-                "value": 666
+                "value": 0.0
+            },
+            {
+                "key": "a$",
+                "value": ""
+            },
+            {
+                "key": "s",
+                "value": ""
             },
             {
                 "key": "s$",
@@ -32,8 +55,8 @@
             }
         ]
     },
-    "timestamp": "2017-02-07T17:17:09Z",
-    "timestampepoch": 1486487829,
+    "timestamp": "2017-02-13T04:18:32Z",
+    "timestampepoch": 1486959512,
     "type": "rebuildalldb",
     "version": "1.0"
 }
