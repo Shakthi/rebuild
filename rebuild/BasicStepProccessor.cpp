@@ -140,6 +140,38 @@ void BasicStepProcessor::FromJson(nlohmann::json j)
     }
 }
 
+bool BasicStepProcessor::Evaluate(Statement  * result)
+{
+    
+    
+    auto endStatement = dynamic_cast< EndStatement*>(result);
+    if (endStatement) {
+        exitProcessing();
+        delete result;
+        return false;
+    }
+    
+    auto readStatemnt = dynamic_cast< ReadStatement*>(result);
+    if (readStatemnt) {
+        
+        ReadStepProcessor* readStepProcessor = new ReadStepProcessor(rebuild, readStatemnt->variableList,readStatemnt->prompt);
+        rebuild->addNewProcessing(readStepProcessor);
+        delete result;
+        return true;
+    }
+    
+    auto forStatemnt = dynamic_cast< ForStatment*>(result);
+    if (forStatemnt) {
+        
+        ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild, forStatemnt->forBlock);
+        rebuild->addNewProcessing(readStepProcessor);
+        delete result;
+        return true;
+    }
+    
+
+    return true;
+}
 
 void BasicStepProcessor::RunStep()
 {
@@ -155,33 +187,9 @@ void BasicStepProcessor::RunStep()
 
     
     BasicParser parser;
-    Statement * result =  parser.Parse(answer);
     
-    auto endStatement = dynamic_cast< EndStatement*>(result);
-    if (endStatement) {
-        exitProcessing();
-        delete result;
-        return;
-    }
     
-    auto readStatemnt = dynamic_cast< ReadStatement*>(result);
-    if (readStatemnt) {
-        
-        ReadStepProcessor* readStepProcessor = new ReadStepProcessor(rebuild, readStatemnt->variableList,readStatemnt->prompt);
-        rebuild->addNewProcessing(readStepProcessor);
-        delete result;
-        return;
-    }
-    
-    auto forStatemnt = dynamic_cast< ForStatment*>(result);
-    if (forStatemnt) {
-        
-        ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild, forStatemnt->forBlock);
-        rebuild->addNewProcessing(readStepProcessor);
-        delete result;
-        return;
-    }
-
+    Evaluate(parser.Parse(answer));
     
         
             

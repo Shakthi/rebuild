@@ -16,7 +16,6 @@
 
 class ForStepProcessor : public BasicStepProcessor {
     const ForStatment::ForBlock thisForBlock;
-    float forValue;
     
     std::vector<std::string> statements;
     
@@ -25,8 +24,14 @@ public:
     : BasicStepProcessor(aRebuild)
     ,thisForBlock(forblock)
     {
-        forValue=forblock.forBegin;
+        getForVar()=forblock.forBegin;
     }
+    
+    float & getForVar()
+    {
+        return varTable[thisForBlock.forVar].numVal;
+    }
+    
     
     nlohmann::json ToJson()
     {

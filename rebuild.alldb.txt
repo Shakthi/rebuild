@@ -44,6 +44,25 @@
             "end",
             "input a",
             "333",
+            "end",
+            "for i = 1 to 10",
+            "print i",
+            "print i+1",
+            "print i",
+            "print 10",
+            "next",
+            "next i",
+            "end",
+            "print i",
+            "print a",
+            "for i = 1 to 10",
+            "print i",
+            "end",
+            "end",
+            "print i",
+            "for i=1 to 10",
+            "print i",
+            "next i",
             "end"
         ],
         "creator": "rebuild",
@@ -73,8 +92,8 @@
             }
         ]
     },
-    "timestamp": "2017-02-14T18:21:52Z",
-    "timestampepoch": 1487096512,
+    "timestamp": "2017-02-14T19:10:02Z",
+    "timestampepoch": 1487099402,
     "type": "rebuildalldb",
     "version": "1.0"
 }

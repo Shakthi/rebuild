@@ -34,9 +34,8 @@ void ForStepProcessor::RunStep()
         return;
     }
     
-    
-    
-    statements.push_back(answer);
+    if(BasicStepProcessor::Evaluate(result))
+        statements.push_back(answer);
     
     
 
@@ -44,9 +43,16 @@ void ForStepProcessor::RunStep()
 
 void ForStepProcessor::ExecuteLoop()
 {
-    for (forValue =  forValue +thisForBlock.forStep;
-         forValue <thisForBlock.forEnd; forValue += thisForBlock.forStep) {
+    for (getForVar() =  getForVar() +thisForBlock.forStep;
+         getForVar() <=thisForBlock.forEnd; getForVar() += thisForBlock.forStep) {
         
+        for( std::string statement :statements )
+        {
+            BasicParser parser;
+            Statement * result =  parser.Parse(statement);
+
+            Evaluate(result);
+        }
         
     }
     

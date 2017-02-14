@@ -9,11 +9,13 @@
 #ifndef BasicStepProccessor_hpp
 #define BasicStepProccessor_hpp
 #include "Rebuild.hpp"
+
 #include "StepProcessor.hpp"
 
 class BasicStepProcessor : public StepProcessor {
 public:
     void RunStep();
+    virtual bool Evaluate(class Statement* input);
 
     BasicStepProcessor(Rebuild* aRebuild)
         : StepProcessor(aRebuild)
