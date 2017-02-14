@@ -11,7 +11,7 @@
 #include "AST.hpp"
 
 std::map<std::string,Value> varTable;
-std::list<ForBlock> forBlockList;
+
 
 
 
@@ -35,8 +35,11 @@ ELLIPSIS REM CLS LIST RUN
 %token <numVal> NUMBER REAL_NUMBER
 
 %type <numVal> numexpr lineNumber
-%type <stringVal> strexpr
+%type <stringVal> strexpr inputItem
 %type <boolVal> boolExression
+%type <nodeVal> inputList forStataement nextStatement
+
+%destructor { delete $$ ;} inputList forStataement nextStatement
 
 
 %left '='  '>' '<'
@@ -49,9 +52,11 @@ ELLIPSIS REM CLS LIST RUN
 
 %%
 
-line    :   lineNumber STATEMENT_RECORD { /*interpreter.statementRecord[(int)$1] = $2;*/}
-        |   statement
-                                        
+line    :   statement {
+    *statementOut = $$.nodeVal;
+
+}
+
         |   command
         ;
 
@@ -63,7 +68,8 @@ lineNumber : NUMBER;
 runCommand : RUN    {  std::cout<<"Run to be implemnted"<<std::endl;}
 ;
 
-statement   :    printStatement
+statement   :
+    printStatement
 |   letStatement
 |   inputStatement
 |   endstatement
@@ -124,29 +130,53 @@ letStatement     : LET VAR '=' numexpr  {
 
 ;
 
-inputStatement  : INPUT inputList {std::cout<<"sd";}
-| INPUT STRING_LITERAL ';'  inputList   { std::cout<<$2<<std::endl; }
+
+endstatement    : END { $$.nodeVal = new EndStatement(); }
 ;
 
-inputList       : inputItem {  auto readnode = new ReadStatement(); readnode->variableList->push_back($1);
-    
+inputStatement  : INPUT inputList { $$.nodeVal=$2;}
+| INPUT STRING_LITERAL ';'  inputList
+{
+    auto readnode = static_cast<ReadStatement*>($4);
+    readnode->prompt = $2;
+    $$.nodeVal=readnode;
+}
+;
+
+inputList : inputItem
+{
+    auto readnode = new ReadStatement();
+    readnode->variableList.push_back($1);
+    $$=readnode;
+
+}
 | inputList ';' inputItem
+{
+
+    auto readnode = static_cast<ReadStatement*>($1);
+    readnode->variableList.push_back($3);
+    $$ = $1;
+}
 ;
 
 inputItem       : VAR|SVAR;
 
 
 forStataement 	: FOR VAR '=' numexpr TO numexpr  {
+    
     std::string varName = $2;
     float step = 1;
     
-    ForBlock forBlock;
+    ForStatment::ForBlock forBlock;
     
     forBlock.forVar = varName;
     forBlock.forBegin = $4;
     forBlock.forStep = step;
     forBlock.forEnd = $6;
-    forBlockList.push_back(forBlock);
+    
+    auto fornode = new ForStatment();
+    fornode->forBlock = forBlock;
+    $$=fornode;
 
 
     
@@ -156,14 +186,16 @@ forStataement 	: FOR VAR '=' numexpr TO numexpr  {
     std::string varName = $2;
     float step = $8;
     
-    ForBlock forBlock;
+    ForStatment::ForBlock forBlock;
     
     forBlock.forVar = varName;
     forBlock.forBegin = $4;
     forBlock.forStep = step;
     forBlock.forEnd = $6;
     
-    forBlockList.push_back(forBlock);
+    auto fornode = new ForStatment();
+    fornode->forBlock = forBlock;
+    $$=fornode;
 }
 ;
 
@@ -171,20 +203,8 @@ forStataement 	: FOR VAR '=' numexpr TO numexpr  {
 
 nextStatement   : NEXT VAR {
     
-    
-    if(forBlockList.size()==0)
-        std::cout<<"For without next "<<$2<<std::endl;
-    else
-    {
-        ForBlock fb =*(forBlockList.rbegin());
-        
-        if(fb.forVar!=$2)
-            std::cout<<"Unmatching for "<<$2<<std::endl;
-        else
-        forBlockList.pop_back();
-        
-    }
-    
+    auto node = new NextStatement();
+    $$=node;
     
     
     
@@ -216,8 +236,6 @@ nextStatement   : NEXT VAR {
 
 
 
-endstatement    : END { *statementOut = new EndStatement(); }
-;
 
 boolExression : numexpr '=' numexpr {   $$ = ($1 == $3); }
 | numexpr '>' numexpr {   $$ = ($1 > $3); }

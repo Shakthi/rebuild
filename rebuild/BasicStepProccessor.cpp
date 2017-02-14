@@ -7,6 +7,7 @@
 //
 
 #include "BasicStepProccessor.hpp"
+#include "ForStepProcessor.hpp"
 #include "Rebuild.hpp"
 #include "lineNoiseWrapper.hpp"
 #include "ParserWrapper.hpp"
@@ -17,11 +18,12 @@
 #include <vector>
 
 class ReadStepProcessor : public StepProcessor {
-    varTableIteratorList& list;
+    std::list<std::string> list;
+    std::string prompt;
 
 public:
-    ReadStepProcessor(Rebuild* aRebuild, varTableIteratorList& alist)
-        : StepProcessor(aRebuild)
+    ReadStepProcessor(Rebuild* aRebuild, std::list<std::string>& alist,std::string aPrompt)
+        : StepProcessor(aRebuild),prompt(aPrompt)
         , list(alist)
     {
         list = alist;
@@ -44,8 +46,8 @@ public:
             if (!firstParam)
                 readprompt += " ";
 
-            auto aVarTableiter = *i;
-            std::string varName = aVarTableiter->first;
+            
+            std::string varName = *i;
             readprompt += varName;
 
             firstParam = false;
@@ -56,18 +58,17 @@ public:
         std::istringstream stream(answer);
 
         for (auto i = list.begin(); i != list.end(); i++) {
-            auto aVarTableiter = *i;
-            Value value = aVarTableiter->second;
-
-            if (value.valutype == Value::Evaluetype::floattype) {
+            auto variableName = *i;
+            
+            if(variableName.find("$") == std::string::npos){ //hack
+                Value value;
                 stream >> value.numVal;
-                std::string varname = aVarTableiter->first;
-                varTable[varname] = value;
+                varTable[variableName] = value;
 
-            } else if (value.valutype == Value::Evaluetype::stringtype) {
+            } else if(variableName.find("$") != std::string::npos){
+                Value value;
                 stream >> value.stringVal;
-                std::string varname = aVarTableiter->first;
-                varTable[varname] = value;
+                varTable[variableName] = value;
             }
 
             list.pop_front();
@@ -93,34 +94,6 @@ public:
 
 
 
-
-
-class ForStepProcessor : public StepProcessor {
-    const ForBlock thisForBlock;
-    size_t forLevel;
-    
-    std::vector<std::string> statements;
-    
-public:
-    ForStepProcessor(Rebuild* aRebuild, const ForBlock & forblock)
-    : StepProcessor(aRebuild)
-    ,thisForBlock(forblock)
-    {
-    }
-    
-    nlohmann::json ToJson()
-    {
-        nlohmann::json j;
-        return j;
-    }
-    
-    void FromJson(nlohmann::json j) {}
-    
-    void RunStep();
-    
-    
-    
-};
 
 
 nlohmann::json
@@ -174,65 +147,46 @@ void BasicStepProcessor::RunStep()
     
 
     
-    if (answer == "" && rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::EStatus::ctrl_c){
+    if (answer == ""){
+        if( rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::EStatus::ctrl_c)
         exitProcessing();
         return;
     }
 
     
     BasicParser parser;
-    const Statement * result =  parser.Parse(answer);
+    Statement * result =  parser.Parse(answer);
     
-    auto endStatemnt = dynamic_cast<const EndStatement*>(result);
-    if (endStatemnt) {
+    auto endStatement = dynamic_cast< EndStatement*>(result);
+    if (endStatement) {
         exitProcessing();
+        delete result;
         return;
     }
     
+    auto readStatemnt = dynamic_cast< ReadStatement*>(result);
+    if (readStatemnt) {
+        
+        ReadStepProcessor* readStepProcessor = new ReadStepProcessor(rebuild, readStatemnt->variableList,readStatemnt->prompt);
+        rebuild->addNewProcessing(readStepProcessor);
+        delete result;
+        return;
+    }
+    
+    auto forStatemnt = dynamic_cast< ForStatment*>(result);
+    if (forStatemnt) {
+        
+        ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild, forStatemnt->forBlock);
+        rebuild->addNewProcessing(readStepProcessor);
+        delete result;
+        return;
+    }
+
     
         
             
-        
-        
-        // parse the input
-       
-
-        if (parserQuits)
-
-        if (!varReadList.empty()) {
-            ReadStepProcessor* readStepProcessor = new ReadStepProcessor(rebuild, varReadList);
-            rebuild->addNewProcessing(readStepProcessor);
-        }
     
 }
-
-
-
-
-void ForStepProcessor::RunStep()
-{
-    std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild>for "+ thisForBlock.forVar+"]:");
-    
-        BasicParser parser;
-        parser.Parse(answer);
-    
-        
-        if (parserQuits)
-            exitProcessing();
-        else
-            
-        
-        if (!varReadList.empty()) {
-            ReadStepProcessor* readStepProcessor = new ReadStepProcessor(rebuild, varReadList);
-            rebuild->addNewProcessing(readStepProcessor);
-        }
-    
-    
-    
-    
-}
-
-
 
 
 

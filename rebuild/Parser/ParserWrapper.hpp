@@ -18,7 +18,7 @@ class Parser {
     
     
 public:
-    const Statement *  Parse(std::string data);
+     Statement *  Parse(std::string data);
 };
 
 

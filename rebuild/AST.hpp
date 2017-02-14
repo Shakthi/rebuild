@@ -9,7 +9,7 @@
 #ifndef AST_hpp
 #define AST_hpp
 #include <memory>
-#include <vector>
+#include <list>
 #include <string>
 
 
@@ -17,7 +17,7 @@ struct Statement {
     
     
 public:
-    virtual std::string Describe(){return "";}
+    virtual ~Statement(){}
 };
 
 
@@ -33,13 +33,39 @@ public:
 struct EndStatement:public  Statement{
 };
 
+
+struct NextStatement:public  Statement{
+};
+
+
+
+struct ForStatment:public Statement {
+    
+    struct ForBlock
+    {
+        std::string forVar;
+        float  forBegin;
+        float  forEnd;
+        
+        float  forStep;
+        
+        bool foundNext;
+        
+        
+    } forBlock;
+
+};
+
+
+
+
 struct ReadStatement:public  Statement{
     
     
 public:
     
     std::string prompt;
-    std::vector<std::string> variableList;
+    std::list<std::string> variableList;
     
     
 };

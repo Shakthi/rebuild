@@ -30,6 +30,20 @@
             "print \"Hello\"",
             "print $s",
             "print s$",
+            "end",
+            "input a;b;c",
+            "66",
+            "2",
+            "3",
+            "print a;b;c",
+            "print s",
+            "ptinrint s$",
+            "print s$",
+            "end",
+            "input a",
+            "end",
+            "input a",
+            "333",
             "end"
         ],
         "creator": "rebuild",
@@ -38,12 +52,16 @@
     "processor": {
         "varablelist": [
             {
-                "key": "a",
-                "value": 0.0
-            },
-            {
                 "key": "a$",
                 "value": ""
+            },
+            {
+                "key": "b",
+                "value": 2
+            },
+            {
+                "key": "c",
+                "value": 3
             },
             {
                 "key": "s",
@@ -55,8 +73,8 @@
             }
         ]
     },
-    "timestamp": "2017-02-13T04:18:32Z",
-    "timestampepoch": 1486959512,
+    "timestamp": "2017-02-14T18:21:52Z",
+    "timestampepoch": 1487096512,
     "type": "rebuildalldb",
     "version": "1.0"
 }

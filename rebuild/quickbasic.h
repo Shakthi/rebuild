@@ -10,6 +10,7 @@
 #define quickbasic_h
 #include<list>
 #include<map>
+#include<memory>
 #include "AST.hpp"
 struct Value
 {
@@ -34,36 +35,18 @@ struct Value
         char    charVal;
     };
     std::string stringVal;
-    Statement * node;
+    Statement * nodeVal;
     
-    Value():valutype(Evaluetype::emptyType){}
-    ~Value(){ if(valutype == Evaluetype::nodeType ) delete (node); }
-    
+       
 };
 
 
 
-struct ForBlock
-{
-    std::string forVar;
-    float  forBegin;
-    float  forEnd;
-    
-    float  forStep;
-    
-    bool foundNext;
-    
-    
-};
 
 
 #define YYSTYPE struct Value
-typedef std::list<std::map<std::string,Value>::iterator> varTableIteratorList;
 
 extern std::map<std::string,Value> varTable;
-extern std::list<ForBlock> forBlockList;
-extern varTableIteratorList varReadList;
-;
 
 extern bool parserQuits;
 
