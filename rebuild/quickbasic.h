@@ -51,7 +51,7 @@ extern std::map<std::string,Value> varTable;
 extern bool parserQuits;
 
 
-
+#define register 
 
 
 #endif /* quickbasic_h */

@@ -18,6 +18,7 @@ class ForStepProcessor : public BasicStepProcessor {
     const ForStatment::ForBlock thisForBlock;
     
     std::vector<std::string> statements;
+    std::string remarks;
     
 public:
     ForStepProcessor(Rebuild* aRebuild, const ForStatment::ForBlock & forblock)

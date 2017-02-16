@@ -63,10 +63,27 @@
             "for i=1 to 10",
             "print i",
             "next i",
+            "end",
+            "for i = 1 to 10",
+            "print i",
+            "next i",
+            "done",
+            "end",
+            "for i = 1 to 1",
+            "end",
+            "for i = 1 to 1",
+            "end",
+            "for i = 1 to 0",
+            "rem kllkl",
+            "end",
+            "print 1",
             "end"
         ],
         "creator": "rebuild",
         "type": "historyfile"
+    },
+    "options": {
+        "logquite": false
     },
     "processor": {
         "varablelist": [
@@ -92,8 +109,8 @@
             }
         ]
     },
-    "timestamp": "2017-02-14T19:10:02Z",
-    "timestampepoch": 1487099402,
+    "timestamp": "2017-02-16T20:49:38Z",
+    "timestampepoch": 1487278178,
     "type": "rebuildalldb",
     "version": "1.0"
 }

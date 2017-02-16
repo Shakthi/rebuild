@@ -35,6 +35,14 @@ struct EndStatement:public  Statement{
 
 
 struct NextStatement:public  Statement{
+    
+};
+
+
+
+struct RemarkStatement:public  Statement{
+    std::string comments;
+
 };
 
 

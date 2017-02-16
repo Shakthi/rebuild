@@ -82,7 +82,8 @@ statement   :
 ;
 
 
-remStatement : REM REMARK_RECORD {}
+
+remStatement : REM REMARK_RECORD {  auto var= new RemarkStatement;  var->comments= $2; $$.nodeVal = var; }
 ;
 
 
@@ -301,6 +302,7 @@ numexpr    :   '(' numexpr ')'
 %%
 void yyerror( Statement** statement, const char * error)
 {
+    
     *statement = new ErrorStatement(error);
     
 

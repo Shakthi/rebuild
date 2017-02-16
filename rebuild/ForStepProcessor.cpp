@@ -16,6 +16,10 @@
 
 void ForStepProcessor::RunStep()
 {
+    
+    if(getForVar() <=thisForBlock.forEnd) {
+    
+    
     std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild>for "+ thisForBlock.forVar+"]:");
     
     BasicParser parser;
@@ -37,7 +41,27 @@ void ForStepProcessor::RunStep()
     if(BasicStepProcessor::Evaluate(result))
         statements.push_back(answer);
     
-    
+    }else
+    {
+        std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild>for "+ thisForBlock.forVar+" (remarks)]:");
+        
+        BasicParser parser;
+        Statement * result =  parser.Parse(answer);
+        
+        auto remarkStatement = dynamic_cast< RemarkStatement*>(result);
+        if (remarkStatement) {
+            remarks=remarkStatement->comments;
+            delete result;
+            exitProcessing();
+            return;
+        }
+        
+        
+        
+        delete result;
+        exitProcessing();
+        return;
+    }
 
 }
 

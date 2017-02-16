@@ -14,8 +14,6 @@ int main(int argc, const char* argv[])
 {
     Rebuild rebuild;
 
-    // insert code here...
-    std::cout << "Hello, World!\n";
 
     while (rebuild.IsAlive()) {
         rebuild.RunStep();

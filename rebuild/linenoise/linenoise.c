@@ -1075,7 +1075,11 @@ char *linenoise(const char *prompt) {
 
         printf("%s",prompt);
         fflush(stdout);
-        if (fgets(buf,LINENOISE_MAX_LINE,stdin) == NULL) return NULL;
+        if (fgets(buf,LINENOISE_MAX_LINE,stdin) == NULL) {
+            errno = EAGAIN;
+            return NULL
+            ;
+        }
         len = strlen(buf);
         while(len && (buf[len-1] == '\n' || buf[len-1] == '\r')) {
             len--;

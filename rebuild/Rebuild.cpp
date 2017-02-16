@@ -7,6 +7,7 @@
 //
 
 #include "Rebuild.hpp"
+#include "Logger.hpp"
 
 #include "BasicStepProccessor.hpp"
 #include "lineNoiseWrapper.hpp"
@@ -14,6 +15,10 @@
 #include <iostream>
 
 namespace {
+    
+    
+    
+    
 
 std::string
 nowTime()
@@ -35,12 +40,23 @@ bool replace(std::string& str, const std::string& from, const std::string& to)
     str.replace(start_pos, from.length(), to);
     return true;
 }
+    
+    
+    
+    
 }
+
+
+log_buffer lbuffer;
+std::basic_ostream<char>  rlog(&lbuffer);
+
+
 
 Rebuild::Rebuild()
     : exitStatus(exitStatusRIP)
     , alive(true)
 {
+    rlog << "Hello world...!("<<__DATE__<<"-"<<__TIME__<< ")"<<std::endl;
     lineNoiseWrapper = new LineNoiseWrapper();
     processorStack.push(new BasicStepProcessor(this));
     Load();
@@ -85,11 +101,38 @@ void Rebuild::SaveIfLatest()
     }
 }
 
+namespace
+{
+    
+    
+    void Logger_FromJson(nlohmann::json options)
+    {
+        if(!options.is_null())
+        {
+            lbuffer.quit=options["logquite"];
+        }
+    }
+    
+    
+    nlohmann::json Logger_ToJson()
+    {
+        nlohmann::json options;
+        options["logquite"]=lbuffer.quit;
+        return options;
+    }
+
+
+
+}
+
+
+
 void Rebuild::Load()
 {
     std::string savepath = GetSavePath();
-    std::clog << "Loading..." << savepath << std::endl;
-
+    
+    rlog << "Loading main config:" << savepath << std::endl;
+    
     std::ifstream stream(savepath);
     if (stream.good()) {
         nlohmann::json root;
@@ -100,19 +143,23 @@ void Rebuild::Load()
 
             lineNoiseWrapper->FromJson(root["history"]);
             processorStack.top()->FromJson(root["processor"]);
+            Logger_FromJson(root["options"]);
+            
 
             // successfull read lets save backup
             std::ofstream stream2(LocalSavePath());
+            rlog << "Backing up db at :" << LocalSavePath() << std::endl;
+
             stream2 << root.dump(4);
 
         } catch (...) {
+            
         }
     }
 }
 
 void Rebuild::Save()
 {
-    std::clog << "Saving..." << std::endl;
     nlohmann::json root;
 
     root["history"] = lineNoiseWrapper->ToJson();
@@ -122,16 +169,21 @@ void Rebuild::Save()
     root["type"] = "rebuildalldb";
     root["creator"] = "rebuild";
     root["version"] = version;
+    root["options"] = Logger_ToJson();
 
     root["processor"] = lastStepProcessorData;
 
     std::ofstream stream(GetSavePath());
+    rlog << "Saving at "<<GetSavePath()<<"... " << std::endl;
+
     stream << root.dump(4);
 }
 
 Rebuild::~Rebuild()
 {
     SaveIfLatest();
+    rlog << "Goodbye world!... " <<std::endl;
+
     delete lineNoiseWrapper;
 }
 

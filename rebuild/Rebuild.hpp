@@ -14,6 +14,12 @@
 #include "json.hpp"
 
 class Rebuild {
+    
+    
+    
+    
+    
+    
     bool alive;
     enum ExitStatus {
         exitStatusRIP = 0,

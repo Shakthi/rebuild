@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		531B191A1E562EC000F530FA /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 531B19181E562EC000F530FA /* Logger.cpp */; };
 		533AE4E11E3CE896008910D4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4E01E3CE896008910D4 /* main.cpp */; };
 		533AE5021E3FB58B008910D4 /* linenoise.c in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4FC1E3FB180008910D4 /* linenoise.c */; };
 		535FF2581E4117FB00EF0E51 /* quickbasic.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 535FF2571E4117FB00EF0E51 /* quickbasic.lpp */; };
@@ -34,6 +35,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		531B19181E562EC000F530FA /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Logger.cpp; sourceTree = "<group>"; };
+		531B19191E562EC000F530FA /* Logger.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Logger.hpp; sourceTree = "<group>"; };
 		533AE4DD1E3CE896008910D4 /* rebuild */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = rebuild; sourceTree = BUILT_PRODUCTS_DIR; };
 		533AE4E01E3CE896008910D4 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		533AE4FC1E3FB180008910D4 /* linenoise.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = linenoise.c; sourceTree = "<group>"; };
@@ -99,6 +102,8 @@
 				53A1E3F41E45A0010071C220 /* BasicStepProccessor.hpp */,
 				5362BDCB1E52BA7600A95798 /* ForStepProcessor.cpp */,
 				5362BDCC1E52BA7600A95798 /* ForStepProcessor.hpp */,
+				531B19181E562EC000F530FA /* Logger.cpp */,
+				531B19191E562EC000F530FA /* Logger.hpp */,
 				536578721E50F0D100A561D9 /* AST.cpp */,
 				536578731E50F0D100A561D9 /* AST.hpp */,
 				53CB85891E3FC04300E44564 /* Rebuild.hpp */,
@@ -205,6 +210,7 @@
 				53A1E3F21E4504870071C220 /* lineHistory.cpp in Sources */,
 				535FF25D1E42EA2600EF0E51 /* StepProcessor.cpp in Sources */,
 				535FF2581E4117FB00EF0E51 /* quickbasic.lpp in Sources */,
+				531B191A1E562EC000F530FA /* Logger.cpp in Sources */,
 				53A1E3F51E45A0010071C220 /* BasicStepProccessor.cpp in Sources */,
 				5362BDCD1E52BA7600A95798 /* ForStepProcessor.cpp in Sources */,
 				533AE4E11E3CE896008910D4 /* main.cpp in Sources */,
