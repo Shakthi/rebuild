@@ -7,8 +7,10 @@
 //
 
 #include "Logger.hpp"
+#include "Rebuild.hpp"
 #include <iostream>
 #include <cassert>
+
 log_buffer::int_type log_buffer::overflow(int_type ch)
 {
     if (sink_ && ch != traits_type::eof())
@@ -42,7 +44,7 @@ bool log_buffer::do_caps_and_flush()
     
     std::ptrdiff_t n = pptr() - pbase();
     pbump(static_cast<int>(-n));
-    std::string prompt="//rebuild:";
+    std::string prompt=Rebuild::prompt+" //";
     
     sink_.write(prompt.c_str(),prompt.size());
     return sink_.write(pbase(), n).good();

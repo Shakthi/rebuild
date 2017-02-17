@@ -29,12 +29,13 @@ class Rebuild {
 
     std::string GetSavePath();
     std::string LocalSavePath();
+    
 
     std::stack<class StepProcessor*> processorStack;
 
 public:
     class LineNoiseWrapper* lineNoiseWrapper;
-
+    static std::string prompt;
     nlohmann::json lastStepProcessorData;
 
 public:

@@ -50,12 +50,13 @@ bool replace(std::string& str, const std::string& from, const std::string& to)
 log_buffer lbuffer;
 std::basic_ostream<char>  rlog(&lbuffer);
 
-
+std::string Rebuild::prompt;
 
 Rebuild::Rebuild()
     : exitStatus(exitStatusRIP)
     , alive(true)
 {
+    Rebuild::prompt="rebuild]:";
     rlog << "Hello world...!("<<__DATE__<<"-"<<__TIME__<< ")"<<std::endl;
     lineNoiseWrapper = new LineNoiseWrapper();
     processorStack.push(new BasicStepProcessor(this));
@@ -148,11 +149,13 @@ void Rebuild::Load()
 
             // successfull read lets save backup
             std::ofstream stream2(LocalSavePath());
-            rlog << "Backing up db at :" << LocalSavePath() << std::endl;
+            rlog << "Successfull load config..Backing up db at :" << LocalSavePath() << std::endl;
 
             stream2 << root.dump(4);
 
         } catch (...) {
+            
+            rlog << "Failed load config"<< LocalSavePath() << std::endl;
             
         }
     }

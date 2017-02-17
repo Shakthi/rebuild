@@ -13,7 +13,7 @@
 
 void EchoProcessor::RunStep()
 {
-    std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild]:");
+    std::string answer = rebuild->lineNoiseWrapper->getLine(Rebuild::prompt);
 
     if (answer != "") {
         std::cout << "rebuild>" << answer << std::endl;

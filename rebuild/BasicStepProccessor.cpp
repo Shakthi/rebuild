@@ -12,6 +12,8 @@
 #include "lineNoiseWrapper.hpp"
 #include "ParserWrapper.hpp"
 #include "quickbasic.h"
+#include "Logger.hpp"
+
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -39,8 +41,19 @@ public:
 
     void RunStep()
     {
+        std::string readprompt;
+        
+        
+        if(prompt!="")
+        {
+            
+            readprompt=Rebuild::prompt+prompt+"";
+        }
+        
+        else
+        {
         // create the prompt for reading
-        std::string readprompt = "[rebuild>input ";
+        readprompt = "[rebuild>input ";
         bool firstParam = true;
         for (auto i = list.begin(); i != list.end(); i++) {
             if (!firstParam)
@@ -53,6 +66,7 @@ public:
             firstParam = false;
         }
         readprompt += "]:";
+        }
 
         std::string answer = rebuild->lineNoiseWrapper->getLine(readprompt);
         std::istringstream stream(answer);
@@ -64,11 +78,13 @@ public:
                 Value value;
                 stream >> value.numVal;
                 varTable[variableName] = value;
+                rlog<<variableName <<"="<<value.numVal<<std::endl;
 
             } else if(variableName.find("$") != std::string::npos){
                 Value value;
                 stream >> value.stringVal;
                 varTable[variableName] = value;
+                rlog<<variableName <<"="<<value.stringVal<<std::endl;
             }
 
             list.pop_front();
@@ -175,7 +191,7 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
 
 void BasicStepProcessor::RunStep()
 {
-    std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild]:");
+    std::string answer = rebuild->lineNoiseWrapper->getLine(Rebuild::prompt);
     
 
     
