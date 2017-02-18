@@ -19,6 +19,7 @@ class ForStepProcessor : public BasicStepProcessor {
     
     std::vector<std::string> statements;
     std::string remarks;
+    bool isInited;
     
 public:
     ForStepProcessor(Rebuild* aRebuild, const ForStatment::ForBlock & forblock)
@@ -26,6 +27,7 @@ public:
     ,thisForBlock(forblock)
     {
         getForVar()=forblock.forBegin;
+        isInited=false;
     }
     
     float & getForVar()

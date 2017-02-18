@@ -17,8 +17,9 @@
 void ForStepProcessor::RunStep()
 {
     
-    if(getForVar() <=thisForBlock.forEnd) {
+    if(getForVar() <=thisForBlock.forEnd ) {
     
+    isInited =true;
     
     std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild>for "+ thisForBlock.forVar+"]:");
     
@@ -29,6 +30,7 @@ void ForStepProcessor::RunStep()
     if (nextStatemnt) {
         delete result;
         ExecuteLoop();
+        exitProcessing();
         return;
     }
     
@@ -41,7 +43,7 @@ void ForStepProcessor::RunStep()
     if(BasicStepProcessor::Evaluate(result))
         statements.push_back(answer);
     
-    }else
+    }else if(!isInited)
     {
         std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild>for "+ thisForBlock.forVar+" (remarks)]:");
         

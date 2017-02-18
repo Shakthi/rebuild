@@ -33,21 +33,35 @@ LineNoiseWrapper::getLine(std::string prompt)
 }
 
 const char*
-LineNoiseWrapper::linenoiseHistoryCallback(int direction, const char* oldline,
+LineNoiseWrapper::linenoiseHistoryCallbackStatic(int direction, const char* oldline,
     void* context)
 {
-    LineHistory& history = static_cast<LineNoiseWrapper*>(context)->history;
+    LineNoiseWrapper * that= static_cast<LineNoiseWrapper*>(context);
+    
+    
     bool success;
-    std::string result = history.Edit(oldline, (direction == 1) ? LineHistory::MoveDirection::prev
-                                                                : LineHistory::MoveDirection::next,
-        success);
+    std::string result = that->LinenoiseHistoryCallback(direction, oldline, success).c_str();
 
     return (success) ? result.c_str() : nullptr;
 }
 
 LineNoiseWrapper::LineNoiseWrapper()
+
+std::string LineNoiseWrapper::LinenoiseHistoryCallback(int direction, std::string oldline,bool &  success)
 {
-    linenoiseSetHistoryCallback(LineNoiseWrapper::linenoiseHistoryCallback, this);
+    std::string result = history.Edit(oldline, (direction == 1) ? LineHistory::MoveDirection::prev
+                                      : LineHistory::MoveDirection::next,
+                                      success);
+    
+    return result;
+    
+}
+
+
+LineNoiseWrapper::LineNoiseWrapper(LineHistory & linehistory)
+:history(linehistory)
+{
+    linenoiseSetHistoryCallback(LineNoiseWrapper::linenoiseHistoryCallbackStatic, this);
 }
 
 LineNoiseWrapper::~LineNoiseWrapper()

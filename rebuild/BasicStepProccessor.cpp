@@ -53,19 +53,20 @@ public:
         else
         {
         // create the prompt for reading
-        readprompt = "[rebuild>input ";
+        readprompt = Rebuild::prompt +"input ";
         bool firstParam = true;
         for (auto i = list.begin(); i != list.end(); i++) {
             if (!firstParam)
                 readprompt += " ";
 
-            
+            readprompt += "\'";
             std::string varName = *i;
             readprompt += varName;
+            readprompt += "\'";
 
             firstParam = false;
         }
-        readprompt += "]:";
+        readprompt += ":";
         }
 
         std::string answer = rebuild->lineNoiseWrapper->getLine(readprompt);
@@ -189,13 +190,23 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         return true;
     }
     
+    auto errorStatemnt = dynamic_cast< ErrorStatement*>(result);
+    if (errorStatemnt) {
+        
+        std::cout<<Rebuild::prompt<<"! "<<errorStatemnt->description<<std::endl;
+        delete result;
+        return false;
+    }
+    
+    
+    
 
     return true;
 }
 
 void BasicStepProcessor::RunStep()
 {
-    std::string answer = rebuild->lineNoiseWrapper->getLine(Rebuild::prompt);
+    std::string answer = rebuild->lineNoiseWrapper->getLine(Rebuild::prompt+":");
     
 
     

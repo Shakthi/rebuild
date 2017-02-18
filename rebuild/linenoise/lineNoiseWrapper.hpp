@@ -28,9 +28,14 @@ public:
     EStatus GetStatus() { return status; }
     ~LineNoiseWrapper();
     LineNoiseWrapper();
-    static const char* linenoiseHistoryCallback(int direction,
+    static const char* linenoiseHistoryCallbackStatic(int direction,
         const char* oldline,
         void* context);
+    
+    
+    std::string LinenoiseHistoryCallback(int movedirection,std::string oldline, bool & successStatus );
+    
+    
 
     nlohmann::json ToJson();
     void FromJson(nlohmann::json);
