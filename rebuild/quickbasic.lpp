@@ -44,10 +44,10 @@ L			[a-zA-Z]
 				return((int)REMARK_RECORD);  }
 "#"			{ BEGIN(REMARK); return((int)REM); }
 
-{L}		{  yylval.stringVal = yytext;
+{L}+		{  yylval.stringVal = yytext;
     return((int)VAR); }
 
-{L}"$"	{    yylval.stringVal  = yytext;
+{L}+"$"	{    yylval.stringVal  = yytext;
     return((int)SVAR); }
 
 {D}+		{  yylval.numVal = atoi(yytext);

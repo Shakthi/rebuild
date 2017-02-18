@@ -125,7 +125,53 @@
             "Vishnu",
             "print \"Value is:\";a$",
             "cls",
-            "hai"
+            "hai",
+            "print a$",
+            "cls",
+            "print s$",
+            "input aNumber",
+            "8090",
+            "input aNumber",
+            "98989",
+            "end",
+            "input a",
+            "445",
+            "input k",
+            "45",
+            "input aNumber",
+            "788",
+            "print aNumber",
+            "input aNumber",
+            "66",
+            "print aNumber",
+            "input sh",
+            "33",
+            "input iii",
+            "input h",
+            "809",
+            "input ere",
+            "55",
+            "input u",
+            "rer",
+            "inpuy r",
+            "input r",
+            "5",
+            "input h",
+            "sd",
+            "input r",
+            "889",
+            "input a",
+            "67",
+            "input h",
+            "566",
+            "input a",
+            "67",
+            "",
+            "input k",
+            "1234",
+            "print k",
+            "input variable",
+            "3456"
         ],
         "creator": "rebuild",
         "type": "historyfile"
@@ -136,6 +182,10 @@
     "processor": {
         "varablelist": [
             {
+                "key": "a",
+                "value": 67
+            },
+            {
                 "key": "b",
                 "value": 2
             },
@@ -144,17 +194,25 @@
                 "value": 3
             },
             {
+                "key": "k",
+                "value": 1234
+            },
+            {
                 "key": "s",
                 "value": ""
             },
             {
                 "key": "s$",
                 "value": "Shakthi"
+            },
+            {
+                "key": "variable",
+                "value": 3456
             }
         ]
     },
-    "timestamp": "2017-02-17T20:41:29Z",
-    "timestampepoch": 1487364089,
+    "timestamp": "2017-02-18T03:38:11Z",
+    "timestampepoch": 1487389091,
     "type": "rebuildalldb",
     "version": "1.0"
 }

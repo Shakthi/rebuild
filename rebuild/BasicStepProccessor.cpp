@@ -77,12 +77,14 @@ public:
             if(variableName.find("$") == std::string::npos){ //hack
                 Value value;
                 stream >> value.numVal;
+                value.valutype = Value::Evaluetype::floattype;
                 varTable[variableName] = value;
                 rlog<<variableName <<"="<<value.numVal<<std::endl;
 
             } else if(variableName.find("$") != std::string::npos){
                 Value value;
                 stream >> value.stringVal;
+                value.valutype = Value::Evaluetype::stringtype;
                 varTable[variableName] = value;
                 rlog<<variableName <<"="<<value.stringVal<<std::endl;
             }
@@ -115,6 +117,8 @@ public:
 nlohmann::json
 BasicStepProcessor::ToJson()
 {
+    
+    
     nlohmann::json j;
 
     for (auto varaible : varTable) {
