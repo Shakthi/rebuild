@@ -11,6 +11,7 @@
 
 #include "BasicStepProccessor.hpp"
 #include "lineNoiseWrapper.hpp"
+#include "lineHistory.hpp"
 
 #include <iostream>
 
@@ -56,9 +57,10 @@ Rebuild::Rebuild()
     : exitStatus(exitStatusRIP)
     , alive(true)
 {
-    Rebuild::prompt="rebuild]:";
+    Rebuild::prompt="rebuild]";
     rlog << "Hello world...!("<<__DATE__<<"-"<<__TIME__<< ")"<<std::endl;
-    lineNoiseWrapper = new LineNoiseWrapper();
+    history = new LineHistory();
+    lineNoiseWrapper = new LineNoiseWrapper(*history);
     processorStack.push(new BasicStepProcessor(this));
     Load();
 }
@@ -142,7 +144,7 @@ void Rebuild::Load()
             if (root["version"] != version)
                 throw version;
 
-            lineNoiseWrapper->FromJson(root["history"]);
+            history->FromJson(root["history"]);
             processorStack.top()->FromJson(root["processor"]);
             Logger_FromJson(root["options"]);
             
@@ -165,7 +167,7 @@ void Rebuild::Save()
 {
     nlohmann::json root;
 
-    root["history"] = lineNoiseWrapper->ToJson();
+    root["history"] = history->ToJson();
 
     root["timestampepoch"] = std::time(0);
     root["timestamp"] = nowTime();
@@ -186,7 +188,7 @@ Rebuild::~Rebuild()
 {
     SaveIfLatest();
     rlog << "Goodbye world!... " <<std::endl;
-
+    delete history;
     delete lineNoiseWrapper;
 }
 

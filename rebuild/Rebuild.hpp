@@ -35,6 +35,7 @@ class Rebuild {
 
 public:
     class LineNoiseWrapper* lineNoiseWrapper;
+    class LineHistory * history;
     static std::string prompt;
     nlohmann::json lastStepProcessorData;
 

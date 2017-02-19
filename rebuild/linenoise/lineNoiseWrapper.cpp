@@ -21,9 +21,7 @@ LineNoiseWrapper::getLine(std::string prompt)
 
     if (result) {
         returnstring = result;
-        if (returnstring != "")
-            history.Add(result);
-    }
+          }
 
     if (errno == EAGAIN)
         status = EStatus::ctrl_c;
@@ -45,7 +43,6 @@ LineNoiseWrapper::linenoiseHistoryCallbackStatic(int direction, const char* oldl
     return (success) ? result.c_str() : nullptr;
 }
 
-LineNoiseWrapper::LineNoiseWrapper()
 
 std::string LineNoiseWrapper::LinenoiseHistoryCallback(int direction, std::string oldline,bool &  success)
 {
