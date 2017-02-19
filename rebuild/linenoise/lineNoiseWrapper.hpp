@@ -30,7 +30,7 @@ public:
     LineNoiseWrapper(LineHistory & linehistory);
     
     
-    static const char* linenoiseHistoryCallbackStatic(int direction,
+    static  char* linenoiseHistoryCallbackStatic(int direction,
         const char* oldline,
         void* context);
     

@@ -27,10 +27,11 @@ LineNoiseWrapper::getLine(std::string prompt)
         status = EStatus::ctrl_c;
 
     linenoiseFree(result);
+    
     return returnstring;
 }
 
-const char*
+ char*
 LineNoiseWrapper::linenoiseHistoryCallbackStatic(int direction, const char* oldline,
     void* context)
 {
@@ -40,7 +41,7 @@ LineNoiseWrapper::linenoiseHistoryCallbackStatic(int direction, const char* oldl
     bool success;
     std::string result = that->LinenoiseHistoryCallback(direction, oldline, success).c_str();
 
-    return (success) ? result.c_str() : nullptr;
+    return (success) ? strdup(result.c_str()) : nullptr;
 }
 
 

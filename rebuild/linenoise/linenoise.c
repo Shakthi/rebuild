@@ -658,6 +658,8 @@ int linenoiseEditInsert(struct linenoiseState *l, char c) {
             l->pos++;
             l->len++;
             l->buf[l->len] = '\0';
+           
+            
             if ((!mlmode && l->plen+l->len < l->cols && !hintsCallback)) {
                 /* Avoid a full update of the line in the
                  * trivial case. */
@@ -716,10 +718,11 @@ void linenoiseEditMoveEnd(struct linenoiseState *l) {
 void linenoiseEditHistoryNext(struct linenoiseState *l, int dir) {
     if(historyCallback!=NULL)
     {
-        const char * historyrecord = historyCallback(dir,l->buf,linenoiseHistoryCallbackContext);
+         char * historyrecord = historyCallback(dir,l->buf,linenoiseHistoryCallbackContext);
         if(historyrecord)
         {
             strncpy(l->buf,historyrecord,l->buflen);
+            free(historyrecord);
             l->buf[l->buflen-1] = '\0';
             l->len = l->pos = strlen(l->buf);
             refreshLine(l);

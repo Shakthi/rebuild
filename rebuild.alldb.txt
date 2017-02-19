@@ -171,7 +171,9 @@
             "1234",
             "print k",
             "input variable",
-            "erw"
+            "erw",
+            "wwewe",
+            "r44"
         ],
         "creator": "rebuild",
         "type": "historyfile"
@@ -211,8 +213,8 @@
             }
         ]
     },
-    "timestamp": "2017-02-19T09:10:39Z",
-    "timestampepoch": 1487495439,
+    "timestamp": "2017-02-19T17:17:18Z",
+    "timestampepoch": 1487524638,
     "type": "rebuildalldb",
     "version": "1.0"
 }
