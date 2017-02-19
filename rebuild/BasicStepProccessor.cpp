@@ -215,6 +215,9 @@ void BasicStepProcessor::RunStep()
         exitProcessing();
         return;
     }
+    
+    rebuild->history->Add(answer);
+    
 
     
     BasicParser parser;
