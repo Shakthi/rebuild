@@ -79,6 +79,9 @@ LineHistory::Edit(std::string currentBuffer, MoveDirection direction,
             historyIndex = (int)history.size() - 1;
             success = false;
         }
+    }else
+    {
+        success = false;
     }
 
     return history[history.size() - 1 - historyIndex];
