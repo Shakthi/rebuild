@@ -16,12 +16,13 @@
 #include <vector>
 
 class LineHistory : public Rebuild::Serialised {
+
+protected:
+    int historyIndex;
     std::vector<std::string> history;
 
-    int historyIndex;
-
-    void ReInit();
-    void ReInitDone();
+    virtual void ReInit();
+    virtual  void ReInitDone();
     friend class LineNoiseWrapper;
 
 public:
@@ -32,7 +33,10 @@ public:
 
     void Save(std::string filename);
     void Load(std::string filename);
-    void Add(std::string entry);
+    virtual void Add(std::string entry);
+    void InternalAdd(std::string entry);
+    std::vector<std::string> & GetHistory();
+    
     std::string Edit(std::string currentBuffer, MoveDirection direction,
         bool& success);
 
@@ -43,5 +47,17 @@ public:
     nlohmann::json ToJson();
     void FromJson(nlohmann::json);
 };
+
+class PopingLineHistory:public LineHistory
+{
+    int extracount;
+public:
+    PopingLineHistory():extracount(0){}
+    void Add(std::string entry);
+    void AddExtra(std::string entry);
+    void PopExtra();
+
+};
+
 
 #endif /* lineHistory_hpp */

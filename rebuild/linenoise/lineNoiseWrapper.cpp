@@ -11,24 +11,38 @@
 #include "linenoise.h"
 #include <stdlib.h>
 
-std::string
-LineNoiseWrapper::getLine(std::string prompt)
-{
-    std::string returnstring;
-    history.ReInit();
-    char* result = linenoise(prompt.c_str());
-    history.ReInitDone();
 
+
+
+std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory & inhistory)
+{
+    localHistory = &inhistory;
+    
+    std::string returnstring;
+    inhistory.ReInit();
+    char* result = linenoise(prompt.c_str());
+    inhistory.ReInitDone();
+    
     if (result) {
         returnstring = result;
-          }
-
+    }
+    
     if (errno == EAGAIN)
         status = EStatus::ctrl_c;
-
+    
     linenoiseFree(result);
     
     return returnstring;
+    
+}
+
+
+
+///Returns the line read by prompt with default history
+std::string
+LineNoiseWrapper::getLine(std::string prompt)
+{
+    return getLineWithHistory(prompt, defaultHistory);
 }
 
  char*
@@ -47,7 +61,7 @@ LineNoiseWrapper::linenoiseHistoryCallbackStatic(int direction, const char* oldl
 
 std::string LineNoiseWrapper::LinenoiseHistoryCallback(int direction, std::string oldline,bool &  success)
 {
-    std::string result = history.Edit(oldline, (direction == 1) ? LineHistory::MoveDirection::prev
+    std::string result = localHistory->Edit(oldline, (direction == 1) ? LineHistory::MoveDirection::prev
                                       : LineHistory::MoveDirection::next,
                                       success);
     
@@ -57,7 +71,7 @@ std::string LineNoiseWrapper::LinenoiseHistoryCallback(int direction, std::strin
 
 
 LineNoiseWrapper::LineNoiseWrapper(LineHistory & linehistory)
-:history(linehistory)
+:defaultHistory(linehistory)
 {
     linenoiseSetHistoryCallback(LineNoiseWrapper::linenoiseHistoryCallbackStatic, this);
 }
@@ -69,9 +83,9 @@ LineNoiseWrapper::~LineNoiseWrapper()
 nlohmann::json
 LineNoiseWrapper::ToJson()
 {
-    return history.ToJson();
+    return localHistory->ToJson();
 }
 void LineNoiseWrapper::FromJson(nlohmann::json input)
 {
-    history.FromJson(input);
+    localHistory->FromJson(input);
 }

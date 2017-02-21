@@ -48,15 +48,28 @@ void LineHistory::Add(std::string entry)
         if (*(history.rbegin()) == entry) {
             return;
         }
+    
+    InternalAdd(entry);
+    
 
+}
+
+void LineHistory::InternalAdd(std::string entry)
+{
     history.push_back(entry);
+
 }
 
 void LineHistory::ReInit()
 {
-    Add("");
-    historyIndex = 0;
+    
+    
+    historyIndex=0;
+    InternalAdd("");
+    
 }
+    
+
 void LineHistory::ReInitDone()
 {
     history.pop_back();
@@ -118,4 +131,45 @@ void LineHistory::FromJson(nlohmann::json root)
     for (int i = 0; i < content.size(); i++) {
         Add(content[i]);
     }
+}
+
+std::vector<std::string> & LineHistory::GetHistory()
+{
+    return history;
+}
+
+
+void PopingLineHistory::PopExtra()
+{
+    for (int i=0; i<extracount; i++)
+    {
+        history.pop_back();
+        if(historyIndex>0)
+            historyIndex--;
+    }
+    extracount=0;
+    
+    
+}
+
+void PopingLineHistory::AddExtra(std::string entry)
+{
+    InternalAdd(entry);
+    extracount++;
+
+}
+
+
+void PopingLineHistory::Add(std::string entry)
+{
+    if (!history.empty())
+        if (*(history.rbegin()) == entry) {
+            return;
+        }
+    
+    for (int i=0; i<historyIndex; i++)
+        history.pop_back();
+    InternalAdd(entry);
+
+
 }

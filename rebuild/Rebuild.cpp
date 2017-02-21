@@ -74,6 +74,8 @@ Rebuild::LocalSavePath()
     return original + "rebuild.alldb.txt";
 }
 
+
+
 std::string
 Rebuild::GetSavePath()
 {
@@ -106,8 +108,7 @@ void Rebuild::SaveIfLatest()
 
 namespace
 {
-    
-    
+
     void Logger_FromJson(nlohmann::json options)
     {
         if(!options.is_null())
@@ -135,8 +136,13 @@ void Rebuild::Load()
     std::string savepath = GetSavePath();
     
     rlog << "Loading main config:" << savepath << std::endl;
-    
     std::ifstream stream(savepath);
+    
+    
+    
+    
+    
+    
     if (stream.good()) {
         nlohmann::json root;
         try {

@@ -13,7 +13,10 @@
 #include <string>
 
 class LineNoiseWrapper : public Rebuild::Serialised {
-    LineHistory & history;
+    LineHistory & defaultHistory;
+    
+    LineHistory * localHistory;
+    
 
 public:
     enum class EStatus { ok,
@@ -25,6 +28,7 @@ private:
 
 public:
     std::string getLine(std::string prompt);
+    std::string getLineWithHistory(std::string prompt,LineHistory & inhistory);
     EStatus GetStatus() { return status; }
     ~LineNoiseWrapper();
     LineNoiseWrapper(LineHistory & linehistory);

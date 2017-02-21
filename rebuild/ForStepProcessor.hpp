@@ -11,14 +11,15 @@
 
 #include "BasicStepProccessor.hpp"
 #include "quickbasic.h"
+#include "lineHistory.hpp"
 
 
 
 class ForStepProcessor : public BasicStepProcessor {
     const ForStatment::ForBlock thisForBlock;
     
-    std::vector<std::string> statements;
     std::string remarks;
+    PopingLineHistory popingLineHistory;
     bool isInited;
     
 public:

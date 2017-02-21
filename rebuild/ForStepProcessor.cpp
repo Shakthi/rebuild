@@ -20,12 +20,12 @@ void ForStepProcessor::RunStep()
     if(getForVar() <=thisForBlock.forEnd ) {
     
     isInited =true;
-    
-    std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild>for "+ thisForBlock.forVar+"]:");
+    std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>for "+ thisForBlock.forVar+"]:",popingLineHistory);
     
     BasicParser parser;
     Statement * result =  parser.Parse(answer);
-    
+    popingLineHistory.PopExtra();
+
     auto nextStatemnt = dynamic_cast< NextStatement*>(result);
     if (nextStatemnt) {
         delete result;
@@ -36,12 +36,16 @@ void ForStepProcessor::RunStep()
     
     auto errorStatemnt = dynamic_cast< ErrorStatement*>(result);
     if (errorStatemnt) {
-        
+        BasicStepProcessor::Evaluate(errorStatemnt);
+        popingLineHistory.AddExtra(answer);
         return;
+
+
     }
     
     if(BasicStepProcessor::Evaluate(result))
-        statements.push_back(answer);
+        popingLineHistory.Add(answer);
+        
     
     }else if(!isInited)
     {
@@ -69,10 +73,13 @@ void ForStepProcessor::RunStep()
 
 void ForStepProcessor::ExecuteLoop()
 {
+    popingLineHistory.PopExtra();
+
+    
     for (getForVar() =  getForVar() +thisForBlock.forStep;
          getForVar() <=thisForBlock.forEnd; getForVar() += thisForBlock.forStep) {
         
-        for( std::string statement :statements )
+        for( std::string statement :popingLineHistory.GetHistory() )
         {
             BasicParser parser;
             Statement * result =  parser.Parse(statement);
