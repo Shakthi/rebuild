@@ -98,6 +98,11 @@ struct Rlog:public std::ostream
 
     Rlog();
     Rlog(std::streambuf & buff);
+    typedef  bool  (*logfilterType)(int currentlevel,int thislevel);
+    
+    
+    
+    
     
     ~Rlog();
     
@@ -107,16 +112,17 @@ struct Rlog:public std::ostream
     template <typename T>
     void put(T&& t)
     {
-        if(logNestLevel>0)
+        if(Rlog::sharedlogfilter(Rlog::currentLogNestLevel ,logNestLevel))
         {
-         std::ostream & dout=*this;
-         dout<< (std::forward<T>(t));
+            std::ostream & dout=*this;
+            dout<< (std::forward<T>(t));
         }
     }
     
     std::ostream& operator<<(std::ostream& (*__pf)(std::ostream&))
     {
-        if(logNestLevel>0)
+        
+        if(Rlog::sharedlogfilter(Rlog::currentLogNestLevel ,logNestLevel))
         {
             std::ostream & dout=*this;
             dout<< __pf;;
@@ -124,15 +130,23 @@ struct Rlog:public std::ostream
         return *this;
     }
     
+    
+    
+    
     private:
     
     int logNestLevel;
     static int currentLogNestLevel;
-    static   std::streambuf * sharedbuffer;;
-    typedef std::basic_ostream<char> basetype;
+    static std::streambuf * sharedbuffer;
+    static logfilterType sharedlogfilter;
+    
+    static bool defaultFilter(int currentlevel,int thislevel);
+    
+    
 
 
 };
+
 
 template <typename T>
 Rlog& operator<<(Rlog& record, T&& t) {

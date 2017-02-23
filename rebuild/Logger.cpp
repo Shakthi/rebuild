@@ -55,6 +55,7 @@ bool log_buffer::do_caps_and_flush()
 Rlog::Rlog(std::streambuf & lbuffer):std::ostream(&lbuffer)
 {
     Rlog::sharedbuffer = &lbuffer;
+    sharedlogfilter = Rlog::defaultFilter;
 }
 
 
@@ -75,11 +76,14 @@ Rlog::~Rlog()
 
 int Rlog::currentLogNestLevel = 0;
 std::streambuf * Rlog::sharedbuffer = nullptr;
+Rlog::logfilterType Rlog::sharedlogfilter = nullptr;
 
-
-
-
-Rlog& operator<<(Rlog& record,std::ostream & (*__pf)(std::ostream&))
+bool Rlog::defaultFilter(int currentlevel,int thislevel)
 {
-    return record;;
+    if(thislevel>0)
+        return true;
+    else
+        return false;
 }
+
+
