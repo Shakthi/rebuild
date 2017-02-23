@@ -37,15 +37,49 @@ log_buffer::log_buffer(std::ostream &sink, std::size_t buff_sz ):sink_(sink),buf
 }
 
 
+
+
 bool log_buffer::do_caps_and_flush()
 {
-    if(quit)
-        return true;
-    
     std::ptrdiff_t n = pptr() - pbase();
     pbump(static_cast<int>(-n));
     std::string prompt=Rebuild::prompt+"  ///";
     
     sink_.write(prompt.c_str(),prompt.size());
     return sink_.write(pbase(), n).good();
+}
+
+
+
+
+Rlog::Rlog(std::streambuf & lbuffer):std::ostream(&lbuffer)
+{
+    Rlog::sharedbuffer = &lbuffer;
+}
+
+
+Rlog::Rlog():std::ostream(Rlog::sharedbuffer)
+{
+    Rlog::currentLogNestLevel++;
+    logNestLevel = Rlog::currentLogNestLevel;
+}
+
+Rlog::~Rlog()
+{
+    Rlog::currentLogNestLevel--;
+    
+}
+
+
+
+
+int Rlog::currentLogNestLevel = 0;
+std::streambuf * Rlog::sharedbuffer = nullptr;
+
+
+
+
+Rlog& operator<<(Rlog& record,std::ostream & (*__pf)(std::ostream&))
+{
+    return record;;
 }

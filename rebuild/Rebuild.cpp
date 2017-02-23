@@ -49,7 +49,9 @@ bool replace(std::string& str, const std::string& from, const std::string& to)
 
 
 log_buffer lbuffer;
-std::basic_ostream<char>  rlog(&lbuffer);
+Rlog  rlog(lbuffer);
+
+
 
 std::string Rebuild::prompt;
 
@@ -172,6 +174,7 @@ void Rebuild::Load()
 void Rebuild::Save()
 {
     nlohmann::json root;
+    //Rlog rlog;
 
     root["history"] = history->ToJson();
 
