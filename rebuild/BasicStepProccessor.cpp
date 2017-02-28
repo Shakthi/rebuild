@@ -199,6 +199,15 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     }
     
     
+    auto printStatemnt = dynamic_cast< PrintStatement*>(result);
+    if (printStatemnt) {
+        
+        std::cout<<printStatemnt->content<<std::endl;
+        delete result;
+        return false;
+    }
+    
+    
     
 
     return true;
@@ -221,12 +230,7 @@ void BasicStepProcessor::RunStep()
 
     
     BasicParser parser;
-    
-    
     Evaluate(parser.Parse(answer));
-    
-        
-            
     
 }
 

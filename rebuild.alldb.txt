@@ -172,8 +172,12 @@
             "print k",
             "input variable",
             "erw",
-            "wwewe",
-            "r44"
+            "input a=45+3+12-45*2-12",
+            "let a=45+3+12-45*2-12",
+            "let a=23-45",
+            "let a=89*67-4*7+3",
+            "let a=a+3*2",
+            "print 4+67"
         ],
         "creator": "rebuild",
         "type": "historyfile"
@@ -185,7 +189,7 @@
         "varablelist": [
             {
                 "key": "a",
-                "value": 67
+                "value": 5944
             },
             {
                 "key": "b",
@@ -213,8 +217,8 @@
             }
         ]
     },
-    "timestamp": "2017-02-19T17:17:18Z",
-    "timestampepoch": 1487524638,
+    "timestamp": "2017-02-27T18:09:44Z",
+    "timestampepoch": 1488218984,
     "type": "rebuildalldb",
     "version": "1.0"
 }

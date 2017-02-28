@@ -12,6 +12,7 @@
 #include "BasicStepProccessor.hpp"
 #include "quickbasic.h"
 #include "lineHistory.hpp"
+#include "AST.hpp"
 
 
 

@@ -11,12 +11,12 @@
 #include <memory>
 #include <list>
 #include <string>
+#include "quickbasic.h"
 
 
 struct Statement {
     
-    
-public:
+    std::string sourceText;
     virtual ~Statement(){}
 };
 
@@ -68,14 +68,46 @@ struct ForStatment:public Statement {
 
 
 struct ReadStatement:public  Statement{
-    
-    
 public:
-    
     std::string prompt;
     std::list<std::string> variableList;
     
     
 };
+
+
+
+
+struct PrintStatement:public  Statement{
+    
+    
+public:
+    
+    std::string content;
+    
+    
+    
+};
+
+
+
+
+
+
+struct LetStatement:public  Statement{
+    
+    
+public:
+    
+    std::string variablename;
+    Value val;
+    
+    
+    
+    
+};
+
+
+
 
 #endif /* AST_hpp */

@@ -11,8 +11,9 @@
 #include "quickbasic.h"
 #include "AST.hpp"
 
-std::map<std::string,Value> varTable;
 
+std::map<std::string,Value> varTable;
+Rlog trace("trace");
 
 
 
@@ -36,11 +37,11 @@ ELLIPSIS REM CLS LIST RUN
 %token <numVal> NUMBER REAL_NUMBER
 
 %type <numVal> numexpr lineNumber
-%type <stringVal> strexpr inputItem
+%type <stringVal> strexpr inputItem printItem printlist
 %type <boolVal> boolExression
-%type <nodeVal> inputList forStataement nextStatement
+%type <nodeVal> inputList forStataement nextStatement printStatement
 
-%destructor { delete $$ ;} inputList forStataement nextStatement
+%destructor { delete $$ ;} inputList forStataement nextStatement printStatement
 
 
 %left '='  '>' '<'
@@ -99,15 +100,22 @@ listCommand : LIST { std::cout<<"LIST to be implemnted"<<std::endl;  /*foreach(v
 ifstatment : IF boolExression THEN GOTO NUMBER { std::cout<<"IF to be implemnted"<<std::endl; /*if($2) interpreter.jumpAddress = (int)$5; */}
 ;
 
-printStatement : PRINT printlist    { std::cout<<std::endl;  /* interpreter.PrintBuffer("\n"); */}
+printStatement : PRINT printlist    {
+    
+    auto printnode = new PrintStatement();
+    printnode->content = $2;
+    $$=printnode;
+    
+    //PrintStatement//std::cout<<std::endl;  /* interpreter.PrintBuffer("\n"); */
+}
 ;
 
 printlist   :   printItem
-|   printlist ';' printItem
+|   printlist ';' printItem { $$ = $1+$3; }
 ;
 
-printItem   :   strexpr   {   std::cout<<$1;   }
-|   numexpr        {  std::cout<<$1;   }
+printItem   :   strexpr
+|   numexpr        {  std::ostringstream m; m<< $1; $$ = m.str();}
 ;
 
 
@@ -118,15 +126,18 @@ letStatement     : LET VAR '=' numexpr  {
     value.valutype = Value::Evaluetype::floattype;
     value.numVal = $4;
     varTable[$2]=value;
-    printf("///let %s = %f\n",$2.c_str(),$4);
     
+   
+   
+   trace<<"let "<<$2<<" = "<<$4<<std::endl;
+   
 }
 | LET SVAR '=' strexpr {
     Value value;
     value.valutype = Value::Evaluetype::stringtype;
     value.stringVal = $4;
     varTable[$2]=value;
-    printf("///let %s = \"%s\"\n",$2.c_str(),$4.c_str());
+    trace<<"let "<<$2<<" = "<<$4<<std::endl;
 
 }
 
@@ -256,7 +267,9 @@ strexpr     : '(' strexpr ')'
 {
     
     $$=$1+$3;
-    
+    trace<<$1<<"+"<<$3<<" = "<<$$<<std::endl;
+
+
     
 }
 | STRING_LITERAL
@@ -271,14 +284,18 @@ strexpr     : '(' strexpr ')'
 numexpr    :   '(' numexpr ')'
 {
     $$ = $2;
+   // trace<<"("<<$2<<") ="<<$$<<std::endl;
 }
 |   numexpr '*' numexpr
 {
     $$ = $1 * $3;
+    trace<<$1<<"*"<<$3<<"= "<<$$<<std::endl;
 }
 |   numexpr '/' numexpr
 {
     $$ = $1 / $3;
+    trace<<$1<<"/"<<$3<<"= "<<$$<<std::endl;
+
 }
 |   numexpr '%' numexpr
 {
@@ -287,10 +304,13 @@ numexpr    :   '(' numexpr ')'
 |   numexpr '+' numexpr
 {
     $$ = $1 + $3;
+    trace<<$1<<"+"<<$3<<"= "<<$$<<std::endl;
+
 }
 |   numexpr '-' numexpr
 {
     $$ = $1 - $3;
+    trace<<$1<<"-"<<$3<<"=" <<$$<<std::endl;
 }
 
 |NUMBER

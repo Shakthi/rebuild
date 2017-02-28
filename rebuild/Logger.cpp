@@ -59,6 +59,13 @@ Rlog::Rlog(std::streambuf & lbuffer):std::ostream(&lbuffer)
 }
 
 
+
+Rlog::Rlog(const std::string & incontex):std::ostream(Rlog::sharedbuffer),context(incontex)
+{
+    Rlog::currentLogNestLevel++;
+    logNestLevel = Rlog::currentLogNestLevel;
+}
+
 Rlog::Rlog():std::ostream(Rlog::sharedbuffer)
 {
     Rlog::currentLogNestLevel++;
@@ -78,7 +85,7 @@ int Rlog::currentLogNestLevel = 0;
 std::streambuf * Rlog::sharedbuffer = nullptr;
 Rlog::logfilterType Rlog::sharedlogfilter = nullptr;
 
-bool Rlog::defaultFilter(int currentlevel,int thislevel)
+bool Rlog::defaultFilter(int currentlevel,int thislevel,const std::string & context,int level)
 {
     if(thislevel>0)
         return true;

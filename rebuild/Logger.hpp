@@ -95,10 +95,24 @@ extern  Rlog rlog; //
 struct Rlog:public std::ostream
 {
     
+    enum class type {
+        
+        info,
+        warn,
+        error,
+        debug
+        
+        
+    };
+    
+    
+
+    
 
     Rlog();
+    Rlog(const std::string & incontex);
     Rlog(std::streambuf & buff);
-    typedef  bool  (*logfilterType)(int currentlevel,int thislevel);
+    typedef  bool  (*logfilterType)(int currentlevel,int thislevel,const std::string  & context,int );
     
     
     
@@ -112,17 +126,17 @@ struct Rlog:public std::ostream
     template <typename T>
     void put(T&& t)
     {
-        if(Rlog::sharedlogfilter(Rlog::currentLogNestLevel ,logNestLevel))
+        if(Rlog::sharedlogfilter(Rlog::currentLogNestLevel ,logNestLevel,context,currenttype))
         {
             std::ostream & dout=*this;
             dout<< (std::forward<T>(t));
         }
     }
     
-    std::ostream& operator<<(std::ostream& (*__pf)(std::ostream&))
+    Rlog & operator<<(std::ostream& (*__pf)(std::ostream&))
     {
         
-        if(Rlog::sharedlogfilter(Rlog::currentLogNestLevel ,logNestLevel))
+        if(Rlog::sharedlogfilter(Rlog::currentLogNestLevel ,logNestLevel,context,currenttype))
         {
             std::ostream & dout=*this;
             dout<< __pf;;
@@ -132,15 +146,31 @@ struct Rlog:public std::ostream
     
     
     
+    Rlog & operator<<(type atype)
+    {
+        currenttype=(int)atype;
+        
+        return *this;
+    }
+    
+    
     
     private:
     
     int logNestLevel;
+    int currenttype;
+    
+    std::string context;
+    
+    
+    
+    
+    
     static int currentLogNestLevel;
     static std::streambuf * sharedbuffer;
     static logfilterType sharedlogfilter;
     
-    static bool defaultFilter(int currentlevel,int thislevel);
+    static bool defaultFilter(int currentlevel,int thislevel,const std::string & context,int level);
     
     
 

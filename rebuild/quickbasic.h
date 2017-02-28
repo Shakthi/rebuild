@@ -11,7 +11,7 @@
 #include<list>
 #include<map>
 #include<memory>
-#include "AST.hpp"
+
 struct Value
 {
     enum class Evaluetype
@@ -35,7 +35,7 @@ struct Value
         char    charVal;
     };
     std::string stringVal;
-    Statement * nodeVal;
+    class Statement * nodeVal;
     
        
 };
