@@ -37,9 +37,9 @@ ELLIPSIS REM CLS LIST RUN
 %token <numVal> NUMBER REAL_NUMBER
 
 %type <numVal> lineNumber
-%type <expression> numexpr printItem printlist
+%type <expression> numexpr printItem printlist strexpr
 
-%type <stringVal> strexpr inputItem
+%type <stringVal>  inputItem
 %type <boolVal> boolExression
 %type <nodeVal> inputList forStataement nextStatement printStatement letStatement
 
@@ -143,12 +143,12 @@ letStatement     : LET VAR '=' numexpr  {
    
 }
 | LET SVAR '=' strexpr {
-    Value value;
-    value.valutype = Value::Evaluetype::stringtype;
-    value.stringVal = $4;
-    varTable[$2]=value;
-    trace<<"let "<<$2<<" = "<<$4<<std::endl;
-
+    
+    auto l = new LetStatement;
+    l->variablename= $2;
+    l->rvalue =    std::unique_ptr<Expression>($4);
+    
+    $$=l;
 }
 
 
@@ -256,14 +256,35 @@ strexpr     : '(' strexpr ')'
 | strexpr '+' strexpr
 {
     
-    $$=$1+$3;
-    trace<<$1<<"+"<<$3<<" = "<<$$<<std::endl;
+    BainaryExpression *e=new BainaryExpression ;
+    e->left = std::unique_ptr<Expression>($1);
+    
+    e->mOperator = BainaryExpression::operatorType::plus;
+    
+    e->right = std::unique_ptr<Expression>($3);
+    
+    $$=e;
+
+    //trace<<$1<<"+"<<$3<<" = "<<$$<<std::endl;
 
 
     
 }
-| STRING_LITERAL
-| SVAR { $$ =  varTable[$1].stringVal;  }
+| STRING_LITERAL {
+    
+    auto  t =new TerminalExpression;
+    t->sub.stringVal = $1;
+    t->sub.valutype = Value::Evaluetype::stringtype;
+    $$ = t;
+
+}
+| SVAR {
+    GetExpression *g =new GetExpression;
+    g->varName = $1;
+    
+    $$ = g;
+
+}
 
 ;
 
@@ -274,6 +295,14 @@ strexpr     : '(' strexpr ')'
 numexpr    :   '(' numexpr ')'
 {
     //$$ = $2;
+    
+    
+    auto e=new UnaryExpression ;
+    e->sub = std::unique_ptr<Expression>($2);
+    
+    e->mOperator = UnaryExpression::operatorType::grouping;
+    
+    
    // trace<<"("<<$2<<") ="<<$$<<std::endl;
    
    
@@ -326,8 +355,10 @@ numexpr    :   '(' numexpr ')'
    
    e->right = std::unique_ptr<Expression>($3);
    
-   // trace<<$1<<"+"<<$3<<"= "<<$$<<std::endl;
    $$=e;
+
+// trace<<$1<<"+"<<$3<<"= "<<$$<<std::endl;
+
 
 }
 |   numexpr '-' numexpr

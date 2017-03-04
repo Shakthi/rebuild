@@ -205,7 +205,10 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         for (auto i= printStatemnt->printitems.begin();i!=printStatemnt->printitems.end();i++) {
             
             Value value=(*i)->Evaluate();
-            std::cout<<value.numVal;
+            if(value.valutype == Value::Evaluetype::stringtype)
+            std::cout<<value.stringVal;
+            else
+                std::cout<<value.numVal;
 
         }
         std::cout<<std::endl;

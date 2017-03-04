@@ -190,7 +190,16 @@
             "print 1;2",
             "print 1+2",
             "print 1;2",
-            "print 1"
+            "print 1",
+            "print 1+2;4",
+            "print \"asdasd\"",
+            "print \"asdasd\";45+3;\"sasda\"+56\"\"56\"",
+            "print \"asdasd\";45+3;\"",
+            "print \"asdasd\";45+3",
+            "print \"sdasda\";4+2",
+            "print \"hghgh\";67+9",
+            "print 2+3",
+            "print \"kjkk\";6+7"
         ],
         "creator": "rebuild",
         "type": "historyfile"
@@ -226,8 +235,8 @@
             }
         ]
     },
-    "timestamp": "2017-03-04T04:37:06Z",
-    "timestampepoch": 1488602226,
+    "timestamp": "2017-03-04T12:33:48Z",
+    "timestampepoch": 1488630828,
     "type": "rebuildalldb",
     "version": "1.0"
 }

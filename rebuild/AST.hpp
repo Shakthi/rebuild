@@ -112,6 +112,7 @@ public:
 
 struct Expression
 {
+    
     virtual Value Evaluate()=0;
 };
 
@@ -128,12 +129,25 @@ struct ExpressionList:Expression
 
 struct BainaryExpression :Expression
 {
+    Value::Evaluetype valuetype;
     std::unique_ptr<Expression> left;
     std::unique_ptr<Expression> right;
     
     Value Evaluate()
     {
         Value result;
+        
+        switch(valuetype)
+        {
+            case  Value::Evaluetype::stringtype:
+                result.stringVal = left->Evaluate().stringVal + right->Evaluate().stringVal;
+                return result;
+                
+        
+        }
+        
+        result.valutype = Value::Evaluetype::floattype;
+
 
         switch(mOperator)
         {
@@ -164,6 +178,23 @@ struct UnaryExpression :Expression
 {
     std::unique_ptr<Expression> sub;
     enum class operatorType{ minus,grouping} mOperator;
+    Value Evaluate()
+    {
+        Value result;
+
+        switch(mOperator)
+        {
+            case operatorType::minus:
+                result.numVal = - sub->Evaluate().numVal ;
+                return result;
+                
+            case operatorType::grouping:
+                result = sub->Evaluate();
+                return result;
+            
+        }
+    
+    }
     
 };
 
