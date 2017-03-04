@@ -36,12 +36,14 @@ ELLIPSIS REM CLS LIST RUN
 %token <stringVal> STRING_LITERAL STATEMENT_RECORD REMARK_RECORD
 %token <numVal> NUMBER REAL_NUMBER
 
-%type <numVal> numexpr lineNumber
-%type <stringVal> strexpr inputItem printItem printlist
-%type <boolVal> boolExression
-%type <nodeVal> inputList forStataement nextStatement printStatement
+%type <numVal> lineNumber
+%type <expression> numexpr printItem printlist
 
-%destructor { delete $$ ;} inputList forStataement nextStatement printStatement
+%type <stringVal> strexpr inputItem
+%type <boolVal> boolExression
+%type <nodeVal> inputList forStataement nextStatement printStatement letStatement
+
+%destructor { delete $$ ;} inputList forStataement nextStatement printStatement numexpr
 
 
 %left '='  '>' '<'
@@ -103,33 +105,41 @@ ifstatment : IF boolExression THEN GOTO NUMBER { std::cout<<"IF to be implemnted
 printStatement : PRINT printlist    {
     
     auto printnode = new PrintStatement();
-    printnode->content = $2;
+    auto a  = static_cast<ExpressionList*>$2;
+    printnode->printitems = std::move(a->list);
     $$=printnode;
+    
     
     //PrintStatement//std::cout<<std::endl;  /* interpreter.PrintBuffer("\n"); */
 }
 ;
 
-printlist   :   printItem
-|   printlist ';' printItem { $$ = $1+$3; }
+printlist   :   printItem { auto a = new ExpressionList(); a->list.push_back($1); $$=a;}
+|   printlist ';' printItem { auto a  = static_cast<ExpressionList*>$1; a->list.push_back($3); $$=a; }
 ;
 
 printItem   :   strexpr
-|   numexpr        {  std::ostringstream m; m<< $1; $$ = m.str();}
+|   numexpr
 ;
 
 
 
 letStatement     : LET VAR '=' numexpr  {
     
-    Value value;
-    value.valutype = Value::Evaluetype::floattype;
-    value.numVal = $4;
-    varTable[$2]=value;
+   // Value value;
+   // value.valutype = Value::Evaluetype::floattype;
+   // value.numVal = $4;
+    //varTable[$2]=value;
     
    
+   auto l = new LetStatement;
+   l->variablename= $2;
+   l->rvalue =    std::unique_ptr<Expression>($4);
+
+    $$=l;
+
    
-   trace<<"let "<<$2<<" = "<<$4<<std::endl;
+   //trace<<"let "<<$2<<" = "<<$4<<std::endl;
    
 }
 | LET SVAR '=' strexpr {
@@ -140,8 +150,6 @@ letStatement     : LET VAR '=' numexpr  {
     trace<<"let "<<$2<<" = "<<$4<<std::endl;
 
 }
-
-;
 
 
 endstatement    : END { $$.nodeVal = new EndStatement(); }
@@ -183,12 +191,17 @@ forStataement 	: FOR VAR '=' numexpr TO numexpr  {
     ForStatment::ForBlock forBlock;
     
     forBlock.forVar = varName;
-    forBlock.forBegin = $4;
-    forBlock.forStep = step;
-    forBlock.forEnd = $6;
+    forBlock.forBegin =  std::unique_ptr<Expression>($4);
+    
+    TerminalExpression t;
+    t.sub.numVal = step;
+    
+    
+    forBlock.forStep =  std::unique_ptr<Expression>(&t);
+    forBlock.forEnd = std::unique_ptr<Expression>($6);
     
     auto fornode = new ForStatment();
-    fornode->forBlock = forBlock;
+    fornode->forBlock.Set(std::move(forBlock));
     $$=fornode;
 
 
@@ -197,17 +210,16 @@ forStataement 	: FOR VAR '=' numexpr TO numexpr  {
 | FOR VAR '=' numexpr TO numexpr STEP numexpr
 {
     std::string varName = $2;
-    float step = $8;
     
     ForStatment::ForBlock forBlock;
     
     forBlock.forVar = varName;
-    forBlock.forBegin = $4;
-    forBlock.forStep = step;
-    forBlock.forEnd = $6;
+    forBlock.forBegin =  std::unique_ptr<Expression>($4);
+    forBlock.forStep =  std::unique_ptr<Expression>($8);
+    forBlock.forEnd = std::unique_ptr<Expression>($6);
     
     auto fornode = new ForStatment();
-    fornode->forBlock = forBlock;
+    fornode->forBlock.Set(std::move(forBlock));
     $$=fornode;
 }
 ;
@@ -219,29 +231,7 @@ nextStatement   : NEXT VAR {
     auto node = new NextStatement();
     $$=node;
     
-    
-    
-  /*  List<Interpreter.forPoints> newList = new List<Interpreter.forPoints>(interpreter.forRegister);
-    newList.Reverse();
-    bool found=false;
-    std::string varName = $2;
-    foreach(var fr in newList)
-    {
-        if(fr.variable == $2)
-        {
-            found = true;
-            if(fr.finalValue >=  interpreter.varTable[varName] )
-            break;
-            interpreter.varTable[varName]  +=fr.step;
-            interpreter.jumpAddress =  fr.lineNo+1;
-            break;
-        }
-        
-        
-    }
-    if(!found)
-    interpreter.PrintBuffer("Error in search of I");
-    */
+  
 }
 ;
 
@@ -283,18 +273,41 @@ strexpr     : '(' strexpr ')'
 
 numexpr    :   '(' numexpr ')'
 {
-    $$ = $2;
+    //$$ = $2;
    // trace<<"("<<$2<<") ="<<$$<<std::endl;
+   
+   
+   
 }
 |   numexpr '*' numexpr
 {
-    $$ = $1 * $3;
-    trace<<$1<<"*"<<$3<<"= "<<$$<<std::endl;
+    
+
+    BainaryExpression *e=new BainaryExpression ;
+    e->left = std::unique_ptr<Expression>($1);
+    
+    e->mOperator = BainaryExpression::operatorType::multiply;
+    
+    e->right = std::unique_ptr<Expression>($3);
+
+    //trace<<$1<<"*"<<$3<<"= "<<$$<<std::endl;
+    $$= e;
 }
 |   numexpr '/' numexpr
 {
-    $$ = $1 / $3;
-    trace<<$1<<"/"<<$3<<"= "<<$$<<std::endl;
+    //$$ = $1 / $3;
+    
+    
+    
+    BainaryExpression *e=new BainaryExpression ;
+    e->left = std::unique_ptr<Expression>($1);
+    
+    e->mOperator = BainaryExpression::operatorType::devide;
+    
+    e->right = std::unique_ptr<Expression>($3);
+    $$=e;
+    
+    //trace<<$1<<"/"<<$3<<"= "<<$$<<std::endl;
 
 }
 |   numexpr '%' numexpr
@@ -303,19 +316,50 @@ numexpr    :   '(' numexpr ')'
 }
 |   numexpr '+' numexpr
 {
-    $$ = $1 + $3;
-    trace<<$1<<"+"<<$3<<"= "<<$$<<std::endl;
+   // $$ = $1 + $3;
+   
+   
+   BainaryExpression *e=new BainaryExpression ;
+   e->left = std::unique_ptr<Expression>($1);
+   
+   e->mOperator = BainaryExpression::operatorType::plus;
+   
+   e->right = std::unique_ptr<Expression>($3);
+   
+   // trace<<$1<<"+"<<$3<<"= "<<$$<<std::endl;
+   $$=e;
 
 }
 |   numexpr '-' numexpr
 {
-    $$ = $1 - $3;
-    trace<<$1<<"-"<<$3<<"=" <<$$<<std::endl;
+    BainaryExpression *e=new BainaryExpression ;
+    e->left = std::unique_ptr<Expression>($1);
+    
+    e->mOperator = BainaryExpression::operatorType::minus;
+    
+    e->right = std::unique_ptr<Expression>($3);
+   // $$ = $1 - $3;
+   // trace<<$1<<"-"<<$3<<"=" <<$$<<std::endl;
 }
 
-|NUMBER
-|REAL_NUMBER
-|VAR    { $$ = varTable[$1].numVal;  }
+|NUMBER {
+    auto  t =new TerminalExpression;
+    t->sub.numVal = $1;
+    $$ = t;
+}
+|REAL_NUMBER {
+    
+    auto  t =new TerminalExpression;
+    t->sub.numVal = $1;
+    $$ = t;
+}
+|VAR    {
+    
+    GetExpression *g =new GetExpression;
+    g->varName = $1;
+   
+   $$ = g;
+}
 ;
 
 

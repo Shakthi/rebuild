@@ -17,7 +17,7 @@
 void ForStepProcessor::RunStep()
 {
     
-    if(getForVar() <=thisForBlock.forEnd ) {
+    if(getForVar() <=thisForBlock.forEnd->Evaluate().numVal ) {
     
     isInited =true;
     std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>for "+ thisForBlock.forVar+"]:",popingLineHistory);
@@ -76,8 +76,8 @@ void ForStepProcessor::ExecuteLoop()
     popingLineHistory.PopExtra();
 
     
-    for (getForVar() =  getForVar() +thisForBlock.forStep;
-         getForVar() <=thisForBlock.forEnd; getForVar() += thisForBlock.forStep) {
+    for (getForVar() =  getForVar() +thisForBlock.forStep->Evaluate().numVal ;
+         getForVar() <=thisForBlock.forEnd->Evaluate().numVal ; getForVar() += thisForBlock.forStep->Evaluate().numVal ) {
         
         for( std::string statement :popingLineHistory.GetHistory() )
         {

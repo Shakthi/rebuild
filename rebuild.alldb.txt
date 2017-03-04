@@ -177,7 +177,20 @@
             "let a=23-45",
             "let a=89*67-4*7+3",
             "let a=a+3*2",
-            "print 4+67"
+            "print 4+67",
+            "print 1+23",
+            "rem klk;alskcas",
+            "end",
+            "rem ddd",
+            "end",
+            "exit",
+            "let a=1+2",
+            "let a=1+1",
+            "print a",
+            "print 1;2",
+            "print 1+2",
+            "print 1;2",
+            "print 1"
         ],
         "creator": "rebuild",
         "type": "historyfile"
@@ -187,10 +200,6 @@
     },
     "processor": {
         "varablelist": [
-            {
-                "key": "a",
-                "value": 5944
-            },
             {
                 "key": "b",
                 "value": 2
@@ -217,8 +226,8 @@
             }
         ]
     },
-    "timestamp": "2017-02-27T18:09:44Z",
-    "timestampepoch": 1488218984,
+    "timestamp": "2017-03-04T04:37:06Z",
+    "timestampepoch": 1488602226,
     "type": "rebuildalldb",
     "version": "1.0"
 }

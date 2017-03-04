@@ -33,9 +33,11 @@ struct Value
         int     intVal;
         bool    boolVal;
         char    charVal;
+        class Statement * nodeVal;
+        class Expression * expression;
     };
     std::string stringVal;
-    class Statement * nodeVal;
+    
     
        
 };

@@ -11,6 +11,7 @@
 #include <memory>
 #include <list>
 #include <string>
+#include <vector>
 #include "quickbasic.h"
 
 
@@ -52,15 +53,33 @@ struct ForStatment:public Statement {
     struct ForBlock
     {
         std::string forVar;
-        float  forBegin;
-        float  forEnd;
-        
-        float  forStep;
-        
+        std::unique_ptr<Expression> forBegin,forEnd,forStep;
         bool foundNext;
         
+        ForBlock(ForBlock && inforblock):forVar(inforblock.forVar)
+        {
+            forBegin =std::move(inforblock.forBegin);
+            forEnd =std::move(inforblock.forEnd);
+            forStep =std::move(inforblock.forStep);
+        }
+        
+        
+        ForBlock()
+        {
+            
+        }
+        
+        
+        void Set(ForBlock && inforblock)
+        {
+            forVar =inforblock.forVar;
+            forBegin =std::move(inforblock.forBegin);
+            forEnd =std::move(inforblock.forEnd);
+            forStep =std::move(inforblock.forStep);
+        }
         
     } forBlock;
+    
 
 };
 
@@ -83,11 +102,94 @@ struct PrintStatement:public  Statement{
     
 public:
     
-    std::string content;
+    std::vector<Expression*> printitems;
     
-    
+}
+;
+
+
+
+
+struct Expression
+{
+    virtual Value Evaluate()=0;
+};
+
+
+struct ExpressionList:Expression
+{
+    std::vector<Expression*> list;
+    Value Evaluate(){return Value();}
     
 };
+
+
+
+
+struct BainaryExpression :Expression
+{
+    std::unique_ptr<Expression> left;
+    std::unique_ptr<Expression> right;
+    
+    Value Evaluate()
+    {
+        Value result;
+
+        switch(mOperator)
+        {
+            case operatorType::plus:
+                result.numVal = left->Evaluate().numVal + right->Evaluate().numVal;
+                return result;
+            case operatorType::minus:
+                result.numVal = left->Evaluate().numVal - right->Evaluate().numVal;
+                return result;
+            case operatorType::devide:
+                result.numVal = left->Evaluate().numVal / right->Evaluate().numVal;
+                return result;
+                
+            case operatorType::multiply:
+                result.numVal = left->Evaluate().numVal * right->Evaluate().numVal;
+                return result;
+                
+        
+        };
+    }
+    
+    enum class operatorType{ plus,minus,multiply,devide} mOperator;
+    
+};
+
+
+struct UnaryExpression :Expression
+{
+    std::unique_ptr<Expression> sub;
+    enum class operatorType{ minus,grouping} mOperator;
+    
+};
+
+
+struct TerminalExpression :Expression
+{
+    Value sub;
+    Value Evaluate()
+    {
+        return sub;
+    }
+};
+
+
+struct GetExpression :Expression
+{
+    std::string varName;
+    Value Evaluate();
+    
+};
+
+
+
+
+
+
 
 
 
@@ -100,7 +202,9 @@ struct LetStatement:public  Statement{
 public:
     
     std::string variablename;
-    Value val;
+    
+    std::unique_ptr<Expression> rvalue;
+
     
     
     

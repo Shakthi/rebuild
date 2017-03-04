@@ -184,7 +184,7 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     auto forStatemnt = dynamic_cast< ForStatment*>(result);
     if (forStatemnt) {
         
-        ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild, forStatemnt->forBlock);
+        ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild, std::move(forStatemnt->forBlock));
         rebuild->addNewProcessing(readStepProcessor);
         delete result;
         return true;
@@ -202,7 +202,22 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     auto printStatemnt = dynamic_cast< PrintStatement*>(result);
     if (printStatemnt) {
         
-        std::cout<<printStatemnt->content<<std::endl;
+        for (auto i= printStatemnt->printitems.begin();i!=printStatemnt->printitems.end();i++) {
+            
+            Value value=(*i)->Evaluate();
+            std::cout<<value.numVal;
+
+        }
+        std::cout<<std::endl;
+        
+        delete result;
+        return false;
+    }
+    
+    auto letStatemnt = dynamic_cast< LetStatement*>(result);
+    if (letStatemnt) {
+        
+        varTable[letStatemnt->variablename]=letStatemnt->rvalue->Evaluate();
         delete result;
         return false;
     }

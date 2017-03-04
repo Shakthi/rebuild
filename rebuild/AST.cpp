@@ -7,7 +7,13 @@
 //
 
 #include "AST.hpp"
+#include "quickbasic.h"
 
+
+Value GetExpression::Evaluate(){
+    return varTable[varName];
+
+}
 
 
 

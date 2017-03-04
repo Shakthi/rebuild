@@ -24,11 +24,11 @@ class ForStepProcessor : public BasicStepProcessor {
     bool isInited;
     
 public:
-    ForStepProcessor(Rebuild* aRebuild, const ForStatment::ForBlock & forblock)
+    ForStepProcessor(Rebuild* aRebuild,  ForStatment::ForBlock && forblock)
     : BasicStepProcessor(aRebuild)
-    ,thisForBlock(forblock)
+    ,thisForBlock(std::move(forblock))
     {
-        getForVar()=forblock.forBegin;
+       // getForVar()=forblock.forBegin->;
         isInited=false;
     }
     
