@@ -262,7 +262,9 @@ strexpr     : '(' strexpr ')'
     e->mOperator = BainaryExpression::operatorType::plus;
     
     e->right = std::unique_ptr<Expression>($3);
-    
+    e->valuetype = Value::Evaluetype::stringtype;
+
+
     $$=e;
 
     //trace<<$1<<"+"<<$3<<" = "<<$$<<std::endl;

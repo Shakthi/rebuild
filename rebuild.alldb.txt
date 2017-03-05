@@ -209,7 +209,14 @@
             "print s$",
             "print k$",
             "let k$=\"thi\"",
-            "print k$"
+            "print k$",
+            "print s$",
+            "print \"shakthi\"+\"prasad\"",
+            "print \"test\"+\"yy\"",
+            "let add$=\"uiuiu\"+\"fds\"",
+            "print add$",
+            "let t$=\"shakthi\"+s$",
+            "print t$"
         ],
         "creator": "rebuild",
         "type": "historyfile"
@@ -219,6 +226,10 @@
     },
     "processor": {
         "varablelist": [
+            {
+                "key": "add$",
+                "value": "uiuiufds"
+            },
             {
                 "key": "b",
                 "value": 2
@@ -244,13 +255,17 @@
                 "value": "Shakthi"
             },
             {
+                "key": "t$",
+                "value": "shakthiShakthi"
+            },
+            {
                 "key": "variable",
                 "value": 3456
             }
         ]
     },
-    "timestamp": "2017-03-05T15:14:36Z",
-    "timestampepoch": 1488726876,
+    "timestamp": "2017-03-05T15:32:03Z",
+    "timestampepoch": 1488727923,
     "type": "rebuildalldb",
     "version": "1.0"
 }

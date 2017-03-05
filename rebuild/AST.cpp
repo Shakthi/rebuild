@@ -14,7 +14,7 @@
 Value GetExpression::Evaluate(){
     
     Value v=varTable[varName];
-    v.valutype = valuetype;
+  assert(v.valutype == valuetype);
     
     return v;
     
