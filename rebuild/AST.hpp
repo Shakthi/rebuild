@@ -112,7 +112,8 @@ public:
 
 struct Expression
 {
-    
+    Value::Evaluetype valuetype;
+
     virtual Value Evaluate()=0;
 };
 
@@ -129,47 +130,11 @@ struct ExpressionList:Expression
 
 struct BainaryExpression :Expression
 {
-    Value::Evaluetype valuetype;
     std::unique_ptr<Expression> left;
     std::unique_ptr<Expression> right;
-    
-    Value Evaluate()
-    {
-        Value result;
-        
-        switch(valuetype)
-        {
-            case  Value::Evaluetype::stringtype:
-                result.stringVal = left->Evaluate().stringVal + right->Evaluate().stringVal;
-                return result;
-                
-        
-        }
-        
-        result.valutype = Value::Evaluetype::floattype;
-
-
-        switch(mOperator)
-        {
-            case operatorType::plus:
-                result.numVal = left->Evaluate().numVal + right->Evaluate().numVal;
-                return result;
-            case operatorType::minus:
-                result.numVal = left->Evaluate().numVal - right->Evaluate().numVal;
-                return result;
-            case operatorType::devide:
-                result.numVal = left->Evaluate().numVal / right->Evaluate().numVal;
-                return result;
-                
-            case operatorType::multiply:
-                result.numVal = left->Evaluate().numVal * right->Evaluate().numVal;
-                return result;
-                
-        
-        };
-    }
-    
     enum class operatorType{ plus,minus,multiply,devide} mOperator;
+    
+    Value Evaluate();
     
 };
 

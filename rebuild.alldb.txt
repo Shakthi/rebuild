@@ -199,7 +199,17 @@
             "print \"sdasda\";4+2",
             "print \"hghgh\";67+9",
             "print 2+3",
-            "print \"kjkk\";6+7"
+            "print \"kjkk\";6+7",
+            "print \"xczxcz\"",
+            "print \"cxczx\";6+e",
+            " ct->valuetype = Value::print \"cxczx\";6+677",
+            "print \"cxczx\"",
+            "print \"cxczx\";77",
+            "print \"cxczx\";77+4",
+            "print s$",
+            "print k$",
+            "let k$=\"thi\"",
+            "print k$"
         ],
         "creator": "rebuild",
         "type": "historyfile"
@@ -222,6 +232,10 @@
                 "value": 1234
             },
             {
+                "key": "k$",
+                "value": "thi"
+            },
+            {
                 "key": "s",
                 "value": ""
             },
@@ -235,8 +249,8 @@
             }
         ]
     },
-    "timestamp": "2017-03-04T12:33:48Z",
-    "timestampepoch": 1488630828,
+    "timestamp": "2017-03-05T15:14:36Z",
+    "timestampepoch": 1488726876,
     "type": "rebuildalldb",
     "version": "1.0"
 }

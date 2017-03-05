@@ -281,6 +281,7 @@ strexpr     : '(' strexpr ')'
 | SVAR {
     GetExpression *g =new GetExpression;
     g->varName = $1;
+    g->valuetype = Value::Evaluetype::stringtype;
     
     $$ = g;
 
@@ -299,7 +300,7 @@ numexpr    :   '(' numexpr ')'
     
     auto e=new UnaryExpression ;
     e->sub = std::unique_ptr<Expression>($2);
-    
+    e->valuetype = Value::Evaluetype::floattype;
     e->mOperator = UnaryExpression::operatorType::grouping;
     
     
@@ -314,7 +315,7 @@ numexpr    :   '(' numexpr ')'
 
     BainaryExpression *e=new BainaryExpression ;
     e->left = std::unique_ptr<Expression>($1);
-    
+    e->valuetype = Value::Evaluetype::floattype;
     e->mOperator = BainaryExpression::operatorType::multiply;
     
     e->right = std::unique_ptr<Expression>($3);
@@ -329,6 +330,7 @@ numexpr    :   '(' numexpr ')'
     
     
     BainaryExpression *e=new BainaryExpression ;
+    e->valuetype = Value::Evaluetype::floattype;
     e->left = std::unique_ptr<Expression>($1);
     
     e->mOperator = BainaryExpression::operatorType::devide;
@@ -350,7 +352,7 @@ numexpr    :   '(' numexpr ')'
    
    BainaryExpression *e=new BainaryExpression ;
    e->left = std::unique_ptr<Expression>($1);
-   
+   e->valuetype = Value::Evaluetype::floattype;
    e->mOperator = BainaryExpression::operatorType::plus;
    
    e->right = std::unique_ptr<Expression>($3);
@@ -365,7 +367,7 @@ numexpr    :   '(' numexpr ')'
 {
     BainaryExpression *e=new BainaryExpression ;
     e->left = std::unique_ptr<Expression>($1);
-    
+    e->valuetype = Value::Evaluetype::floattype;
     e->mOperator = BainaryExpression::operatorType::minus;
     
     e->right = std::unique_ptr<Expression>($3);
@@ -376,18 +378,21 @@ numexpr    :   '(' numexpr ')'
 |NUMBER {
     auto  t =new TerminalExpression;
     t->sub.numVal = $1;
+    t->valuetype = Value::Evaluetype::floattype;
     $$ = t;
 }
 |REAL_NUMBER {
     
     auto  t =new TerminalExpression;
     t->sub.numVal = $1;
+    t->valuetype = Value::Evaluetype::floattype;
     $$ = t;
 }
 |VAR    {
     
     GetExpression *g =new GetExpression;
     g->varName = $1;
+    g->valuetype = Value::Evaluetype::floattype;
    
    $$ = g;
 }
@@ -408,13 +413,3 @@ extern "C" int yywrap()
 {
     return 1;
 }
-
-/*
- Parser(Scanner scanner,
-Interpreter interpreter)
-: base(scanner)
-{
-    this.interpreter = interpreter;
-    
-}
-*/

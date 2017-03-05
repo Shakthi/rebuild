@@ -19,10 +19,8 @@ struct Value
         emptyType,
         stringtype,
         booltype,
-        floattype,
-        inttype,
-        chartype,
-        nodeType
+        floattype
+        
         
     };
     Evaluetype valutype;
@@ -30,7 +28,6 @@ struct Value
     union
     {
         float   numVal;
-        int     intVal;
         bool    boolVal;
         char    charVal;
         class Statement * nodeVal;
