@@ -32,9 +32,9 @@ public:
         isInited=false;
     }
     
-    float & getForVar()
+    float  getForVar()
     {
-        return varTable[thisForBlock.forVar].numVal;
+        return varTable[thisForBlock.forVar].getNumVal();
     }
     
     
@@ -47,6 +47,7 @@ public:
     void FromJson(nlohmann::json j) {}
     
     void RunStep();
+    void Init();
     
     void ExecuteLoop();
     

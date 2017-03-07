@@ -11,13 +11,19 @@
 #include "ParserWrapper.hpp"
 
 
+void ForStepProcessor::Init()
+{
+    
+    varTable[thisForBlock.forVar] = thisForBlock.forBegin->Evaluate();
 
+
+}
 
 
 void ForStepProcessor::RunStep()
 {
     
-    if(getForVar() <=thisForBlock.forEnd->Evaluate().numVal ) {
+    if(getForVar() <=thisForBlock.forEnd->Evaluate().getNumVal() ) {
     
     isInited =true;
     std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>for "+ thisForBlock.forVar+"]:",popingLineHistory);
@@ -76,8 +82,8 @@ void ForStepProcessor::ExecuteLoop()
     popingLineHistory.PopExtra();
 
     
-    for (getForVar() =  getForVar() +thisForBlock.forStep->Evaluate().numVal ;
-         getForVar() <=thisForBlock.forEnd->Evaluate().numVal ; getForVar() += thisForBlock.forStep->Evaluate().numVal ) {
+    for (varTable[thisForBlock.forVar] =  getForVar() +thisForBlock.forStep->Evaluate().getNumVal() ;
+         getForVar() <=thisForBlock.forEnd->Evaluate().getNumVal() ; varTable[thisForBlock.forVar]= getForVar() +thisForBlock.forStep->Evaluate().getNumVal() ) {
         
         for( std::string statement :popingLineHistory.GetHistory() )
         {

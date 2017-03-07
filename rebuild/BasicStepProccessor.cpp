@@ -77,17 +77,17 @@ public:
             
             if(variableName.find("$") == std::string::npos){ //hack
                 Value value;
-                stream >> value.numVal;
-                value.valutype = Value::Evaluetype::floattype;
-                varTable[variableName] = value;
-                rlog<<variableName <<"="<<value.numVal<<std::endl;
+                float num;
+                stream >> num;
+                varTable[variableName] = Value(num);
+                rlog<<variableName <<"="<<value.getNumVal()<<std::endl;
 
             } else if(variableName.find("$") != std::string::npos){
                 Value value;
-                stream >> value.stringVal;
-                value.valutype = Value::Evaluetype::stringtype;
-                varTable[variableName] = value;
-                rlog<<variableName <<"="<<value.stringVal<<std::endl;
+                std::string str;
+                stream >> str;
+                varTable[variableName] = Value(str);
+                rlog<<variableName <<"="<<value.getStringVal()<<std::endl;
             }
 
             list.pop_front();
@@ -126,12 +126,12 @@ BasicStepProcessor::ToJson()
         if (varaible.second.valutype == Value::Evaluetype::floattype) {
             nlohmann::json item;
             item["key"] = varaible.first;
-            item["value"] = varaible.second.numVal;
+            item["value"] = varaible.second.getNumVal();
             j.push_back(item);
         } else if (varaible.second.valutype == Value::Evaluetype::stringtype) {
             nlohmann::json item;
             item["key"] = varaible.first;
-            item["value"] = varaible.second.stringVal;
+            item["value"] = varaible.second.getStringVal();
             j.push_back(item);
         }
     }
@@ -147,16 +147,11 @@ void BasicStepProcessor::FromJson(nlohmann::json j)
     nlohmann::json varablelist = j["varablelist"];
     for (nlohmann::json item : varablelist) {
         if (item["value"].is_number()) {
-            Value value;
-            value.valutype = Value::Evaluetype::floattype;
-            value.numVal = item["value"];
-            varTable[item["key"]] = value;
+            varTable[item["key"]] = Value((float)item["value"]);
 
         } else if (item["value"].is_string()) {
-            Value value;
-            value.valutype = Value::Evaluetype::stringtype;
-            value.stringVal = item["value"];
-            varTable[item["key"]] = value;
+            
+            varTable[item["key"]] = Value(item["value"].get<std::string>());
         }
     }
 }
@@ -185,6 +180,9 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     if (forStatemnt) {
         
         ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild, std::move(forStatemnt->forBlock));
+        readStepProcessor->Init();
+        
+        
         rebuild->addNewProcessing(readStepProcessor);
         delete result;
         return true;
@@ -206,9 +204,9 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
             
             Value value=(*i)->Evaluate();
             if(value.valutype == Value::Evaluetype::stringtype)
-            std::cout<<value.stringVal;
+            std::cout<<value.getStringVal();
             else
-                std::cout<<value.numVal;
+                std::cout<<value.getNumVal();
 
         }
         std::cout<<std::endl;

@@ -145,17 +145,15 @@ struct UnaryExpression :Expression
     enum class operatorType{ minus,grouping} mOperator;
     Value Evaluate()
     {
-        Value result;
 
         switch(mOperator)
         {
             case operatorType::minus:
-                result.numVal = - sub->Evaluate().numVal ;
-                return result;
+                return Value( - sub->Evaluate().getNumVal() ) ;
+                
                 
             case operatorType::grouping:
-                result = sub->Evaluate();
-                return result;
+                return Value(  sub->Evaluate().getNumVal() ) ;
             
         }
     

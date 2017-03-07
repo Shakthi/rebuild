@@ -25,7 +25,6 @@ Value GetExpression::Evaluate(){
 
 Value BainaryExpression::Evaluate()
 {
-    Value result;
     
     switch(valuetype)
     {
@@ -33,12 +32,11 @@ Value BainaryExpression::Evaluate()
             switch(mOperator)
             {
                 case operatorType::plus:
-                    result.stringVal = left->Evaluate().stringVal + right->Evaluate().stringVal;
-                    result.valutype = Value::Evaluetype::stringtype;
-                    return result;
+                    return Value ( left->Evaluate().getStringVal() + right->Evaluate().getStringVal());
+                    
                 default:
                     assert(false);//should not come here
-                    return result;
+                    return Value();
                     
             }
             
@@ -53,36 +51,27 @@ Value BainaryExpression::Evaluate()
                 switch(mOperator)
                 {
                     case operatorType::plus:
-                        result.numVal = left->Evaluate().numVal + right->Evaluate().numVal;
-                        result.valutype = Value::Evaluetype::floattype;
-
-                        return result;
+                        return Value ( left->Evaluate().getNumVal() + right->Evaluate().getNumVal());
                     case operatorType::minus:
-                        result.numVal = left->Evaluate().numVal - right->Evaluate().numVal;
-                        result.valutype = Value::Evaluetype::floattype;
+                        return Value ( left->Evaluate().getNumVal() - right->Evaluate().getNumVal());;
                         
-                        return result;
+                        
                     case operatorType::devide:
-                        result.numVal = left->Evaluate().numVal / right->Evaluate().numVal;
-                        result.valutype = Value::Evaluetype::floattype;
+                        return Value (left->Evaluate().getNumVal() / right->Evaluate().getNumVal());
                         
-                        return result;
                         
                     case operatorType::multiply:
-                        result.numVal = left->Evaluate().numVal * right->Evaluate().numVal;
-                        result.valutype = Value::Evaluetype::floattype;
-                        return result;
+                        return Value( left->Evaluate().getNumVal() * right->Evaluate().getNumVal());
                 };
             
         default:
             assert(false);
-            return result;
+            return Value();
     }
     
     
     
     
-    result.valutype = Value::Evaluetype::floattype;
     
     }
 

@@ -216,7 +216,10 @@
             "let add$=\"uiuiu\"+\"fds\"",
             "print add$",
             "let t$=\"shakthi\"+s$",
-            "print t$"
+            "print t$",
+            "print 4-2",
+            "print (3-2)*30",
+            "print \"test bracket\";(56-2)*3"
         ],
         "creator": "rebuild",
         "type": "historyfile"
@@ -264,8 +267,8 @@
             }
         ]
     },
-    "timestamp": "2017-03-05T15:32:03Z",
-    "timestampepoch": 1488727923,
+    "timestamp": "2017-03-05T16:15:52Z",
+    "timestampepoch": 1488730552,
     "type": "rebuildalldb",
     "version": "1.0"
 }

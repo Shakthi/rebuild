@@ -11,6 +11,7 @@
 #include<list>
 #include<map>
 #include<memory>
+#include<assert.h>
 
 struct Value
 {
@@ -19,20 +20,52 @@ struct Value
         emptyType,
         stringtype,
         booltype,
-        floattype
-        
+        floattype,
+        othertype
         
     };
     Evaluetype valutype;
     
+    float getNumVal()
+    {
+        assert(Evaluetype::floattype == valutype);
+        return numVal;
+    }
+    
+    std::string getStringVal()
+    {
+        assert(Evaluetype::stringtype == valutype);
+        return stringVal;
+    }
+    
+    Value(float aNumVall):numVal(aNumVall){ valutype = Evaluetype::floattype;}
+    
+    Value(std::string aStringVall):stringVal(aStringVall){valutype = Evaluetype::stringtype;}
+    
+    Value(class Expression * aExpression):expression(aExpression){valutype = Evaluetype::othertype;}
+    Value(class Statement * anodeVal):nodeVal(anodeVal){valutype = Evaluetype::othertype;}
+
+
+    Value(){}
+    
+    
+    
+    union
+    {
+        class Statement * nodeVal;
+        class Expression * expression;
+    };
+
+    
+private:
     union
     {
         float   numVal;
         bool    boolVal;
         char    charVal;
-        class Statement * nodeVal;
-        class Expression * expression;
     };
+    
+    
     std::string stringVal;
     
     

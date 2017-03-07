@@ -40,24 +40,24 @@ L			[a-zA-Z]
 
 
 <REMARK>"\n" { BEGIN(0); }
-<REMARK>.* {  yylval.stringVal = yytext;
+<REMARK>.* {  yylval = Value (yytext);
 				return((int)REMARK_RECORD);  }
 "#"			{ BEGIN(REMARK); return((int)REM); }
 
-{L}+		{  yylval.stringVal = yytext;
+{L}+		{  yylval = Value (yytext);
     return((int)VAR); }
 
-{L}+"$"	{    yylval.stringVal  = yytext;
+{L}+"$"	{    yylval = Value (yytext);;
     return((int)SVAR); }
 
-{D}+		{  yylval.numVal = atoi(yytext);
+{D}+		{  yylval  = Value(atoi(yytext));
     return((int)NUMBER); }
 
-{D}*"."{D}+		{yylval.numVal = atof(yytext);
+{D}*"."{D}+		{yylval  = Value(atof(yytext));
 				return((int)REAL_NUMBER); }
 
 
-\"(\\.|[^\\"])*\"	{ std::string temp = yytext; yylval.stringVal=temp.substr(1,temp.size()-2); return((int)STRING_LITERAL); }
+\"(\\.|[^\\"])*\"	{ std::string temp = yytext; yylval=Value(temp.substr(1,temp.size()-2)); return((int)STRING_LITERAL); }
 
 "..."			{  return((int)ELLIPSIS); }
 ";"			{  return yytext[0]; }
