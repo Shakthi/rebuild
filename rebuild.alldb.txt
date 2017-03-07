@@ -219,7 +219,11 @@
             "print t$",
             "print 4-2",
             "print (3-2)*30",
-            "print \"test bracket\";(56-2)*3"
+            "print \"test bracket\";(56-2)*3",
+            "print 1+2",
+            "print \"2+56=\";2+46",
+            "print \"2+56=\";2+56",
+            "for i=1 to 10"
         ],
         "creator": "rebuild",
         "type": "historyfile"
@@ -240,6 +244,10 @@
             {
                 "key": "c",
                 "value": 3
+            },
+            {
+                "key": "i",
+                "value": 11
             },
             {
                 "key": "k",
@@ -267,8 +275,8 @@
             }
         ]
     },
-    "timestamp": "2017-03-05T16:15:52Z",
-    "timestampepoch": 1488730552,
+    "timestamp": "2017-03-07T05:51:37Z",
+    "timestampepoch": 1488865897,
     "type": "rebuildalldb",
     "version": "1.0"
 }

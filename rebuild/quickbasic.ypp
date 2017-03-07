@@ -193,11 +193,11 @@ forStataement 	: FOR VAR '=' numexpr TO numexpr  {
     forBlock.forVar = varName;
     forBlock.forBegin =  std::unique_ptr<Expression>($4);
     
-    TerminalExpression t;
-    t.sub = step;
+    auto t=new TerminalExpression();
+    t->sub = step;
     
     
-    forBlock.forStep =  std::unique_ptr<Expression>(&t);
+    forBlock.forStep =  std::unique_ptr<Expression>(t);
     forBlock.forEnd = std::unique_ptr<Expression>($6);
     
     auto fornode = new ForStatment();

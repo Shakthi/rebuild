@@ -212,7 +212,7 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         std::cout<<std::endl;
         
         delete result;
-        return false;
+        return true;
     }
     
     auto letStatemnt = dynamic_cast< LetStatement*>(result);
