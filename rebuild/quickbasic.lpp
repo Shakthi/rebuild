@@ -44,16 +44,16 @@ L			[a-zA-Z]
 				return((int)REMARK_RECORD);  }
 "#"			{ BEGIN(REMARK); return((int)REM); }
 
-{L}+		{  yylval = Value (yytext);
+{L}+		{  yylval = Value (std::string(yytext));
     return((int)VAR); }
 
-{L}+"$"	{    yylval = Value (yytext);;
+{L}+"$"	{    yylval = Value (std::string(yytext));
     return((int)SVAR); }
 
-{D}+		{  yylval  = Value(atoi(yytext));
+{D}+		{  yylval  = Value((float) atoi(yytext));
     return((int)NUMBER); }
 
-{D}*"."{D}+		{yylval  = Value(atof(yytext));
+{D}*"."{D}+		{yylval  = Value((float)atof(yytext));
 				return((int)REAL_NUMBER); }
 
 

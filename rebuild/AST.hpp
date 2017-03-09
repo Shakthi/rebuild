@@ -115,6 +115,7 @@ struct Expression
     Value::Evaluetype valuetype;
 
     virtual Value Evaluate()=0;
+    virtual ~Expression(){}
 };
 
 
@@ -132,11 +133,33 @@ struct BainaryExpression :Expression
 {
     std::unique_ptr<Expression> left;
     std::unique_ptr<Expression> right;
-    enum class operatorType{ plus,minus,multiply,devide} mOperator;
-    
-    Value Evaluate();
-    
 };
+
+struct ArithmeticExpression:BainaryExpression {
+    
+    enum class operatorType{ plus,minus,multiply,devide} mOperator;
+    Value Evaluate();
+
+};
+
+
+struct RelationalExpression :BainaryExpression
+{
+    enum class operatorType{ less,equal,greater} mOperator;
+    
+    Value::Evaluetype inputype;
+
+    RelationalExpression(Expression * aleft,operatorType ot,Expression * aright,Value::Evaluetype ainputtype)
+    {
+        left=std::unique_ptr<Expression>(aleft);
+        right=std::unique_ptr<Expression>(aright);
+        mOperator = ot;
+        valuetype = Value::Evaluetype::booltype;
+        inputype = ainputtype;
+    }
+    Value Evaluate();
+};
+
 
 
 struct UnaryExpression :Expression

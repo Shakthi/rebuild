@@ -38,15 +38,25 @@ struct Value
         return stringVal;
     }
     
+    bool getBoolVal()
+    {
+        assert(Evaluetype::booltype == valutype);
+        return boolVal;
+    }
+
+    
     Value(float aNumVall):numVal(aNumVall){ valutype = Evaluetype::floattype;}
     
     Value(std::string aStringVall):stringVal(aStringVall){valutype = Evaluetype::stringtype;}
+    Value(bool aboolval):boolVal(aboolval){valutype = Evaluetype::booltype;}
+    
+    
     
     Value(class Expression * aExpression):expression(aExpression){valutype = Evaluetype::othertype;}
     Value(class Statement * anodeVal):nodeVal(anodeVal){valutype = Evaluetype::othertype;}
 
 
-    Value(){}
+    Value(){ valutype = Evaluetype::emptyType;}
     
     
     

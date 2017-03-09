@@ -37,13 +37,12 @@ ELLIPSIS REM CLS LIST RUN
 %token <getNumVal()> NUMBER REAL_NUMBER
 
 %type <getNumVal()> lineNumber
-%type <expression> numexpr printItem printlist strexpr
+%type <expression> numexpr printItem printlist strexpr boolExression
 
 %type <getStringVal()>  inputItem
-%type <boolVal> boolExression
 %type <nodeVal> inputList forStataement nextStatement printStatement letStatement
 
-%destructor { delete $$ ;} inputList forStataement nextStatement printStatement numexpr
+%destructor { delete $$ ;} inputList forStataement nextStatement printStatement numexpr boolExression
 
 
 %left '='  '>' '<'
@@ -120,6 +119,7 @@ printlist   :   printItem { auto a = new ExpressionList(); a->list.push_back($1)
 
 printItem   :   strexpr
 |   numexpr
+|   boolExression
 ;
 
 
@@ -166,6 +166,7 @@ inputStatement  : INPUT inputList { $$.nodeVal=$2;}
 
 inputList : inputItem
 {
+    
     auto readnode = new ReadStatement();
     readnode->variableList.push_back($1);
     $$=readnode;
@@ -180,7 +181,12 @@ inputList : inputItem
 }
 ;
 
-inputItem       : VAR|SVAR;
+
+
+inputItem   : VAR {auto val=$1;}
+| SVAR{    auto val=$1;
+    
+};
 
 
 forStataement 	: FOR VAR '=' numexpr TO numexpr  {
@@ -240,10 +246,22 @@ nextStatement   : NEXT VAR {
 
 
 
-boolExression : numexpr '=' numexpr {  /* $$ = ($1 == $3); */}
-| numexpr '>' numexpr { /*  $$ = ($1 > $3); */}
-| numexpr '<' numexpr { /*  $$ = ($1 < $3); */}
-| strexpr '=' strexpr { /*  $$ = ($1 == $3); */}
+
+boolExression : numexpr '=' numexpr
+{  $$ = new RelationalExpression($1 ,RelationalExpression::operatorType::equal, $3,Value::Evaluetype::floattype);
+}
+| numexpr '>' numexpr
+{  $$ = new RelationalExpression($1 ,RelationalExpression::operatorType::greater, $3,Value::Evaluetype::floattype);
+}
+
+| numexpr '<' numexpr
+{  $$ = new RelationalExpression($1 ,RelationalExpression::operatorType::less, $3,Value::Evaluetype::floattype);
+}
+
+| strexpr '=' strexpr
+{  $$ = new RelationalExpression($1 ,RelationalExpression::operatorType::equal, $3,Value::Evaluetype::stringtype);
+}
+
 ;
 
 
@@ -256,10 +274,10 @@ strexpr     : '(' strexpr ')'
 | strexpr '+' strexpr
 {
     
-    BainaryExpression *e=new BainaryExpression ;
+    auto e=new ArithmeticExpression ;
     e->left = std::unique_ptr<Expression>($1);
     
-    e->mOperator = BainaryExpression::operatorType::plus;
+    e->mOperator = ArithmeticExpression::operatorType::plus;
     
     e->right = std::unique_ptr<Expression>($3);
     e->valuetype = Value::Evaluetype::stringtype;
@@ -317,10 +335,10 @@ numexpr    :   '(' numexpr ')'
 {
     
 
-    BainaryExpression *e=new BainaryExpression ;
+    auto e=new ArithmeticExpression ;
     e->left = std::unique_ptr<Expression>($1);
     e->valuetype = Value::Evaluetype::floattype;
-    e->mOperator = BainaryExpression::operatorType::multiply;
+    e->mOperator = ArithmeticExpression::operatorType::multiply;
     
     e->right = std::unique_ptr<Expression>($3);
 
@@ -333,11 +351,13 @@ numexpr    :   '(' numexpr ')'
     
     
     
-    BainaryExpression *e=new BainaryExpression ;
-    e->valuetype = Value::Evaluetype::floattype;
-    e->left = std::unique_ptr<Expression>($1);
     
-    e->mOperator = BainaryExpression::operatorType::devide;
+    auto e=new ArithmeticExpression ;
+    e->left = std::unique_ptr<Expression>($1);
+    e->valuetype = Value::Evaluetype::floattype;
+    e->mOperator = ArithmeticExpression::operatorType::devide;
+    
+    e->right = std::unique_ptr<Expression>($3);
     
     e->right = std::unique_ptr<Expression>($3);
     $$=e;
@@ -354,13 +374,12 @@ numexpr    :   '(' numexpr ')'
    // $$ = $1 + $3;
    
    
-   BainaryExpression *e=new BainaryExpression ;
+   auto e=new ArithmeticExpression ;
    e->left = std::unique_ptr<Expression>($1);
    e->valuetype = Value::Evaluetype::floattype;
-   e->mOperator = BainaryExpression::operatorType::plus;
+   e->mOperator = ArithmeticExpression::operatorType::plus;
    
    e->right = std::unique_ptr<Expression>($3);
-   
    $$=e;
 
 // trace<<$1<<"+"<<$3<<"= "<<$$<<std::endl;
@@ -369,10 +388,11 @@ numexpr    :   '(' numexpr ')'
 }
 |   numexpr '-' numexpr
 {
-    BainaryExpression *e=new BainaryExpression ;
+    
+    auto e=new ArithmeticExpression ;
     e->left = std::unique_ptr<Expression>($1);
     e->valuetype = Value::Evaluetype::floattype;
-    e->mOperator = BainaryExpression::operatorType::minus;
+    e->mOperator = ArithmeticExpression::operatorType::minus;
     
     e->right = std::unique_ptr<Expression>($3);
    // $$ = $1 - $3;

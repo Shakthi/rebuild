@@ -76,18 +76,18 @@ public:
             auto variableName = *i;
             
             if(variableName.find("$") == std::string::npos){ //hack
-                Value value;
+                
                 float num;
                 stream >> num;
                 varTable[variableName] = Value(num);
-                rlog<<variableName <<"="<<value.getNumVal()<<std::endl;
+                rlog<<variableName <<"="<<varTable[variableName].getNumVal()<<std::endl;
 
             } else if(variableName.find("$") != std::string::npos){
                 Value value;
                 std::string str;
                 stream >> str;
                 varTable[variableName] = Value(str);
-                rlog<<variableName <<"="<<value.getStringVal()<<std::endl;
+                rlog<<variableName <<"="<<varTable[variableName].getStringVal()<<std::endl;
             }
 
             list.pop_front();
@@ -204,9 +204,14 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
             
             Value value=(*i)->Evaluate();
             if(value.valutype == Value::Evaluetype::stringtype)
-            std::cout<<value.getStringVal();
-            else
+                std::cout<<value.getStringVal();
+            else  if(value.valutype == Value::Evaluetype::floattype)
                 std::cout<<value.getNumVal();
+            else if(value.valutype == Value::Evaluetype::emptyType)
+                std::cout<<"<NULL>";
+            else  if(value.valutype == Value::Evaluetype::booltype)
+                std::cout<<(value.getBoolVal()?"true":"false");
+            
 
         }
         std::cout<<std::endl;

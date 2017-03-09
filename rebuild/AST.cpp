@@ -14,7 +14,7 @@
 Value GetExpression::Evaluate(){
     
     Value v=varTable[varName];
-  assert(v.valutype == valuetype);
+    assert(v.valutype == valuetype || Value::Evaluetype::emptyType == v.valutype);
     
     return v;
     
@@ -23,7 +23,7 @@ Value GetExpression::Evaluate(){
 
 
 
-Value BainaryExpression::Evaluate()
+Value ArithmeticExpression::Evaluate()
 {
     
     switch(valuetype)
@@ -38,7 +38,8 @@ Value BainaryExpression::Evaluate()
                     assert(false);//should not come here
                     return Value();
                     
-            }
+            }            
+
             
         case  Value::Evaluetype::floattype:
             assert(valuetype == Value::Evaluetype::floattype &&
@@ -50,10 +51,11 @@ Value BainaryExpression::Evaluate()
             
                 switch(mOperator)
                 {
-                    case operatorType::plus:
-                        return Value ( left->Evaluate().getNumVal() + right->Evaluate().getNumVal());
                     case operatorType::minus:
                         return Value ( left->Evaluate().getNumVal() - right->Evaluate().getNumVal());;
+                        
+                    case operatorType::plus:
+                        return Value ( left->Evaluate().getNumVal() + right->Evaluate().getNumVal());
                         
                         
                     case operatorType::devide:
@@ -71,11 +73,64 @@ Value BainaryExpression::Evaluate()
     
     
     
-    
-    
     }
 
 
+
+
+
+
+
+
+Value RelationalExpression::Evaluate()
+{
+    
+    switch(inputype)
+    {
+        case  Value::Evaluetype::stringtype:
+            switch(mOperator)
+        {
+            case operatorType::equal:
+                return Value ( left->Evaluate().getStringVal() == right->Evaluate().getStringVal());
+                
+            default:
+                assert(false);//should not come here
+                return Value();
+                
+        }
+            
+            
+        case  Value::Evaluetype::floattype:
+            assert(valuetype == Value::Evaluetype::booltype &&
+                   left->valuetype == Value::Evaluetype::floattype &&
+                   right->valuetype == Value::Evaluetype::floattype
+                   );
+            
+            
+            
+            switch(mOperator)
+        {
+            case operatorType::equal:
+                return Value ( left->Evaluate().getNumVal()  == right->Evaluate().getNumVal());;
+                
+            case operatorType::less:
+                return Value ( left->Evaluate().getNumVal() < right->Evaluate().getNumVal());
+                
+                
+            case operatorType::greater:
+                return Value (left->Evaluate().getNumVal() > right->Evaluate().getNumVal());
+            
+        };
+            
+            
+        default:
+            assert(false);
+            return Value();
+    }
+    
+    
+    
+}
 
 
 
