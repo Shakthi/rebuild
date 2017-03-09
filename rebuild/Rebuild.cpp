@@ -12,6 +12,7 @@
 #include "BasicStepProccessor.hpp"
 #include "lineNoiseWrapper.hpp"
 #include "lineHistory.hpp"
+#include "UnitTester.hpp"
 
 #include <iostream>
 
@@ -64,6 +65,7 @@ Rebuild::Rebuild()
     history = new LineHistory();
     lineNoiseWrapper = new LineNoiseWrapper(*history);
     processorStack.push(new BasicStepProcessor(this));
+    unitTester = new UnitTester();
     Load();
 }
 
@@ -151,6 +153,10 @@ void Rebuild::Load()
             stream >> root;
             if (root["version"] != version)
                 throw version;
+            
+            
+            
+            
 
             history->FromJson(root["history"]);
             processorStack.top()->FromJson(root["processor"]);

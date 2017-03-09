@@ -32,6 +32,8 @@ class Rebuild {
     
 
     std::stack<class StepProcessor*> processorStack;
+    
+    class UnitTester * unitTester;
 
 public:
     class LineNoiseWrapper* lineNoiseWrapper;

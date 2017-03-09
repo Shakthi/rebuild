@@ -19,6 +19,7 @@ extern void yy_delete_buffer(YY_BUFFER_STATE buffer);
 
  Statement * Parser::Parse(std::string data)
 {
+
     yy_scan_string(data.c_str());
     Statement * outStatment;
     if(yyparse(&outStatment)==0){

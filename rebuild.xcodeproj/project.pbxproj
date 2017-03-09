@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		531B191A1E562EC000F530FA /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 531B19181E562EC000F530FA /* Logger.cpp */; };
+		531BC92D1E71DE9C00D75E65 /* UnitTester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 531BC92B1E71DE9C00D75E65 /* UnitTester.cpp */; };
 		533AE4E11E3CE896008910D4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4E01E3CE896008910D4 /* main.cpp */; };
 		533AE5021E3FB58B008910D4 /* linenoise.c in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4FC1E3FB180008910D4 /* linenoise.c */; };
 		535FF2581E4117FB00EF0E51 /* quickbasic.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 535FF2571E4117FB00EF0E51 /* quickbasic.lpp */; };
@@ -37,6 +38,8 @@
 /* Begin PBXFileReference section */
 		531B19181E562EC000F530FA /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Logger.cpp; sourceTree = "<group>"; };
 		531B19191E562EC000F530FA /* Logger.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Logger.hpp; sourceTree = "<group>"; };
+		531BC92B1E71DE9C00D75E65 /* UnitTester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitTester.cpp; sourceTree = "<group>"; };
+		531BC92C1E71DE9C00D75E65 /* UnitTester.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UnitTester.hpp; sourceTree = "<group>"; };
 		533AE4DD1E3CE896008910D4 /* rebuild */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = rebuild; sourceTree = BUILT_PRODUCTS_DIR; };
 		533AE4E01E3CE896008910D4 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		533AE4FC1E3FB180008910D4 /* linenoise.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = linenoise.c; sourceTree = "<group>"; };
@@ -96,6 +99,8 @@
 			isa = PBXGroup;
 			children = (
 				53CB85881E3FC04300E44564 /* Rebuild.cpp */,
+				531BC92B1E71DE9C00D75E65 /* UnitTester.cpp */,
+				531BC92C1E71DE9C00D75E65 /* UnitTester.hpp */,
 				535FF25B1E42EA2600EF0E51 /* StepProcessor.cpp */,
 				535FF25C1E42EA2600EF0E51 /* StepProcessor.hpp */,
 				53A1E3F31E45A0010071C220 /* BasicStepProccessor.cpp */,
@@ -203,6 +208,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				531BC92D1E71DE9C00D75E65 /* UnitTester.cpp in Sources */,
 				536578741E50F0D100A561D9 /* AST.cpp in Sources */,
 				53CB858D1E403E8500E44564 /* lineNoiseWrapper.cpp in Sources */,
 				536578771E50F53D00A561D9 /* ParserWrapper.cpp in Sources */,

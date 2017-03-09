@@ -223,7 +223,8 @@
             "print 1+2",
             "print \"2+56=\";2+46",
             "print \"2+56=\";2+56",
-            "for i=1 to 10"
+            "for i=1 to 10",
+            "print"
         ],
         "creator": "rebuild",
         "type": "historyfile"
@@ -275,8 +276,8 @@
             }
         ]
     },
-    "timestamp": "2017-03-07T05:51:37Z",
-    "timestampepoch": 1488865897,
+    "timestamp": "2017-03-09T19:22:23Z",
+    "timestampepoch": 1489087343,
     "type": "rebuildalldb",
     "version": "1.0"
 }
