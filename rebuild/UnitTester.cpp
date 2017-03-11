@@ -7,8 +7,8 @@
 //
 
 #include "UnitTester.hpp"
-#include "Logger.cpp"
-#include "BasicStepProccessor.cpp"
+#include "Logger.hpp"
+#include "BasicStepProccessor.hpp"
 
 
 
@@ -28,8 +28,27 @@ nlohmann::json
 UnitTester::TestCase::ToJson()
 {
     json root;
-    root["input"] = input;
-    root["output"] = output;
+    json testdataJson;
+    
+    for(auto testdata:testdata)
+    {
+        json dataJson;
+        if (testdata.dataType == DataType::input) {
+            dataJson["dataType"]="input";
+        }
+        
+        if (testdata.dataType == DataType::output) {
+            dataJson["dataType"]="output";
+        }
+        
+        dataJson["data"]=testdata.data;
+        
+        testdataJson.push_back(dataJson);
+    }
+    
+    
+    root["session"]="session";
+    root["root"]=testdataJson;
     
     return root;
 }
@@ -37,14 +56,62 @@ UnitTester::TestCase::ToJson()
 
 void UnitTester::TestCase::FromJson(nlohmann::json root)
 {
-    input = root["input"];
-    output = root["output"];
+    
+    
+    
+    json testdataJson= root["root"];
+    
+    
+    for(auto dataJson:testdataJson)
+    {
+        Data data;
+        if (dataJson["dataType"]=="input") {
+            data.dataType = DataType::input;
+            data.data = dataJson["data"];
+            
+        }
+        
+        if (dataJson["dataType"]=="output") {
+            data.dataType = DataType::output;
+            data.data = dataJson["data"];
+            
+        }
+        
+        testdata.push_back(data);
+    }
+    
     
 
 
 }
 
+void UnitTester::TestCase::AddInput(std::string input)
+{
+    Data data;
+    data.data = input;
+    data.dataType = DataType::input;
+    testdata.push_back(std::move(data));
+}
 
+
+void UnitTester::TestCase::AddOutput(std::string output)
+{
+    Data data;
+    data.data = output;
+    data.dataType = DataType::input;
+    testdata.push_back(std::move(data));
+
+}
+
+
+void UnitTester::AddInput(std::string in)
+{
+    currentSession.AddInput(in);
+}
+void UnitTester::AddOutput(std::string out)
+{
+    currentSession.AddOutput(out);
+}
 
 nlohmann::json
 UnitTester::ToJson()
@@ -78,7 +145,7 @@ void UnitTester::FromJson(nlohmann::json root)
 }
 
 
-void UnitTester::TestAll(Bas)
+void UnitTester::TestAll()
 {
     int total=0;
     int passed=0;
@@ -94,14 +161,3 @@ void UnitTester::TestAll(Bas)
 
 }
 
-
-
-
-void UnitTester::TestCase::FromJson(nlohmann::json root)
-{
-    input = root["input"];
-    output = root["output"];
-    
-    
-    
-}

@@ -22,16 +22,39 @@ class UnitTester:public Rebuild::Serialised {
     
     Rlog rlog;
 
-    
 public:
     
     struct TestCase
     {
-          std::string  input;
-          std::string  output;
-        virtual bool Test();
+         // std::string  input;
+          //std::string  output;
+        //virtual bool Test();
+        
+        enum class DataType{
+            input,
+            output
+        };
+        
+        struct Data
+        {
+            DataType dataType;
+            std::string data;
+        };
+        
+        
+        
+        
+        std::vector<Data>  testdata;
+        
         nlohmann::json ToJson();
         void FromJson(nlohmann::json);
+        
+        
+        void AddInput(std::string );
+        void AddOutput(std::string );
+        
+        
+        bool Test(){return true;}
     };
     
     
@@ -45,6 +68,15 @@ public:
     
     nlohmann::json ToJson();
     void FromJson(nlohmann::json);
+    
+    
+    void AddInput(std::string );
+    void AddOutput(std::string );
+    
+
+
+private:
+    TestCase currentSession;
 
     
 

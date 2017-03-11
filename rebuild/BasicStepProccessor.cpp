@@ -13,6 +13,7 @@
 #include "ParserWrapper.hpp"
 #include "quickbasic.h"
 #include "Logger.hpp"
+#include "UnitTester.hpp"
 
 #include <iostream>
 #include <map>
@@ -238,7 +239,7 @@ void BasicStepProcessor::RunStep()
 {
     std::string answer = rebuild->lineNoiseWrapper->getLine(Rebuild::prompt+":");
     
-
+    
     
     if (answer == ""){
         if( rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::EStatus::ctrl_c)
@@ -246,6 +247,7 @@ void BasicStepProcessor::RunStep()
         return;
     }
     
+    rebuild->unitTester->AddInput(answer);
     rebuild->history->Add(answer);
     
 
