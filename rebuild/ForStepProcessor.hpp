@@ -21,7 +21,7 @@ class ForStepProcessor : public BasicStepProcessor {
     
     std::string remarks;
     PopingLineHistory popingLineHistory;
-    bool isInited;
+    bool passThrough;
     
 public:
     ForStepProcessor(Rebuild* aRebuild,  ForStatment::ForBlock && forblock)
@@ -29,7 +29,7 @@ public:
     ,thisForBlock(std::move(forblock))
     {
        // getForVar()=forblock.forBegin->;
-        isInited=false;
+
     }
     
     float  getForVar()

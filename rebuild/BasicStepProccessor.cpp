@@ -8,6 +8,7 @@
 
 #include "BasicStepProccessor.hpp"
 #include "ForStepProcessor.hpp"
+#include "IfStepProccessor.hpp"
 #include "Rebuild.hpp"
 #include "lineNoiseWrapper.hpp"
 #include "ParserWrapper.hpp"

@@ -98,7 +98,12 @@ clearStatement : CLS { std::cout<<"CLS to be implemnted"<<std::endl;/*  DisplayC
 listCommand : LIST { std::cout<<"LIST to be implemnted"<<std::endl;  /*foreach(var aline in interpreter.statementRecord { interpreter.PrintBuffer(""+aline.Key +":");  interpreter.PrintLnBuffer(aline.Value);} */ }
 ;
 
-ifstatment : IF boolExression THEN GOTO NUMBER { std::cout<<"IF to be implemnted"<<std::endl; /*if($2) interpreter.jumpAddress = (int)$5; */}
+ifstatment : IF boolExression  {
+    auto ifstment = new IfStatment;
+    ifstment->expression = static_cast<RelationalExpression*>($2);
+    $$=ifstment;
+
+}
 ;
 
 printStatement : PRINT printlist    {

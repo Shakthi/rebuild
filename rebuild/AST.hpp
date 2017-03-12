@@ -47,6 +47,10 @@ struct RemarkStatement:public  Statement{
 };
 
 
+struct IfStatment:public Statement {
+    
+    class RelationalExpression * expression;
+};
 
 struct ForStatment:public Statement {
     
