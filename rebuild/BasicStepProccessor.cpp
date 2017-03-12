@@ -14,6 +14,9 @@
 #include "ParserWrapper.hpp"
 #include "quickbasic.h"
 #include "Logger.hpp"
+#include "StatementHistory.hpp"
+
+
 
 #include <iostream>
 #include <map>
@@ -160,7 +163,7 @@ void BasicStepProcessor::FromJson(nlohmann::json j)
 bool BasicStepProcessor::Evaluate(Statement  * result)
 {
     
-    
+      rebuild->history->Add(answer);
     auto endStatement = dynamic_cast< EndStatement*>(result);
     if (endStatement) {
         exitProcessing();
@@ -197,6 +200,20 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         return false;
     }
     
+    
+    auto ifstment = dynamic_cast< IfStatment*>(result);
+    if (ifstment) {
+        auto  * stepprocessor = new IfStepProcessor(rebuild,ifstment->expression);
+        
+        stepprocessor->Init();
+        
+        
+        rebuild->addNewProcessing(stepprocessor);
+        delete result;
+        return true;
+    }
+    
+
     
     auto printStatemnt = dynamic_cast< PrintStatement*>(result);
     if (printStatemnt) {
@@ -247,7 +264,7 @@ void BasicStepProcessor::RunStep()
         return;
     }
     
-    rebuild->history->Add(answer);
+  
     
 
     

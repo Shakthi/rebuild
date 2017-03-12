@@ -134,4 +134,12 @@ Value RelationalExpression::Evaluate()
 
 
 
+ Statement *  Statement::Create(std::string name)
+{
+    if(name == "EndStatement") return new EndStatement();
+        
+
+    return nullptr;
+}
+
 
