@@ -24,7 +24,7 @@ class IfStepProcessor : public BasicStepProcessor {
     
     bool passThroughe;
   
-    PopingLineHistory popingLineHistory;
+    PopingLineHistoryStr popingLineHistory;
     
 
 public:

@@ -20,7 +20,7 @@ class ForStepProcessor : public BasicStepProcessor {
     const ForStatment::ForBlock thisForBlock;
     
     std::string remarks;
-    PopingLineHistory popingLineHistory;
+    PopingLineHistoryStr popingLineHistory;
     bool passThrough;
     
 public:

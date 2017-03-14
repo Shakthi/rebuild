@@ -9,27 +9,46 @@
 #ifndef lineHistory_hpp
 #define lineHistory_hpp
 
-#include "Rebuild.hpp"
-#include "json.hpp"
+
+#include "nlohmann/json.hpp"
 #include <fstream>
 #include <string>
 #include <vector>
 
-class LineHistory : public Rebuild::Serialised {
+
+class LineHistory
+{
+public:
+    
+    virtual void ReInit();
+    virtual  void ReInitDone();
+    friend class LineNoiseWrapper;
+
+    enum class MoveDirection { prev,
+        next };
+    virtual std::string Edit(std::string currentBuffer, MoveDirection direction,
+                     bool& success) =0;
+    virtual void Save(std::string filename)=0;
+    virtual void Load(std::string filename)=0;
+    
+    virtual nlohmann::json ToJson();
+    virtual void FromJson(nlohmann::json);
+
+
+};
+
+class LineHistoryStr:public LineHistory  {
 
 protected:
     int historyIndex;
     std::vector<std::string> history;
 
-    virtual void ReInit();
-    virtual  void ReInitDone();
-    friend class LineNoiseWrapper;
-
+    void ReInit();
+    void ReInitDone();
 public:
-    enum class MoveDirection { prev,
-        next };
+    
 
-    LineHistory();
+    LineHistoryStr();
 
     void Save(std::string filename);
     void Load(std::string filename);
@@ -52,7 +71,16 @@ class PopingLineHistory:public LineHistory
 {
     int extracount;
 public:
-    PopingLineHistory():extracount(0){}
+    virtual void AddExtra(std::string entry)=0;
+    virtual void PopExtra()=0;
+    
+};
+
+class PopingLineHistoryStr:public LineHistoryStr
+{
+    int extracount;
+public:
+    PopingLineHistoryStr():extracount(0){}
     void Add(std::string entry);
     void AddExtra(std::string entry);
     void PopExtra();

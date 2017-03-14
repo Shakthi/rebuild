@@ -10,12 +10,12 @@
 #include <ctime>
 #include <sstream>
 
-LineHistory::LineHistory()
+LineHistoryStr::LineHistoryStr()
     : historyIndex(0)
 {
 }
 
-void LineHistory::Save(std::string filename)
+void LineHistoryStr::Save(std::string filename)
 {
     using namespace nlohmann;
 
@@ -28,7 +28,7 @@ void LineHistory::Save(std::string filename)
     stream << root.dump(4);
 }
 
-void LineHistory::Load(std::string filename)
+void LineHistoryStr::Load(std::string filename)
 {
     using namespace nlohmann;
     std::ifstream stream(filename);
@@ -42,7 +42,7 @@ void LineHistory::Load(std::string filename)
     }
 }
 
-void LineHistory::Add(std::string entry)
+void LineHistoryStr::Add(std::string entry)
 {
     if (!history.empty())
         if (*(history.rbegin()) == entry) {
@@ -54,13 +54,13 @@ void LineHistory::Add(std::string entry)
 
 }
 
-void LineHistory::InternalAdd(std::string entry)
+void LineHistoryStr::InternalAdd(std::string entry)
 {
     history.push_back(entry);
 
 }
 
-void LineHistory::ReInit()
+void LineHistoryStr::ReInit()
 {
     
     
@@ -70,13 +70,13 @@ void LineHistory::ReInit()
 }
     
 
-void LineHistory::ReInitDone()
+void LineHistoryStr::ReInitDone()
 {
     history.pop_back();
 }
 
 std::string
-LineHistory::Edit(std::string currentBuffer, MoveDirection direction,
+LineHistoryStr::Edit(std::string currentBuffer, MoveDirection direction,
     bool& success)
 {
     success = true;
@@ -100,19 +100,19 @@ LineHistory::Edit(std::string currentBuffer, MoveDirection direction,
     return history[history.size() - 1 - historyIndex];
 }
 
-void LineHistory::Clear()
+void LineHistoryStr::Clear()
 {
     history.clear();
 }
 
 std::string
-LineHistory::HistoryAt(int i)
+LineHistoryStr::HistoryAt(int i)
 {
     return history[history.size() - 1 - i];
 }
 
 nlohmann::json
-LineHistory::ToJson()
+LineHistoryStr::ToJson()
 {
     using namespace nlohmann;
 
@@ -123,7 +123,7 @@ LineHistory::ToJson()
 
     return root;
 }
-void LineHistory::FromJson(nlohmann::json root)
+void LineHistoryStr::FromJson(nlohmann::json root)
 {
     using namespace nlohmann;
 
@@ -133,13 +133,13 @@ void LineHistory::FromJson(nlohmann::json root)
     }
 }
 
-std::vector<std::string> & LineHistory::GetHistory()
+std::vector<std::string> & LineHistoryStr::GetHistory()
 {
     return history;
 }
 
 
-void PopingLineHistory::PopExtra()
+void PopingLineHistoryStr::PopExtra()
 {
     for (int i=0; i<extracount; i++)
     {
@@ -152,7 +152,7 @@ void PopingLineHistory::PopExtra()
     
 }
 
-void PopingLineHistory::AddExtra(std::string entry)
+void PopingLineHistoryStr::AddExtra(std::string entry)
 {
     InternalAdd(entry);
     extracount++;
@@ -160,7 +160,7 @@ void PopingLineHistory::AddExtra(std::string entry)
 }
 
 
-void PopingLineHistory::Add(std::string entry)
+void PopingLineHistoryStr::Add(std::string entry)
 {
     if (!history.empty())
         if (*(history.rbegin()) == entry) {
