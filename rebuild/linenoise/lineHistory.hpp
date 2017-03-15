@@ -20,19 +20,14 @@ class LineHistory
 {
 public:
     
-    virtual void ReInit();
-    virtual  void ReInitDone();
-    friend class LineNoiseWrapper;
+    virtual void ReInit()=0;
+    virtual  void ReInitDone()=0;
 
     enum class MoveDirection { prev,
         next };
     virtual std::string Edit(std::string currentBuffer, MoveDirection direction,
                      bool& success) =0;
-    virtual void Save(std::string filename)=0;
-    virtual void Load(std::string filename)=0;
-    
-    virtual nlohmann::json ToJson();
-    virtual void FromJson(nlohmann::json);
+
 
 
 };
@@ -67,14 +62,6 @@ public:
     void FromJson(nlohmann::json);
 };
 
-class PopingLineHistory:public LineHistory
-{
-    int extracount;
-public:
-    virtual void AddExtra(std::string entry)=0;
-    virtual void PopExtra()=0;
-    
-};
 
 class PopingLineHistoryStr:public LineHistoryStr
 {

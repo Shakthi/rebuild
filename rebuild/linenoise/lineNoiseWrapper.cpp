@@ -80,12 +80,3 @@ LineNoiseWrapper::~LineNoiseWrapper()
 {
 }
 
-nlohmann::json
-LineNoiseWrapper::ToJson()
-{
-    return localHistory->ToJson();
-}
-void LineNoiseWrapper::FromJson(nlohmann::json input)
-{
-    localHistory->FromJson(input);
-}

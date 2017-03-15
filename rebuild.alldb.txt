@@ -228,7 +228,14 @@
             "print a",
             "read a",
             "input a",
-            "print a"
+            "print a",
+            "if a=555",
+            "end",
+            "end",
+            "for i = 1 to 10",
+            "for i = 1 to 56",
+            "print t$",
+            "for i = 1 to 10"
         ],
         "creator": "rebuild",
         "type": "historyfile"
@@ -284,8 +291,8 @@
             }
         ]
     },
-    "timestamp": "2017-03-11T19:14:36Z",
-    "timestampepoch": 1489259676,
+    "timestamp": "2017-03-15T18:03:20Z",
+    "timestampepoch": 1489601000,
     "type": "rebuildalldb",
     "version": "1.0"
 }

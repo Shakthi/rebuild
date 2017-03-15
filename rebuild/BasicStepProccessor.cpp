@@ -163,7 +163,6 @@ void BasicStepProcessor::FromJson(nlohmann::json j)
 bool BasicStepProcessor::Evaluate(Statement  * result)
 {
     
-      rebuild->history->Add(result);
     auto endStatement = dynamic_cast< EndStatement*>(result);
     if (endStatement) {
         exitProcessing();
@@ -264,7 +263,7 @@ void BasicStepProcessor::RunStep()
         return;
     }
     
-  
+    rebuild->history->Add(answer);
     
 
     

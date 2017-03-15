@@ -61,7 +61,7 @@ Rebuild::Rebuild()
 {
     Rebuild::prompt="rebuild]";
     rlog << "Hello world...!("<<__DATE__<<"-"<<__TIME__<< ")"<<std::endl;
-    history = new StatementHistory();
+    history = new LineHistoryStr();
     lineNoiseWrapper = new LineNoiseWrapper(*history);
     processorStack.push(new BasicStepProcessor(this));
     Load();

@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-class StatementHistory  {
+class StatementHistory:public LineHistory  {
 protected:
     int historyIndex;
     std::vector<std::string> history;

@@ -13,9 +13,8 @@
 #include "Rebuild.hpp"
 #include <string>
 
-class LineNoiseWrapper : public Rebuild::Serialised {
+class LineNoiseWrapper  {
     LineHistory & defaultHistory;
-    
     LineHistory * localHistory;
     
 
