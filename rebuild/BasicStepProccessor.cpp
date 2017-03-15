@@ -263,12 +263,15 @@ void BasicStepProcessor::RunStep()
         return;
     }
     
-    rebuild->history->Add(answer);
+    
     
 
     
     BasicParser parser;
-    Evaluate(parser.Parse(answer));
+    
+    auto statment = parser.Parse(answer);
+    rebuild->history->Add(statment);
+    Evaluate(statment);
     
 }
 

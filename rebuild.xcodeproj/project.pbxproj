@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		531B191A1E562EC000F530FA /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 531B19181E562EC000F530FA /* Logger.cpp */; };
-		531C065E1E786C1100CFCBFF /* StatmentHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 531C065C1E786C1100CFCBFF /* StatmentHistory.cpp */; };
 		533AE4E11E3CE896008910D4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4E01E3CE896008910D4 /* main.cpp */; };
 		533AE5021E3FB58B008910D4 /* linenoise.c in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4FC1E3FB180008910D4 /* linenoise.c */; };
 		535FF2581E4117FB00EF0E51 /* quickbasic.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 535FF2571E4117FB00EF0E51 /* quickbasic.lpp */; };
@@ -121,8 +120,6 @@
 		531C06591E786ABB00CFCBFF /* utility.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = utility.hpp; sourceTree = "<group>"; };
 		531C065A1E786ABB00CFCBFF /* valarray.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = valarray.hpp; sourceTree = "<group>"; };
 		531C065B1E786ABB00CFCBFF /* vector.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vector.hpp; sourceTree = "<group>"; };
-		531C065C1E786C1100CFCBFF /* StatmentHistory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StatmentHistory.cpp; sourceTree = "<group>"; };
-		531C065D1E786C1100CFCBFF /* StatmentHistory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StatmentHistory.hpp; sourceTree = "<group>"; };
 		531C06621E786DEA00CFCBFF /* AST.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AST.cpp; sourceTree = "<group>"; };
 		531C06631E786DEA00CFCBFF /* AST.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AST.hpp; sourceTree = "<group>"; };
 		531C06641E786DEA00CFCBFF /* BasicStepProccessor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BasicStepProccessor.cpp; sourceTree = "<group>"; };
@@ -147,10 +144,6 @@
 		531C067A1E786DEA00CFCBFF /* quickbasic.ypp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.yacc; path = quickbasic.ypp; sourceTree = "<group>"; };
 		531C067B1E786DEA00CFCBFF /* Rebuild.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Rebuild.cpp; sourceTree = "<group>"; };
 		531C067C1E786DEA00CFCBFF /* Rebuild.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Rebuild.hpp; sourceTree = "<group>"; };
-		531C067D1E786DEA00CFCBFF /* StatementHistory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StatementHistory.cpp; sourceTree = "<group>"; };
-		531C067E1E786DEA00CFCBFF /* StatementHistory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = StatementHistory.hpp; sourceTree = "<group>"; };
-		531C067F1E786DEA00CFCBFF /* StatmentHistory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StatmentHistory.cpp; sourceTree = "<group>"; };
-		531C06801E786DEA00CFCBFF /* StatmentHistory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = StatmentHistory.hpp; sourceTree = "<group>"; };
 		531C06811E786DEA00CFCBFF /* StepProcessor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StepProcessor.cpp; sourceTree = "<group>"; };
 		531C06821E786DEA00CFCBFF /* StepProcessor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = StepProcessor.hpp; sourceTree = "<group>"; };
 		533AE4DD1E3CE896008910D4 /* rebuild */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = rebuild; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -383,10 +376,6 @@
 				531C067A1E786DEA00CFCBFF /* quickbasic.ypp */,
 				531C067B1E786DEA00CFCBFF /* Rebuild.cpp */,
 				531C067C1E786DEA00CFCBFF /* Rebuild.hpp */,
-				531C067D1E786DEA00CFCBFF /* StatementHistory.cpp */,
-				531C067E1E786DEA00CFCBFF /* StatementHistory.hpp */,
-				531C067F1E786DEA00CFCBFF /* StatmentHistory.cpp */,
-				531C06801E786DEA00CFCBFF /* StatmentHistory.hpp */,
 				531C06811E786DEA00CFCBFF /* StepProcessor.cpp */,
 				531C06821E786DEA00CFCBFF /* StepProcessor.hpp */,
 			);
@@ -445,8 +434,6 @@
 			isa = PBXGroup;
 			children = (
 				53CB85881E3FC04300E44564 /* Rebuild.cpp */,
-				531C065C1E786C1100CFCBFF /* StatmentHistory.cpp */,
-				531C065D1E786C1100CFCBFF /* StatmentHistory.hpp */,
 				535FF25B1E42EA2600EF0E51 /* StepProcessor.cpp */,
 				535FF25C1E42EA2600EF0E51 /* StepProcessor.hpp */,
 				53A1E3F31E45A0010071C220 /* BasicStepProccessor.cpp */,
@@ -555,7 +542,6 @@
 				533AE5021E3FB58B008910D4 /* linenoise.c in Sources */,
 				5363734C1E751CCD0079B2EF /* StatementHistory.cpp in Sources */,
 				53A1E3F21E4504870071C220 /* lineHistory.cpp in Sources */,
-				531C065E1E786C1100CFCBFF /* StatmentHistory.cpp in Sources */,
 				535FF25D1E42EA2600EF0E51 /* StepProcessor.cpp in Sources */,
 				535FF2581E4117FB00EF0E51 /* quickbasic.lpp in Sources */,
 				531B191A1E562EC000F530FA /* Logger.cpp in Sources */,

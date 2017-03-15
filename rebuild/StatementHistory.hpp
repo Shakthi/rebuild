@@ -12,39 +12,40 @@
 #include "Rebuild.hpp"
 #include "nlohmann/json.hpp"
 #include "lineHistory.hpp"
-#include <fstream>
+#include "AST.hpp"
+
 #include <string>
 #include <vector>
 
 class StatementHistory:public LineHistory  {
 protected:
     int historyIndex;
-    std::vector<std::string> history;
+    std::vector<Statement*> history;
     
-    virtual void ReInit();
-    virtual  void ReInitDone();
-    friend class LineNoiseWrapper;
     
 public:
-    enum class MoveDirection { prev,
-        next };
+    
+    void ReInit();
+    void ReInitDone();
+
     
     StatementHistory();
     
     void Save(std::string filename);
     void Load(std::string filename);
    void Add(class Statement * st);
-    void InternalAdd(std::string entry);
+    void InternalAdd(class Statement * st);
     
-    std::string Edit(std::string currentBuffer, MoveDirection direction,
-                     bool& success);
+     std::string Edit(std::string currentBuffer, MoveDirection direction,bool& success);
+    
+
     
     void Clear();
     
-    std::string HistoryAt(int i);
     
     nlohmann::json ToJson();
     void FromJson(nlohmann::json);
+    ~StatementHistory(){}
 };
 
 class PopingLineStatementHistory:public StatementHistory
@@ -52,8 +53,8 @@ class PopingLineStatementHistory:public StatementHistory
     int extracount;
 public:
     PopingLineStatementHistory():extracount(0){}
-    void Add(std::string entry);
-    void AddExtra(std::string entry);
+    void Add(class Statement * st);
+    void AddExtra(class Statement * st);
     void PopExtra();
     
 };

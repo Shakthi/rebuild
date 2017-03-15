@@ -18,10 +18,7 @@
 struct Statement {
     
     static Statement * Create(std::string name);
-    
-    
-    
-    
+  
     std::string sourceText;
     virtual ~Statement(){}
     
@@ -29,7 +26,9 @@ struct Statement {
 
 
 
-
+struct UnProcessedStatment:public Statement {
+    
+};
 
 
 struct ErrorStatement:public Statement {

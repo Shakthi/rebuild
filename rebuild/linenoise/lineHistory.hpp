@@ -44,6 +44,8 @@ public:
     
 
     LineHistoryStr();
+    std::string Edit(std::string currentBuffer, MoveDirection direction,
+                     bool& success);
 
     void Save(std::string filename);
     void Load(std::string filename);
@@ -51,9 +53,6 @@ public:
     void InternalAdd(std::string entry);
     std::vector<std::string> & GetHistory();
     
-    std::string Edit(std::string currentBuffer, MoveDirection direction,
-        bool& success);
-
     void Clear();
 
     std::string HistoryAt(int i);
