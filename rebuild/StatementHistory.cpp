@@ -131,7 +131,18 @@ StatementHistory::ToJson()
     using namespace nlohmann;
     
     json root;
-    root["content"] = history;
+    json rootContent;
+    
+    for(auto  statement : history )
+    {
+        rootContent.push_back(statement->ToJson());
+    }
+    
+    root["content"] = rootContent;
+    
+    
+    
+    
     root["type"] = "historyfile";
     root["creator"] = "rebuild";
     

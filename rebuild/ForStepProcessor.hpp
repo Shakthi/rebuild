@@ -17,24 +17,22 @@
 
 
 class ForStepProcessor : public BasicStepProcessor {
-    const ForStatment::ForBlock thisForBlock;
+    ForStatment * thisForBlock;
     
     std::string remarks;
     PopingLineHistoryStr popingLineHistory;
     bool passThrough;
     
 public:
-    ForStepProcessor(Rebuild* aRebuild,  ForStatment::ForBlock && forblock)
-    : BasicStepProcessor(aRebuild)
-    ,thisForBlock(std::move(forblock))
+    ForStepProcessor(Rebuild* aRebuild,ForStatment * forStatement)
+    : BasicStepProcessor(aRebuild),thisForBlock(forStatement)
     {
-       // getForVar()=forblock.forBegin->;
 
     }
     
     float  getForVar()
     {
-        return varTable[thisForBlock.forVar].getNumVal();
+        return varTable[thisForBlock->forVar].getNumVal();
     }
     
     

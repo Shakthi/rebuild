@@ -135,6 +135,7 @@ namespace
 
 void Rebuild::Load()
 {
+    Rlog rlog;
     std::string savepath = GetSavePath();
     
     rlog << "Loading main config:" << savepath << std::endl;

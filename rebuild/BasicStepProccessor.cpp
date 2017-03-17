@@ -166,7 +166,6 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     auto endStatement = dynamic_cast< EndStatement*>(result);
     if (endStatement) {
         exitProcessing();
-        delete result;
         return false;
     }
     
@@ -175,19 +174,17 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         
         ReadStepProcessor* readStepProcessor = new ReadStepProcessor(rebuild, readStatemnt->variableList,readStatemnt->prompt);
         rebuild->addNewProcessing(readStepProcessor);
-        delete result;
         return true;
     }
     
     auto forStatemnt = dynamic_cast< ForStatment*>(result);
     if (forStatemnt) {
         
-        ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild, std::move(forStatemnt->forBlock));
+        ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild,forStatemnt);
         readStepProcessor->Init();
         
         
         rebuild->addNewProcessing(readStepProcessor);
-        delete result;
         return true;
     }
     
@@ -195,7 +192,6 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     if (errorStatemnt) {
         
         std::cout<<Rebuild::prompt<<"! "<<errorStatemnt->description<<std::endl;
-        delete result;
         return false;
     }
     
@@ -208,7 +204,6 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         
         
         rebuild->addNewProcessing(stepprocessor);
-        delete result;
         return true;
     }
     
@@ -233,7 +228,6 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         }
         std::cout<<std::endl;
         
-        delete result;
         return true;
     }
     
@@ -241,7 +235,6 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     if (letStatemnt) {
         
         varTable[letStatemnt->variablename]=letStatemnt->rvalue->Evaluate();
-        delete result;
         return false;
     }
     
@@ -272,6 +265,7 @@ void BasicStepProcessor::RunStep()
     auto statment = parser.Parse(answer);
     rebuild->history->Add(statment);
     Evaluate(statment);
+    
     
 }
 

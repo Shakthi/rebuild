@@ -14,8 +14,8 @@
 void ForStepProcessor::Init()
 {
     
-    varTable[thisForBlock.forVar] = thisForBlock.forBegin->Evaluate();
-    if(getForVar() <=thisForBlock.forEnd->Evaluate().getNumVal() ) {
+    varTable[thisForBlock->forVar] = thisForBlock->forBegin->Evaluate();
+    if(getForVar() <=thisForBlock->forEnd->Evaluate().getNumVal() ) {
              passThrough=true;
     }
 
@@ -30,7 +30,7 @@ void ForStepProcessor::RunStep()
     
     if(passThrough == true){
     
-    std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>for "+ thisForBlock.forVar+"]:",popingLineHistory);
+    std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>for "+ thisForBlock->forVar+"]:",popingLineHistory);
     
     BasicParser parser;
     Statement * result =  parser.Parse(answer);
@@ -59,7 +59,7 @@ void ForStepProcessor::RunStep()
     
     }else 
     {
-        std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild>for "+ thisForBlock.forVar+" (remarks)]:");
+        std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild>for "+ thisForBlock->forVar+" (remarks)]:");
         
         BasicParser parser;
         Statement * result =  parser.Parse(answer);
@@ -86,8 +86,8 @@ void ForStepProcessor::ExecuteLoop()
     popingLineHistory.PopExtra();
 
     
-    for (varTable[thisForBlock.forVar] =  getForVar() +thisForBlock.forStep->Evaluate().getNumVal() ;
-         getForVar() <=thisForBlock.forEnd->Evaluate().getNumVal() ; varTable[thisForBlock.forVar]= getForVar() +thisForBlock.forStep->Evaluate().getNumVal() ) {
+    for (varTable[thisForBlock->forVar] =  getForVar() +thisForBlock->forStep->Evaluate().getNumVal() ;
+         getForVar() <=thisForBlock->forEnd->Evaluate().getNumVal() ; varTable[thisForBlock->forVar]= getForVar() +thisForBlock->forStep->Evaluate().getNumVal() ) {
         
         for( std::string statement :popingLineHistory.GetHistory() )
         {

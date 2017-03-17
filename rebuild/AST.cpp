@@ -8,7 +8,15 @@
 
 #include "AST.hpp"
 #include "quickbasic.h"
+#include "cereal/types/memory.hpp"
+
+#include "Logger.hpp"
+
+
+
+
 #include <assert.h>
+#include <sstream>
 
 
 Value GetExpression::Evaluate(){
@@ -134,12 +142,75 @@ Value RelationalExpression::Evaluate()
 
 
 
- Statement *  Statement::Create(std::string name)
-{
-    if(name == "EndStatement") return new EndStatement();
-        
+CEREAL_REGISTER_TYPE(PrintStatement);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement, PrintStatement);
 
-    return nullptr;
+
+
+CEREAL_REGISTER_TYPE(GetExpression);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Expression, GetExpression);
+
+
+#include "cereal/archives/json.hpp"
+
+template <class T>
+void null_deleter(T *)
+{
+
 }
+template <class T>
+auto make_smart(T* t)-> std::unique_ptr <T,void (*)(T*)>
+{
+    return std::unique_ptr<T,void (*)(T*)>(t,null_deleter);
+}
+
+
+
+nlohmann::json Statement::ToJson()
+{
+    
+    
+
+    //Rlog rlog;
+
+    
+    nlohmann::json root;
+    root["class"]="Statement";
+    
+    std::ostringstream os;
+    cereal::JSONOutputArchive oarchive( os );
+
+    auto noop_deleter = [](Statement*) {};
+    //oarchive(std::unique_ptr<Statement,decltype(noop_deleter)>(this,noop_deleter));
+    
+     oarchive(make_smart(this));
+   
+    std::string datastring = os.str()+"}"; //Bug? Really
+    
+    rlog<<datastring<<std::endl;
+
+    nlohmann::json value0=nlohmann::json::parse(datastring);
+    
+    root["content"]=value0["value0"];
+    
+    
+    return root;
+
+}
+void Statement::FromJson(nlohmann::json root)
+{
+    assert(root["class"]=="Statement");
+    
+}
+
+
+
+
+
+
+
+
+
+
 
 

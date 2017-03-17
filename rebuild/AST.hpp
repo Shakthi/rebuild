@@ -13,14 +13,23 @@
 #include <string>
 #include <vector>
 #include "quickbasic.h"
-
+#include "nlohmann/json.hpp" //TODO move all to archive format
+#include "cereal/cereal.hpp"
+#include "cereal/types/vector.hpp"
 
 struct Statement {
-    
-    static Statement * Create(std::string name);
-  
-    std::string sourceText;
+    std::string sourceText; //Debug only
     virtual ~Statement(){}
+    
+    
+    virtual nlohmann::json ToJson();
+    virtual void FromJson(nlohmann::json );
+    
+    
+    
+    template<class Archive>
+    void serialize( Archive & ar )
+    { ar( CEREAL_NVP(sourceText) ); }
     
 };
 
@@ -64,37 +73,10 @@ struct IfStatment:public Statement {
 
 struct ForStatment:public Statement {
     
-    struct ForBlock
-    {
         std::string forVar;
         std::unique_ptr<Expression> forBegin,forEnd,forStep;
         bool foundNext;
-        
-        ForBlock(ForBlock && inforblock):forVar(inforblock.forVar)
-        {
-            forBegin =std::move(inforblock.forBegin);
-            forEnd =std::move(inforblock.forEnd);
-            forStep =std::move(inforblock.forStep);
-        }
-        
-        
-        ForBlock()
-        {
-            
-        }
-        
-        
-        void Set(ForBlock && inforblock)
-        {
-            forVar =inforblock.forVar;
-            forBegin =std::move(inforblock.forBegin);
-            forEnd =std::move(inforblock.forEnd);
-            forStep =std::move(inforblock.forStep);
-        }
-        
-    } forBlock;
-    
-
+ 
 };
 
 
@@ -116,7 +98,12 @@ struct PrintStatement:public  Statement{
     
 public:
     
-    std::vector<Expression*> printitems;
+    std::vector<std::unique_ptr<Expression>> printitems;
+  
+    
+    template<class Archive>
+    void serialize( Archive & ar )
+    { ar( CEREAL_NVP(printitems) ); }
     
 }
 ;
@@ -130,12 +117,19 @@ struct Expression
 
     virtual Value Evaluate()=0;
     virtual ~Expression(){}
+    
+    
+    
+    template<class Archive>
+    void serialize( Archive & ar )
+    { ar( CEREAL_NVP(valuetype) ); }
+
 };
 
 
 struct ExpressionList:Expression
 {
-    std::vector<Expression*> list;
+    std::vector<std::unique_ptr<Expression>> list;
     Value Evaluate(){return Value();}
     
 };
@@ -147,6 +141,12 @@ struct BainaryExpression :Expression
 {
     std::unique_ptr<Expression> left;
     std::unique_ptr<Expression> right;
+    
+    
+    template<class Archive>
+    void serialize( Archive & ar )
+    { ar( CEREAL_NVP(left),CEREAL_NVP(right) ); }
+
 };
 
 struct ArithmeticExpression:BainaryExpression {
@@ -154,6 +154,12 @@ struct ArithmeticExpression:BainaryExpression {
     enum class operatorType{ plus,minus,multiply,devide} mOperator;
     Value Evaluate();
 
+    
+    
+    template<class Archive>
+    void serialize( Archive & ar )
+    { ar( CEREAL_NVP(mOperator)); }
+    
 };
 
 
@@ -172,6 +178,10 @@ struct RelationalExpression :BainaryExpression
         inputype = ainputtype;
     }
     Value Evaluate();
+    
+    template<class Archive>
+    void serialize( Archive & ar )
+    { ar( CEREAL_NVP(mOperator),CEREAL_NVP(inputype)); }
 };
 
 
@@ -213,6 +223,12 @@ struct GetExpression :Expression
 {
     std::string varName;
     Value Evaluate();
+    
+    
+    
+    template<class Archive>
+    void serialize( Archive & ar )
+    { ar( CEREAL_NVP(varName) ); }
     
 };
 

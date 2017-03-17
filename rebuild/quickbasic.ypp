@@ -118,8 +118,8 @@ printStatement : PRINT printlist    {
 }
 ;
 
-printlist   :   printItem { auto a = new ExpressionList(); a->list.push_back($1); $$=a;}
-|   printlist ';' printItem { auto a  = static_cast<ExpressionList*>$1; a->list.push_back($3); $$=a; }
+printlist   :   printItem { auto a = new ExpressionList(); a->list.push_back(std::unique_ptr<Expression>($1)); $$=a;}
+|   printlist ';' printItem { auto a  = static_cast<ExpressionList*>$1; a->list.push_back(std::unique_ptr<Expression>($3)); $$=a; }
 ;
 
 printItem   :   strexpr
@@ -199,20 +199,18 @@ forStataement 	: FOR VAR '=' numexpr TO numexpr  {
     std::string varName = $2;
     float step = 1.0;
     
-    ForStatment::ForBlock forBlock;
+    auto fornode = new ForStatment();
     
-    forBlock.forVar = varName;
-    forBlock.forBegin =  std::unique_ptr<Expression>($4);
+    fornode->forVar = varName;
+    fornode->forBegin =  std::unique_ptr<Expression>($4);
     
     auto t=new TerminalExpression();
     t->sub = step;
     
     
-    forBlock.forStep =  std::unique_ptr<Expression>(t);
-    forBlock.forEnd = std::unique_ptr<Expression>($6);
+    fornode->forStep =  std::unique_ptr<Expression>(t);
+    fornode->forEnd = std::unique_ptr<Expression>($6);
     
-    auto fornode = new ForStatment();
-    fornode->forBlock.Set(std::move(forBlock));
     $$=fornode;
 
 
@@ -222,15 +220,14 @@ forStataement 	: FOR VAR '=' numexpr TO numexpr  {
 {
     std::string varName = $2;
     
-    ForStatment::ForBlock forBlock;
-    
-    forBlock.forVar = varName;
-    forBlock.forBegin =  std::unique_ptr<Expression>($4);
-    forBlock.forStep =  std::unique_ptr<Expression>($8);
-    forBlock.forEnd = std::unique_ptr<Expression>($6);
-    
     auto fornode = new ForStatment();
-    fornode->forBlock.Set(std::move(forBlock));
+    
+    fornode->forVar = varName;
+    fornode->forBegin =  std::unique_ptr<Expression>($4);
+    fornode->forStep =  std::unique_ptr<Expression>($8);
+    fornode->forEnd = std::unique_ptr<Expression>($6);
+    
+    
     $$=fornode;
 }
 ;
