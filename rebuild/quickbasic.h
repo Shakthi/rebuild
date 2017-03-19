@@ -67,6 +67,8 @@ struct Value
     };
 
     
+    
+    
 private:
     union
     {

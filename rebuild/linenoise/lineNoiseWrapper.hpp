@@ -21,7 +21,15 @@ class LineNoiseWrapper  {
 public:
     enum class EStatus { ok,
         ctrl_c,
-        ctrl_d };
+        ctrl_d,
+        };
+ 
+    enum class EModificationStatus { ok,
+        history,
+        edited,
+    };
+
+    
 
 private:
     EStatus status;

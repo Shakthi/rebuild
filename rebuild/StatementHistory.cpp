@@ -45,20 +45,27 @@ void StatementHistory::Load(std::string filename)
 //TODO:SAVE LOAD
 }
 
+
+
+bool StatementHistory::ChekDuplicate(Statement * entry)
+{
+    
+        if (!history.empty())
+            if (history.back()->dumpToString() == entry->dumpToString()) {
+                return false;
+            }
+    
+    return true;
+}
+
 void StatementHistory::Add(Statement * entry)
 {
     
     
-//    if (!history.empty())
-//        if (*(history.rbegin()) == entry) {
-//            return;
-//        }
-//
-    
-    //TODO removeduplicate
-    
-    InternalAdd(entry);
-    
+    if(ChekDuplicate(entry))
+    {
+        InternalAdd(entry);
+    }
     
 }
 
@@ -115,7 +122,7 @@ StatementHistory::Edit(std::string currentBuffer, MoveDirection direction,
         success = false;
     }
     
-    return history[history.size() - 1 - historyIndex]->sourceText;
+    return history[history.size() - 1 - historyIndex]->dumpToString();
 }
 
 void StatementHistory::Clear()
@@ -152,12 +159,14 @@ StatementHistory::ToJson()
 }
 void StatementHistory::FromJson(nlohmann::json root)
 {
-//    using namespace nlohmann;
-//    
-//    json content = root["content"];
-//    for (int i = 0; i < content.size(); i++) {
-//        Add(content[i]);
-//    }
+    using namespace nlohmann;
+    
+    json content = root["content"];
+    for (int i = 0; i < content.size(); i++) {
+        
+        InternalAdd(Statement::GetFromJson(content[i]));
+        
+    }
 }
 
 
@@ -185,19 +194,21 @@ void PopingLineStatementHistory::AddExtra(Statement * entry)
 
 void PopingLineStatementHistory::Add(Statement * entry)
 {
-    if (!history.empty())
-    {
-//        if (*(history.rbegin()) == entry) {
-//            return;
-//        }
-    }
-    
     for (int i=0; i<historyIndex; i++)
     {
         delete history.back();
         history.pop_back();
     }
-    InternalAdd(entry);
+    
+    
+    if (ChekDuplicate(entry))
+    {
+        InternalAdd(entry);
+        
+    }
+    
+   
+    
     
     
 }

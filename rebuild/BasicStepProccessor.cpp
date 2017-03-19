@@ -198,7 +198,7 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     
     auto ifstment = dynamic_cast< IfStatment*>(result);
     if (ifstment) {
-        auto  * stepprocessor = new IfStepProcessor(rebuild,ifstment->expression);
+        auto  * stepprocessor = new IfStepProcessor(rebuild,ifstment);
         
         stepprocessor->Init();
         

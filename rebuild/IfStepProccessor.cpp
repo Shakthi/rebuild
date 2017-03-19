@@ -15,7 +15,7 @@ void IfStepProcessor::Init()
 {
     
     
-    if(expresion->Evaluate().getBoolVal() ) {
+    if(ifStatment->expression->Evaluate().getBoolVal() ) {
         passThroughe=true;
     }
     

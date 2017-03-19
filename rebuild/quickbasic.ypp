@@ -100,7 +100,7 @@ listCommand : LIST { std::cout<<"LIST to be implemnted"<<std::endl;  /*foreach(v
 
 ifstatment : IF boolExression  {
     auto ifstment = new IfStatment;
-    ifstment->expression = static_cast<RelationalExpression*>($2);
+    ifstment->expression = std::unique_ptr<RelationalExpression>(static_cast<RelationalExpression*>($2));
     $$=ifstment;
 
 }

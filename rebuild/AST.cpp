@@ -142,13 +142,50 @@ Value RelationalExpression::Evaluate()
 
 
 
+
+CEREAL_REGISTER_TYPE (UnProcessedStatment);
+CEREAL_REGISTER_TYPE (ErrorStatement);
+CEREAL_REGISTER_TYPE (EndStatement);
+CEREAL_REGISTER_TYPE (NextStatement);
+CEREAL_REGISTER_TYPE (RemarkStatement);
+CEREAL_REGISTER_TYPE (IfStatment);
+CEREAL_REGISTER_TYPE (ForStatment);
+CEREAL_REGISTER_TYPE (ReadStatement);
 CEREAL_REGISTER_TYPE(PrintStatement);
+
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement, PrintStatement);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,UnProcessedStatment);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,EndStatement);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,NextStatement);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,RemarkStatement);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,IfStatment);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,ForStatment);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,ReadStatement);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,ErrorStatement);
 
 
 
+
+
+
+
+
+
+CEREAL_REGISTER_TYPE(TerminalExpression);
 CEREAL_REGISTER_TYPE(GetExpression);
+CEREAL_REGISTER_TYPE(UnaryExpression);
+CEREAL_REGISTER_TYPE(BainaryExpression);
+CEREAL_REGISTER_TYPE(ArithmeticExpression);
+CEREAL_REGISTER_TYPE(RelationalExpression);
+
+
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Expression, GetExpression);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Expression, UnaryExpression);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Expression, TerminalExpression);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Expression, BainaryExpression);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(BainaryExpression,RelationalExpression );
+CEREAL_REGISTER_POLYMORPHIC_RELATION(BainaryExpression,ArithmeticExpression );
+
 
 
 #include "cereal/archives/json.hpp"
@@ -171,7 +208,7 @@ nlohmann::json Statement::ToJson()
     
     
 
-    //Rlog rlog;
+    Rlog rlog;
 
     
     nlohmann::json root;
@@ -180,8 +217,6 @@ nlohmann::json Statement::ToJson()
     std::ostringstream os;
     cereal::JSONOutputArchive oarchive( os );
 
-    auto noop_deleter = [](Statement*) {};
-    //oarchive(std::unique_ptr<Statement,decltype(noop_deleter)>(this,noop_deleter));
     
      oarchive(make_smart(this));
    
@@ -197,20 +232,181 @@ nlohmann::json Statement::ToJson()
     return root;
 
 }
-void Statement::FromJson(nlohmann::json root)
+
+
+Statement * Statement::GetFromJson(nlohmann::json root)
 {
     assert(root["class"]=="Statement");
+    //Rlog rlog;
+
+    nlohmann::json value0;
+    value0["value0"]=root["content"];
     
+    std::stringstream is;
+    is<<value0;
+    rlog<<is.str()<<std::endl;
+    
+   cereal::JSONInputArchive iarchive( is );
+    
+    
+    auto deleter=[&](Statement* ){};
+    std::unique_ptr<Statement, decltype(deleter)> st(nullptr, deleter);
+    
+    
+    iarchive(st);
+    
+    return st.get();
+  
 }
 
 
 
 
+std::string PrintStatement::dumpToString()
+{
+    std::string result="print ";
+    
+    
+    bool isFirst=true;
+    for (auto const &  i: printitems)
+    {
+        if(!isFirst)
+            result+="; ";
+            
+            
+        result+=i->dumpToString();
+        
+        isFirst=false;
+    }
+    return result;
+}
 
 
 
 
+std::string ReadStatement::dumpToString()
+{
+    std::string result="input ";
+    if(prompt!="")
+        result+="\""+prompt+"\"; ";
+        
+    
+    
+    bool isFirst=true;
+    for (auto const &  i: variableList)
+    {
+        if(!isFirst)
+            result+=";";
+        
+        
+        result+=i;
+        
+        isFirst=false;
+    }
+    return result;
+}
+
+
+std::string ArithmeticExpression::dumpToString()
+{
+    switch(mOperator)
+    {
+        case operatorType::minus:
+            return left->dumpToString() +"-"+ right->dumpToString();;
+            
+        case operatorType::plus:
+            return left->dumpToString() +"+"+ right->dumpToString();;
+            
+            
+        case operatorType::devide:
+            return left->dumpToString() +"/"+ right->dumpToString();;
+            
+            
+        case operatorType::multiply:
+            return left->dumpToString() +"*"+ right->dumpToString();;
+    };
+
+
+}
+
+
+std::string UnaryExpression::dumpToString()
+{
+    
+    switch(mOperator)
+    {
+        case operatorType::minus:
+            return "-"+sub->dumpToString();
+            
+            
+        case operatorType::grouping:
+            return "("+sub->dumpToString()+")";
+            
+    }
 
 
 
+}
+
+
+
+std::string TerminalExpression::dumpToString()
+{
+    
+    switch(sub.valutype)
+    {
+            
+        default: return "<NULL>";
+            break;
+            
+        case Value::Evaluetype::stringtype:
+        {
+            return std::string("\"")+sub.getStringVal()+std::string("\"");
+        }
+            break;
+        case Value::Evaluetype::booltype:
+        {
+            return sub.getBoolVal()?"TRUE":"FALSE";
+            
+        }
+            break;
+            
+        case Value::Evaluetype::floattype:
+        {
+            
+            std::stringstream s;
+            s<<sub.getNumVal();
+            
+            return s.str();
+            
+        }
+            break;
+            
+            
+            
+    }
+    
+   
+}
+
+std::string RelationalExpression::dumpToString()
+{
+    
+    
+    switch(mOperator)
+    {
+        case operatorType::equal:
+            return left->dumpToString() + "=" + right->dumpToString();
+            
+        case operatorType::less:
+            return left->dumpToString() + "<" + right->dumpToString();
+            
+            
+        case operatorType::greater:
+            return left->dumpToString() + ">" + right->dumpToString();
+            
+    };
+
+    
+}
 

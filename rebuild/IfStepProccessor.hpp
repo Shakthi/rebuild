@@ -20,7 +20,7 @@
 class IfStepProcessor : public BasicStepProcessor {
     
     std::string remarks;
-    RelationalExpression * expresion;//TODO: should be boolean expression
+    IfStatment * ifStatment;//TODO: should be boolean expression
     
     bool passThroughe;
   
@@ -28,8 +28,8 @@ class IfStepProcessor : public BasicStepProcessor {
     
 
 public:
-    IfStepProcessor(Rebuild* aRebuild,RelationalExpression * nexpresion)
-    : BasicStepProcessor(aRebuild),expresion(nexpresion)
+    IfStepProcessor(Rebuild* aRebuild,IfStatment * aifStatment)
+    : BasicStepProcessor(aRebuild),ifStatment(aifStatment)
     {
         // getForVar()=forblock.forBegin->;
        // isInited=false;
