@@ -18,6 +18,7 @@
 #include "cereal/types/vector.hpp"
 #include "cereal/types/list.hpp"
 
+//TODO: SERIALISATION via cereal template  need to handcoded by nlohmann::json
 
 struct Statement {
     std::string sourceText; //Debug only
