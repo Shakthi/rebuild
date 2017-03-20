@@ -47,14 +47,14 @@ void IfStepProcessor::RunStep()
         auto errorStatemnt = dynamic_cast< ErrorStatement*>(result);
         if (errorStatemnt) {
             BasicStepProcessor::Evaluate(errorStatemnt);
-            popingLineHistory.AddExtra(answer);
+            popingLineHistory.AddExtra(errorStatemnt);
             return;
             
             
         }
         
         if(BasicStepProcessor::Evaluate(result))
-            popingLineHistory.Add(answer);
+            popingLineHistory.Add(result);
         
         
     }else
@@ -87,13 +87,11 @@ void IfStepProcessor::ExecuteLoop()
     
     
   
-        for( std::string statement :popingLineHistory.GetHistory() )
-        {
-            BasicParser parser;
-            Statement * result =  parser.Parse(statement);
-            
-            Evaluate(result);
-        }
+    for( auto statement :popingLineHistory.GetHistory() )
+    {
+        
+        Evaluate(statement);
+    }
         
     
     

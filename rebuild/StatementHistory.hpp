@@ -33,13 +33,17 @@ public:
     
     void Save(std::string filename);
     void Load(std::string filename);
-   void Add(class Statement * st);
+    void Add(class Statement * st);
     bool ChekDuplicate(class Statement * st);
     void InternalAdd(class Statement * st);
     
      std::string Edit(std::string currentBuffer, MoveDirection direction,bool& success);
     
-
+    
+     const std::vector<Statement*> & GetHistory() const
+    {
+        return history;
+    }
     
     void Clear();
     
