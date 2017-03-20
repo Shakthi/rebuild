@@ -12,7 +12,8 @@
 #include "BasicStepProccessor.hpp"
 #include "lineNoiseWrapper.hpp"
 #include "StatementHistory.hpp"
-
+#include <exception>
+#include <stdexcept>
 #include <iostream>
 
 namespace {
@@ -135,7 +136,7 @@ namespace
 
 void Rebuild::Load()
 {
-    Rlog rlog;
+    //Rlog rlog;
     std::string savepath = GetSavePath();
     
     rlog << "Loading main config:" << savepath << std::endl;
@@ -144,7 +145,7 @@ void Rebuild::Load()
     
     
     
-    
+
     
     if (stream.good()) {
         nlohmann::json root;
@@ -164,11 +165,16 @@ void Rebuild::Load()
 
             stream2 << root.dump(4);
 
-        } catch (...) {
+        } catch (std::exception exception) {
             
-            rlog << "Failed load config"<< LocalSavePath() << std::endl;
+            
+            rlog << Rlog::type::error<< "Failed load config"<< LocalSavePath() << exception.what() << std::endl;
             
         }
+    }else
+    {
+         rlog << Rlog::type::error<< "Failed load config"<< LocalSavePath() << std::endl;
+    
     }
 }
 
