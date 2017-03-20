@@ -208,11 +208,7 @@ auto make_smart(T* t)-> std::unique_ptr <T,void (*)(T*)>
 
 nlohmann::json Statement::ToJson()
 {
-    
-    
-
-    Rlog rlog;
-
+//    Rlog rlog;
     
     nlohmann::json root;
     root["class"]="Statement";
