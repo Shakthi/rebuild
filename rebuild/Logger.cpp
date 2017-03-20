@@ -87,7 +87,7 @@ Rlog::logfilterType Rlog::sharedlogfilter = nullptr;
 
 bool Rlog::defaultFilter(int currentlevel,int thislevel,const std::string & context,int level)
 {
-    if(thislevel>0)
+    if(thislevel>0 ||level == (int)type::error )
         return true;
     else
         return false;

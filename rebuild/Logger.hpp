@@ -140,6 +140,8 @@ struct Rlog:public std::ostream
         {
             std::ostream & dout=*this;
             dout<< __pf;;
+            
+            currenttype = (int)type::info;//FIXME:Temporary fix
         }
         return *this;
     }
