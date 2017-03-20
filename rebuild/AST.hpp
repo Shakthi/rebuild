@@ -14,11 +14,10 @@
 #include <vector>
 #include "quickbasic.h"
 #include "nlohmann/json.hpp"
-#include "cereal/cereal.hpp"
-#include "cereal/types/vector.hpp"
-#include "cereal/types/list.hpp"
+
 
 //TODO: SERIALISATION via cereal template  need to handcoded by nlohmann::json
+/* Templates are ugly */
 
 struct Statement {
     std::string sourceText; //Debug only
