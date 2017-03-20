@@ -47,19 +47,19 @@ void ForStepProcessor::RunStep()
     auto errorStatemnt = dynamic_cast< ErrorStatement*>(result);
     if (errorStatemnt) {
         BasicStepProcessor::Evaluate(errorStatemnt);
-        popingLineHistory.AddExtra(answer);
+        popingLineHistory.AddExtra(errorStatemnt);
         return;
 
 
     }
     
     if(BasicStepProcessor::Evaluate(result))
-        popingLineHistory.Add(answer);
+        popingLineHistory.Add(result);
         
     
     }else 
     {
-        std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild>for "+ thisForBlock->forVar+" (remarks)]:");
+        std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>forelse]:",popingLineHistory);
         
         BasicParser parser;
         Statement * result =  parser.Parse(answer);
@@ -89,12 +89,10 @@ void ForStepProcessor::ExecuteLoop()
     for (varTable[thisForBlock->forVar] =  getForVar() +thisForBlock->forStep->Evaluate().getNumVal() ;
          getForVar() <=thisForBlock->forEnd->Evaluate().getNumVal() ; varTable[thisForBlock->forVar]= getForVar() +thisForBlock->forStep->Evaluate().getNumVal() ) {
         
-        for( std::string statement :popingLineHistory.GetHistory() )
+        for( auto statement :popingLineHistory.GetHistory() )
         {
-            BasicParser parser;
-            Statement * result =  parser.Parse(statement);
 
-            Evaluate(result);
+            Evaluate(statement);
         }
         
     }

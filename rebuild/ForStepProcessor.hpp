@@ -11,7 +11,7 @@
 
 #include "BasicStepProccessor.hpp"
 #include "quickbasic.h"
-#include "lineHistory.hpp"
+#include "StatementHistory.hpp"
 #include "AST.hpp"
 
 
@@ -20,7 +20,7 @@ class ForStepProcessor : public BasicStepProcessor {
     ForStatment * thisForBlock;
     
     std::string remarks;
-    PopingLineHistoryStr popingLineHistory;
+    PopingLineStatementHistory popingLineHistory;
     bool passThrough;
     
 public:
