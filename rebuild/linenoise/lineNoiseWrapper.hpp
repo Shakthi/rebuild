@@ -19,7 +19,7 @@ class LineNoiseWrapper  {
     
 
 public:
-    enum class EStatus { ok,
+    enum class ExitStatus { ok,
         ctrl_c,
         ctrl_d,
         };
@@ -32,12 +32,17 @@ public:
     
 
 private:
-    EStatus status;
+    ExitStatus status;
+    EModificationStatus mstatus;
+    
+    std::string loadedBuffer;
 
 public:
     std::string getLine(std::string prompt);
-    std::string getLineWithHistory(std::string prompt,LineHistory & inhistory);
-    EStatus GetStatus() { return status; }
+    std::string getLineWithHistory(std::string prompt,LineHistory & inhistory,std::string defaultValue="");
+    ExitStatus GetStatus() { return status; }
+    EModificationStatus GetModificationStatus() { return mstatus; }
+
     ~LineNoiseWrapper();
     LineNoiseWrapper(LineHistory & linehistory);
     

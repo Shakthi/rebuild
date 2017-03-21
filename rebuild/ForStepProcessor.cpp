@@ -59,24 +59,32 @@ void ForStepProcessor::RunStep()
     
     }else 
     {
-        std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>forelse]:",popingLineHistory);
         
+        std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>forelse]:",popingLineHistory);
+
         BasicParser parser;
         Statement * result =  parser.Parse(answer);
+        popingLineHistory.PopExtra();
         
-        auto remarkStatement = dynamic_cast< RemarkStatement*>(result);
-        if (remarkStatement) {
-            remarks=remarkStatement->comments;
+        auto endStatement = dynamic_cast< EndStatement*>(result);
+        if (endStatement) {
             delete result;
             exitProcessing();
             return;
         }
         
+        auto errorStatemnt = dynamic_cast< ErrorStatement*>(result);
+        if (errorStatemnt) {
+            BasicStepProcessor::Evaluate(errorStatemnt);
+            popingLineHistory.AddExtra(errorStatemnt);
+            return;
+            
+            
+        }
         
-        
-        delete result;
-        exitProcessing();
-        return;
+        if(BasicStepProcessor::Evaluate(result))
+            popingLineHistory.Add(result);
+
     }
 
 }

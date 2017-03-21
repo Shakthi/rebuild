@@ -251,7 +251,7 @@ void BasicStepProcessor::RunStep()
 
     
     if (answer == ""){
-        if( rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::EStatus::ctrl_c)
+        if( rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::ExitStatus::ctrl_c)
         exitProcessing();
         return;
     }

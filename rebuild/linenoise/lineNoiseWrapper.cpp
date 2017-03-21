@@ -27,8 +27,13 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
         returnstring = result;
     }
     
+    
     if (errno == EAGAIN)
-        status = EStatus::ctrl_c;
+        status = ExitStatus::ctrl_c;
+    
+    if(loadedBuffer != returnstring)
+        mstatus = EModificationStatus::edited;
+        
     
     linenoiseFree(result);
     
@@ -61,9 +66,14 @@ LineNoiseWrapper::linenoiseHistoryCallbackStatic(int direction, const char* oldl
 
 std::string LineNoiseWrapper::LinenoiseHistoryCallback(int direction, std::string oldline,bool &  success)
 {
+    
+    
     std::string result = localHistory->Edit(oldline, (direction == 1) ? LineHistory::MoveDirection::prev
                                       : LineHistory::MoveDirection::next,
                                       success);
+    
+    mstatus = EModificationStatus::history;
+    loadedBuffer=result;
     
     return result;
     
