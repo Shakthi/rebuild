@@ -816,21 +816,25 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
     l.prompt = prompt;
     l.plen = strlen(prompt);
     l.oldpos = l.pos = 0;
-    l.len = 0;
+    l.len = strlen(buf);
     l.cols = getColumns(stdin_fd, stdout_fd);
     l.maxrows = 0;
     l.history_index = 0;
 
     /* Buffer starts empty. */
-    l.buf[0] = '\0';
+   // l.buf[0] = '\0'; //Buffer is not cleared for placeholder value
     l.buflen--; /* Make sure there is always space for the nulterm */
 
     /* The latest history entry is always our current buffer, that
      * initially is just an empty string. */
     linenoiseHistoryAdd("");
+    
+
 
     if (write(l.ofd,prompt,l.plen) == -1) return -1;
     refreshLine(&l);
+    //if (write(l.ofd,l.buf,l.len) == -1) return -1; check if required for placeholdrer
+
 
     while(1) {
         char c;
@@ -1098,6 +1102,7 @@ char *linenoise(const char *prompt,const linenoiseOptions * option,linenoiseResu
         size_t len;
 
         printf("%s",prompt);
+        
         fflush(stdout);
         do {
             if (fgets(buf,LINENOISE_MAX_LINE,stdin) == NULL && errno != EINTR ) {
@@ -1115,7 +1120,10 @@ char *linenoise(const char *prompt,const linenoiseOptions * option,linenoiseResu
         result->printNewln=1;
         return strdup(buf);
     } else {
+
+        strcpy(buf, placeholder);
         count = linenoiseRaw(buf,LINENOISE_MAX_LINE,prompt,option,result);
+        
         if (count == -1) return NULL;
         return strdup(buf);
     }
