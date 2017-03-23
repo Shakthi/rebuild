@@ -12,16 +12,15 @@
                             "printitems": [
                                 {
                                     "polymorphic_id": 2147483650,
-                                    "polymorphic_name": "RelationalExpression",
+                                    "polymorphic_name": "ArithmeticExpression",
                                     "ptr_wrapper": {
                                         "data": {
                                             "::base": {
                                                 "::base": {
-                                                    "valuetype": 2
+                                                    "valuetype": 3
                                                 },
                                                 "left": {
-                                                    "polymorphic_id": 2147483651,
-                                                    "polymorphic_name": "ArithmeticExpression",
+                                                    "polymorphic_id": 2,
                                                     "ptr_wrapper": {
                                                         "data": {
                                                             "::base": {
@@ -29,51 +28,543 @@
                                                                     "valuetype": 3
                                                                 },
                                                                 "left": {
-                                                                    "polymorphic_id": 2147483652,
+                                                                    "polymorphic_id": 2147483651,
                                                                     "polymorphic_name": "TerminalExpression",
                                                                     "ptr_wrapper": {
                                                                         "data": {
-                                                                            "numVal": 78,
+                                                                            "numVal": 1,
                                                                             "sub.valutype": 3
                                                                         },
                                                                         "valid": 1
                                                                     }
                                                                 },
                                                                 "right": {
-                                                                    "polymorphic_id": 4,
+                                                                    "polymorphic_id": 2,
                                                                     "ptr_wrapper": {
                                                                         "data": {
-                                                                            "numVal": 56,
-                                                                            "sub.valutype": 3
+                                                                            "::base": {
+                                                                                "::base": {
+                                                                                    "valuetype": 3
+                                                                                },
+                                                                                "left": {
+                                                                                    "polymorphic_id": 3,
+                                                                                    "ptr_wrapper": {
+                                                                                        "data": {
+                                                                                            "numVal": 2,
+                                                                                            "sub.valutype": 3
+                                                                                        },
+                                                                                        "valid": 1
+                                                                                    }
+                                                                                },
+                                                                                "right": {
+                                                                                    "polymorphic_id": 3,
+                                                                                    "ptr_wrapper": {
+                                                                                        "data": {
+                                                                                            "numVal": 5,
+                                                                                            "sub.valutype": 3
+                                                                                        },
+                                                                                        "valid": 1
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "mOperator": 2
                                                                         },
                                                                         "valid": 1
                                                                     }
                                                                 }
                                                             },
-                                                            "mOperator": 0
+                                                            "mOperator": 1
                                                         },
                                                         "valid": 1
                                                     }
                                                 },
                                                 "right": {
-                                                    "polymorphic_id": 4,
+                                                    "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
-                                                            "numVal": 2,
+                                                            "numVal": 10,
                                                             "sub.valutype": 3
                                                         },
                                                         "valid": 1
                                                     }
                                                 }
                                             },
-                                            "inputype": 3,
                                             "mOperator": 1
+                                        },
+                                        "valid": 1
+                                    }
+                                },
+                                {
+                                    "polymorphic_id": 3,
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "stringValue": "erter",
+                                            "sub.valutype": 1
                                         },
                                         "valid": 1
                                     }
                                 }
                             ],
-                            "sourceText": "print 78+56=2"
+                            "sourceText": "print 1-2*5-10; \"erter\""
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "PrintStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "printitems": [
+                                {
+                                    "polymorphic_id": 2147483650,
+                                    "polymorphic_name": "TerminalExpression",
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "stringValue": "adsaadas+89",
+                                            "sub.valutype": 1
+                                        },
+                                        "valid": 1
+                                    }
+                                }
+                            ],
+                            "sourceText": "print \"adsaadas+89\""
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "PrintStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "printitems": [
+                                {
+                                    "polymorphic_id": 2147483650,
+                                    "polymorphic_name": "TerminalExpression",
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "stringValue": "adsaadas",
+                                            "sub.valutype": 1
+                                        },
+                                        "valid": 1
+                                    }
+                                }
+                            ],
+                            "sourceText": "print \"adsaadas\""
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "PrintStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "printitems": [
+                                {
+                                    "polymorphic_id": 2147483650,
+                                    "polymorphic_name": "TerminalExpression",
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "stringValue": "aa",
+                                            "sub.valutype": 1
+                                        },
+                                        "valid": 1
+                                    }
+                                }
+                            ],
+                            "sourceText": "print \"aa\""
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "PrintStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "printitems": [
+                                {
+                                    "polymorphic_id": 2147483650,
+                                    "polymorphic_name": "TerminalExpression",
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "stringValue": "1",
+                                            "sub.valutype": 1
+                                        },
+                                        "valid": 1
+                                    }
+                                }
+                            ],
+                            "sourceText": "print \"1\""
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "PrintStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "printitems": [
+                                {
+                                    "polymorphic_id": 2147483650,
+                                    "polymorphic_name": "TerminalExpression",
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "stringValue": "asdasd",
+                                            "sub.valutype": 1
+                                        },
+                                        "valid": 1
+                                    }
+                                }
+                            ],
+                            "sourceText": "print \"asdasd\""
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "ForStatment",
+                    "ptr_wrapper": {
+                        "data": {
+                            "forBegin": {
+                                "polymorphic_id": 2147483650,
+                                "polymorphic_name": "TerminalExpression",
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "numVal": 1,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "forEnd": {
+                                "polymorphic_id": 2,
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "numVal": 10,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "forStep": {
+                                "polymorphic_id": 2,
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "numVal": 1,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "forVar": "i",
+                            "sourceText": "for i = 1 to 10"
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "ForStatment",
+                    "ptr_wrapper": {
+                        "data": {
+                            "forBegin": {
+                                "polymorphic_id": 2147483650,
+                                "polymorphic_name": "TerminalExpression",
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "numVal": 10,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "forEnd": {
+                                "polymorphic_id": 2,
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "numVal": 3,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "forStep": {
+                                "polymorphic_id": 2,
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "numVal": 1,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "forVar": "i",
+                            "sourceText": "for i = 10 to 3"
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "ForStatment",
+                    "ptr_wrapper": {
+                        "data": {
+                            "forBegin": {
+                                "polymorphic_id": 2147483650,
+                                "polymorphic_name": "TerminalExpression",
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "numVal": 1,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "forEnd": {
+                                "polymorphic_id": 2,
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "numVal": 10,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "forStep": {
+                                "polymorphic_id": 2,
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "numVal": 1,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "forVar": "i",
+                            "sourceText": "for i = 1 to 10"
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "ForStatment",
+                    "ptr_wrapper": {
+                        "data": {
+                            "forBegin": {
+                                "polymorphic_id": 2147483650,
+                                "polymorphic_name": "TerminalExpression",
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "numVal": 1,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "forEnd": {
+                                "polymorphic_id": 2,
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "numVal": 10,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "forStep": {
+                                "polymorphic_id": 2,
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "numVal": 1,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "forVar": "i",
+                            "sourceText": "for i =1 to 10"
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "LetStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "rvalue": {
+                                "polymorphic_id": 2147483650,
+                                "polymorphic_name": "TerminalExpression",
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "numVal": 455,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "variablename": "a"
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "PrintStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "printitems": [
+                                {
+                                    "polymorphic_id": 2147483650,
+                                    "polymorphic_name": "GetExpression",
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "varName": "a"
+                                        },
+                                        "valid": 1
+                                    }
+                                }
+                            ],
+                            "sourceText": "print a"
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "ReadStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "prompt": "hello:",
+                            "sourceText": "input \"hello:\"; a;b;c",
+                            "variableList": [
+                                "a",
+                                "b",
+                                "c"
+                            ]
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "ReadStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "prompt": "hello:",
+                            "sourceText": "input \"hello:\";a;b;c",
+                            "variableList": [
+                                "a",
+                                "b",
+                                "c"
+                            ]
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "ErrorStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "description": "syntax error, unexpected VAR, expecting ';'",
+                            "sourceText": "input \"hello:\"a;b;c"
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "ReadStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "prompt": "hello:",
+                            "sourceText": "input \"hello:\";a",
+                            "variableList": [
+                                "a"
+                            ]
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "ErrorStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "description": "syntax error, unexpected NUMBER, expecting VAR or SVAR",
+                            "sourceText": "input \"hello:\";5"
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "ReadStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "prompt": "",
+                            "sourceText": "input a",
+                            "variableList": [
+                                "a"
+                            ]
                         },
                         "valid": 1
                     }
@@ -105,36 +596,12 @@
                                                                     "valuetype": 3
                                                                 },
                                                                 "left": {
-                                                                    "polymorphic_id": 2,
+                                                                    "polymorphic_id": 2147483651,
+                                                                    "polymorphic_name": "TerminalExpression",
                                                                     "ptr_wrapper": {
                                                                         "data": {
-                                                                            "::base": {
-                                                                                "::base": {
-                                                                                    "valuetype": 3
-                                                                                },
-                                                                                "left": {
-                                                                                    "polymorphic_id": 2147483651,
-                                                                                    "polymorphic_name": "TerminalExpression",
-                                                                                    "ptr_wrapper": {
-                                                                                        "data": {
-                                                                                            "numVal": 4,
-                                                                                            "sub.valutype": 3
-                                                                                        },
-                                                                                        "valid": 1
-                                                                                    }
-                                                                                },
-                                                                                "right": {
-                                                                                    "polymorphic_id": 3,
-                                                                                    "ptr_wrapper": {
-                                                                                        "data": {
-                                                                                            "numVal": 6,
-                                                                                            "sub.valutype": 3
-                                                                                        },
-                                                                                        "valid": 1
-                                                                                    }
-                                                                                }
-                                                                            },
-                                                                            "mOperator": 2
+                                                                            "numVal": 1,
+                                                                            "sub.valutype": 3
                                                                         },
                                                                         "valid": 1
                                                                     }
@@ -161,7 +628,7 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
-                                                                                            "numVal": 7,
+                                                                                            "numVal": 5,
                                                                                             "sub.valutype": 3
                                                                                         },
                                                                                         "valid": 1
@@ -183,20 +650,371 @@
                                                     "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
-                                                            "numVal": 1,
+                                                            "numVal": 10,
                                                             "sub.valutype": 3
                                                         },
                                                         "valid": 1
                                                     }
                                                 }
                                             },
-                                            "mOperator": 0
+                                            "mOperator": 1
+                                        },
+                                        "valid": 1
+                                    }
+                                },
+                                {
+                                    "polymorphic_id": 3,
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "stringValue": "asdasd",
+                                            "sub.valutype": 1
                                         },
                                         "valid": 1
                                     }
                                 }
                             ],
-                            "sourceText": "print 4*6-2*7+1"
+                            "sourceText": "print 1-2*5-10; \"asdasd\""
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "PrintStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "printitems": [
+                                {
+                                    "polymorphic_id": 2147483650,
+                                    "polymorphic_name": "ArithmeticExpression",
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "::base": {
+                                                "::base": {
+                                                    "valuetype": 3
+                                                },
+                                                "left": {
+                                                    "polymorphic_id": 2,
+                                                    "ptr_wrapper": {
+                                                        "data": {
+                                                            "::base": {
+                                                                "::base": {
+                                                                    "valuetype": 3
+                                                                },
+                                                                "left": {
+                                                                    "polymorphic_id": 2147483651,
+                                                                    "polymorphic_name": "TerminalExpression",
+                                                                    "ptr_wrapper": {
+                                                                        "data": {
+                                                                            "numVal": 1,
+                                                                            "sub.valutype": 3
+                                                                        },
+                                                                        "valid": 1
+                                                                    }
+                                                                },
+                                                                "right": {
+                                                                    "polymorphic_id": 2,
+                                                                    "ptr_wrapper": {
+                                                                        "data": {
+                                                                            "::base": {
+                                                                                "::base": {
+                                                                                    "valuetype": 3
+                                                                                },
+                                                                                "left": {
+                                                                                    "polymorphic_id": 3,
+                                                                                    "ptr_wrapper": {
+                                                                                        "data": {
+                                                                                            "numVal": 2,
+                                                                                            "sub.valutype": 3
+                                                                                        },
+                                                                                        "valid": 1
+                                                                                    }
+                                                                                },
+                                                                                "right": {
+                                                                                    "polymorphic_id": 3,
+                                                                                    "ptr_wrapper": {
+                                                                                        "data": {
+                                                                                            "numVal": 5,
+                                                                                            "sub.valutype": 3
+                                                                                        },
+                                                                                        "valid": 1
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "mOperator": 2
+                                                                        },
+                                                                        "valid": 1
+                                                                    }
+                                                                }
+                                                            },
+                                                            "mOperator": 1
+                                                        },
+                                                        "valid": 1
+                                                    }
+                                                },
+                                                "right": {
+                                                    "polymorphic_id": 3,
+                                                    "ptr_wrapper": {
+                                                        "data": {
+                                                            "numVal": 10,
+                                                            "sub.valutype": 3
+                                                        },
+                                                        "valid": 1
+                                                    }
+                                                }
+                                            },
+                                            "mOperator": 1
+                                        },
+                                        "valid": 1
+                                    }
+                                },
+                                {
+                                    "polymorphic_id": 3,
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "stringValue": "erter",
+                                            "sub.valutype": 1
+                                        },
+                                        "valid": 1
+                                    }
+                                }
+                            ],
+                            "sourceText": "print 1-2*5-10;\"erter\""
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "PrintStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "printitems": [
+                                {
+                                    "polymorphic_id": 2147483650,
+                                    "polymorphic_name": "ArithmeticExpression",
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "::base": {
+                                                "::base": {
+                                                    "valuetype": 3
+                                                },
+                                                "left": {
+                                                    "polymorphic_id": 2,
+                                                    "ptr_wrapper": {
+                                                        "data": {
+                                                            "::base": {
+                                                                "::base": {
+                                                                    "valuetype": 3
+                                                                },
+                                                                "left": {
+                                                                    "polymorphic_id": 2147483651,
+                                                                    "polymorphic_name": "TerminalExpression",
+                                                                    "ptr_wrapper": {
+                                                                        "data": {
+                                                                            "numVal": 1,
+                                                                            "sub.valutype": 3
+                                                                        },
+                                                                        "valid": 1
+                                                                    }
+                                                                },
+                                                                "right": {
+                                                                    "polymorphic_id": 2,
+                                                                    "ptr_wrapper": {
+                                                                        "data": {
+                                                                            "::base": {
+                                                                                "::base": {
+                                                                                    "valuetype": 3
+                                                                                },
+                                                                                "left": {
+                                                                                    "polymorphic_id": 3,
+                                                                                    "ptr_wrapper": {
+                                                                                        "data": {
+                                                                                            "numVal": 2,
+                                                                                            "sub.valutype": 3
+                                                                                        },
+                                                                                        "valid": 1
+                                                                                    }
+                                                                                },
+                                                                                "right": {
+                                                                                    "polymorphic_id": 3,
+                                                                                    "ptr_wrapper": {
+                                                                                        "data": {
+                                                                                            "numVal": 5,
+                                                                                            "sub.valutype": 3
+                                                                                        },
+                                                                                        "valid": 1
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "mOperator": 2
+                                                                        },
+                                                                        "valid": 1
+                                                                    }
+                                                                }
+                                                            },
+                                                            "mOperator": 1
+                                                        },
+                                                        "valid": 1
+                                                    }
+                                                },
+                                                "right": {
+                                                    "polymorphic_id": 3,
+                                                    "ptr_wrapper": {
+                                                        "data": {
+                                                            "numVal": 10,
+                                                            "sub.valutype": 3
+                                                        },
+                                                        "valid": 1
+                                                    }
+                                                }
+                                            },
+                                            "mOperator": 1
+                                        },
+                                        "valid": 1
+                                    }
+                                },
+                                {
+                                    "polymorphic_id": 2147483652,
+                                    "polymorphic_name": "GetExpression",
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "varName": "erter"
+                                        },
+                                        "valid": 1
+                                    }
+                                }
+                            ],
+                            "sourceText": "print 1-2*5-10;erter"
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "ErrorStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "description": "syntax error, unexpected VAR, expecting $end",
+                            "sourceText": "print 1-2*5-10erter"
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "PrintStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "printitems": [
+                                {
+                                    "polymorphic_id": 2147483650,
+                                    "polymorphic_name": "ArithmeticExpression",
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "::base": {
+                                                "::base": {
+                                                    "valuetype": 3
+                                                },
+                                                "left": {
+                                                    "polymorphic_id": 2,
+                                                    "ptr_wrapper": {
+                                                        "data": {
+                                                            "::base": {
+                                                                "::base": {
+                                                                    "valuetype": 3
+                                                                },
+                                                                "left": {
+                                                                    "polymorphic_id": 2147483651,
+                                                                    "polymorphic_name": "TerminalExpression",
+                                                                    "ptr_wrapper": {
+                                                                        "data": {
+                                                                            "numVal": 1,
+                                                                            "sub.valutype": 3
+                                                                        },
+                                                                        "valid": 1
+                                                                    }
+                                                                },
+                                                                "right": {
+                                                                    "polymorphic_id": 2,
+                                                                    "ptr_wrapper": {
+                                                                        "data": {
+                                                                            "::base": {
+                                                                                "::base": {
+                                                                                    "valuetype": 3
+                                                                                },
+                                                                                "left": {
+                                                                                    "polymorphic_id": 3,
+                                                                                    "ptr_wrapper": {
+                                                                                        "data": {
+                                                                                            "numVal": 2,
+                                                                                            "sub.valutype": 3
+                                                                                        },
+                                                                                        "valid": 1
+                                                                                    }
+                                                                                },
+                                                                                "right": {
+                                                                                    "polymorphic_id": 3,
+                                                                                    "ptr_wrapper": {
+                                                                                        "data": {
+                                                                                            "numVal": 5,
+                                                                                            "sub.valutype": 3
+                                                                                        },
+                                                                                        "valid": 1
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "mOperator": 2
+                                                                        },
+                                                                        "valid": 1
+                                                                    }
+                                                                }
+                                                            },
+                                                            "mOperator": 1
+                                                        },
+                                                        "valid": 1
+                                                    }
+                                                },
+                                                "right": {
+                                                    "polymorphic_id": 3,
+                                                    "ptr_wrapper": {
+                                                        "data": {
+                                                            "numVal": 10,
+                                                            "sub.valutype": 3
+                                                        },
+                                                        "valid": 1
+                                                    }
+                                                }
+                                            },
+                                            "mOperator": 1
+                                        },
+                                        "valid": 1
+                                    }
+                                },
+                                {
+                                    "polymorphic_id": 3,
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "stringValue": "erter",
+                                            "sub.valutype": 1
+                                        },
+                                        "valid": 1
+                                    }
+                                }
+                            ],
+                            "sourceText": "print 1-2*5-10;\"erter\""
                         },
                         "valid": 1
                     }
@@ -493,7 +1311,7 @@
                                     }
                                 }
                             ],
-                            "sourceText": "print 1- 2* 5- 10"
+                            "sourceText": "print 1-2*5-10"
                         },
                         "valid": 1
                     }
@@ -691,7 +1509,7 @@
                                     }
                                 }
                             ],
-                            "sourceText": "print 1-2*5-10"
+                            "sourceText": "print 1- 2* 5- 10"
                         },
                         "valid": 1
                     }
@@ -921,12 +1739,36 @@
                                                                     "valuetype": 3
                                                                 },
                                                                 "left": {
-                                                                    "polymorphic_id": 2147483651,
-                                                                    "polymorphic_name": "TerminalExpression",
+                                                                    "polymorphic_id": 2,
                                                                     "ptr_wrapper": {
                                                                         "data": {
-                                                                            "numVal": 1,
-                                                                            "sub.valutype": 3
+                                                                            "::base": {
+                                                                                "::base": {
+                                                                                    "valuetype": 3
+                                                                                },
+                                                                                "left": {
+                                                                                    "polymorphic_id": 2147483651,
+                                                                                    "polymorphic_name": "TerminalExpression",
+                                                                                    "ptr_wrapper": {
+                                                                                        "data": {
+                                                                                            "numVal": 4,
+                                                                                            "sub.valutype": 3
+                                                                                        },
+                                                                                        "valid": 1
+                                                                                    }
+                                                                                },
+                                                                                "right": {
+                                                                                    "polymorphic_id": 3,
+                                                                                    "ptr_wrapper": {
+                                                                                        "data": {
+                                                                                            "numVal": 6,
+                                                                                            "sub.valutype": 3
+                                                                                        },
+                                                                                        "valid": 1
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            "mOperator": 2
                                                                         },
                                                                         "valid": 1
                                                                     }
@@ -953,7 +1795,7 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
-                                                                                            "numVal": 5,
+                                                                                            "numVal": 7,
                                                                                             "sub.valutype": 3
                                                                                         },
                                                                                         "valid": 1
@@ -975,44 +1817,20 @@
                                                     "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
-                                                            "numVal": 10,
+                                                            "numVal": 1,
                                                             "sub.valutype": 3
                                                         },
                                                         "valid": 1
                                                     }
                                                 }
                                             },
-                                            "mOperator": 1
-                                        },
-                                        "valid": 1
-                                    }
-                                },
-                                {
-                                    "polymorphic_id": 3,
-                                    "ptr_wrapper": {
-                                        "data": {
-                                            "stringValue": "erter",
-                                            "sub.valutype": 1
+                                            "mOperator": 0
                                         },
                                         "valid": 1
                                     }
                                 }
                             ],
-                            "sourceText": "print 1-2*5-10;\"erter\""
-                        },
-                        "valid": 1
-                    }
-                }
-            },
-            {
-                "class": "Statement",
-                "content": {
-                    "polymorphic_id": 2147483649,
-                    "polymorphic_name": "ErrorStatement",
-                    "ptr_wrapper": {
-                        "data": {
-                            "description": "syntax error, unexpected VAR, expecting $end",
-                            "sourceText": "print 1-2*5-10erter"
+                            "sourceText": "print 4*6-2*7+1"
                         },
                         "valid": 1
                     }
@@ -1028,15 +1846,16 @@
                             "printitems": [
                                 {
                                     "polymorphic_id": 2147483650,
-                                    "polymorphic_name": "ArithmeticExpression",
+                                    "polymorphic_name": "RelationalExpression",
                                     "ptr_wrapper": {
                                         "data": {
                                             "::base": {
                                                 "::base": {
-                                                    "valuetype": 3
+                                                    "valuetype": 2
                                                 },
                                                 "left": {
-                                                    "polymorphic_id": 2,
+                                                    "polymorphic_id": 2147483651,
+                                                    "polymorphic_name": "ArithmeticExpression",
                                                     "ptr_wrapper": {
                                                         "data": {
                                                             "::base": {
@@ -1044,451 +1863,51 @@
                                                                     "valuetype": 3
                                                                 },
                                                                 "left": {
-                                                                    "polymorphic_id": 2147483651,
+                                                                    "polymorphic_id": 2147483652,
                                                                     "polymorphic_name": "TerminalExpression",
                                                                     "ptr_wrapper": {
                                                                         "data": {
-                                                                            "numVal": 1,
+                                                                            "numVal": 78,
                                                                             "sub.valutype": 3
                                                                         },
                                                                         "valid": 1
                                                                     }
                                                                 },
                                                                 "right": {
-                                                                    "polymorphic_id": 2,
+                                                                    "polymorphic_id": 4,
                                                                     "ptr_wrapper": {
                                                                         "data": {
-                                                                            "::base": {
-                                                                                "::base": {
-                                                                                    "valuetype": 3
-                                                                                },
-                                                                                "left": {
-                                                                                    "polymorphic_id": 3,
-                                                                                    "ptr_wrapper": {
-                                                                                        "data": {
-                                                                                            "numVal": 2,
-                                                                                            "sub.valutype": 3
-                                                                                        },
-                                                                                        "valid": 1
-                                                                                    }
-                                                                                },
-                                                                                "right": {
-                                                                                    "polymorphic_id": 3,
-                                                                                    "ptr_wrapper": {
-                                                                                        "data": {
-                                                                                            "numVal": 5,
-                                                                                            "sub.valutype": 3
-                                                                                        },
-                                                                                        "valid": 1
-                                                                                    }
-                                                                                }
-                                                                            },
-                                                                            "mOperator": 2
-                                                                        },
-                                                                        "valid": 1
-                                                                    }
-                                                                }
-                                                            },
-                                                            "mOperator": 1
-                                                        },
-                                                        "valid": 1
-                                                    }
-                                                },
-                                                "right": {
-                                                    "polymorphic_id": 3,
-                                                    "ptr_wrapper": {
-                                                        "data": {
-                                                            "numVal": 10,
-                                                            "sub.valutype": 3
-                                                        },
-                                                        "valid": 1
-                                                    }
-                                                }
-                                            },
-                                            "mOperator": 1
-                                        },
-                                        "valid": 1
-                                    }
-                                },
-                                {
-                                    "polymorphic_id": 2147483652,
-                                    "polymorphic_name": "GetExpression",
-                                    "ptr_wrapper": {
-                                        "data": {
-                                            "varName": "erter"
-                                        },
-                                        "valid": 1
-                                    }
-                                }
-                            ],
-                            "sourceText": "print 1-2*5-10;erter"
-                        },
-                        "valid": 1
-                    }
-                }
-            },
-            {
-                "class": "Statement",
-                "content": {
-                    "polymorphic_id": 2147483649,
-                    "polymorphic_name": "PrintStatement",
-                    "ptr_wrapper": {
-                        "data": {
-                            "printitems": [
-                                {
-                                    "polymorphic_id": 2147483650,
-                                    "polymorphic_name": "ArithmeticExpression",
-                                    "ptr_wrapper": {
-                                        "data": {
-                                            "::base": {
-                                                "::base": {
-                                                    "valuetype": 3
-                                                },
-                                                "left": {
-                                                    "polymorphic_id": 2,
-                                                    "ptr_wrapper": {
-                                                        "data": {
-                                                            "::base": {
-                                                                "::base": {
-                                                                    "valuetype": 3
-                                                                },
-                                                                "left": {
-                                                                    "polymorphic_id": 2147483651,
-                                                                    "polymorphic_name": "TerminalExpression",
-                                                                    "ptr_wrapper": {
-                                                                        "data": {
-                                                                            "numVal": 1,
+                                                                            "numVal": 56,
                                                                             "sub.valutype": 3
                                                                         },
                                                                         "valid": 1
                                                                     }
-                                                                },
-                                                                "right": {
-                                                                    "polymorphic_id": 2,
-                                                                    "ptr_wrapper": {
-                                                                        "data": {
-                                                                            "::base": {
-                                                                                "::base": {
-                                                                                    "valuetype": 3
-                                                                                },
-                                                                                "left": {
-                                                                                    "polymorphic_id": 3,
-                                                                                    "ptr_wrapper": {
-                                                                                        "data": {
-                                                                                            "numVal": 2,
-                                                                                            "sub.valutype": 3
-                                                                                        },
-                                                                                        "valid": 1
-                                                                                    }
-                                                                                },
-                                                                                "right": {
-                                                                                    "polymorphic_id": 3,
-                                                                                    "ptr_wrapper": {
-                                                                                        "data": {
-                                                                                            "numVal": 5,
-                                                                                            "sub.valutype": 3
-                                                                                        },
-                                                                                        "valid": 1
-                                                                                    }
-                                                                                }
-                                                                            },
-                                                                            "mOperator": 2
-                                                                        },
-                                                                        "valid": 1
-                                                                    }
                                                                 }
                                                             },
-                                                            "mOperator": 1
+                                                            "mOperator": 0
                                                         },
                                                         "valid": 1
                                                     }
                                                 },
                                                 "right": {
-                                                    "polymorphic_id": 3,
+                                                    "polymorphic_id": 4,
                                                     "ptr_wrapper": {
                                                         "data": {
-                                                            "numVal": 10,
+                                                            "numVal": 2,
                                                             "sub.valutype": 3
                                                         },
                                                         "valid": 1
                                                     }
                                                 }
                                             },
+                                            "inputype": 3,
                                             "mOperator": 1
                                         },
                                         "valid": 1
                                     }
-                                },
-                                {
-                                    "polymorphic_id": 3,
-                                    "ptr_wrapper": {
-                                        "data": {
-                                            "stringValue": "erter",
-                                            "sub.valutype": 1
-                                        },
-                                        "valid": 1
-                                    }
                                 }
                             ],
-                            "sourceText": "print 1-2*5-10;\"erter\""
-                        },
-                        "valid": 1
-                    }
-                }
-            },
-            {
-                "class": "Statement",
-                "content": {
-                    "polymorphic_id": 2147483649,
-                    "polymorphic_name": "PrintStatement",
-                    "ptr_wrapper": {
-                        "data": {
-                            "printitems": [
-                                {
-                                    "polymorphic_id": 2147483650,
-                                    "polymorphic_name": "ArithmeticExpression",
-                                    "ptr_wrapper": {
-                                        "data": {
-                                            "::base": {
-                                                "::base": {
-                                                    "valuetype": 3
-                                                },
-                                                "left": {
-                                                    "polymorphic_id": 2,
-                                                    "ptr_wrapper": {
-                                                        "data": {
-                                                            "::base": {
-                                                                "::base": {
-                                                                    "valuetype": 3
-                                                                },
-                                                                "left": {
-                                                                    "polymorphic_id": 2147483651,
-                                                                    "polymorphic_name": "TerminalExpression",
-                                                                    "ptr_wrapper": {
-                                                                        "data": {
-                                                                            "numVal": 1,
-                                                                            "sub.valutype": 3
-                                                                        },
-                                                                        "valid": 1
-                                                                    }
-                                                                },
-                                                                "right": {
-                                                                    "polymorphic_id": 2,
-                                                                    "ptr_wrapper": {
-                                                                        "data": {
-                                                                            "::base": {
-                                                                                "::base": {
-                                                                                    "valuetype": 3
-                                                                                },
-                                                                                "left": {
-                                                                                    "polymorphic_id": 3,
-                                                                                    "ptr_wrapper": {
-                                                                                        "data": {
-                                                                                            "numVal": 2,
-                                                                                            "sub.valutype": 3
-                                                                                        },
-                                                                                        "valid": 1
-                                                                                    }
-                                                                                },
-                                                                                "right": {
-                                                                                    "polymorphic_id": 3,
-                                                                                    "ptr_wrapper": {
-                                                                                        "data": {
-                                                                                            "numVal": 5,
-                                                                                            "sub.valutype": 3
-                                                                                        },
-                                                                                        "valid": 1
-                                                                                    }
-                                                                                }
-                                                                            },
-                                                                            "mOperator": 2
-                                                                        },
-                                                                        "valid": 1
-                                                                    }
-                                                                }
-                                                            },
-                                                            "mOperator": 1
-                                                        },
-                                                        "valid": 1
-                                                    }
-                                                },
-                                                "right": {
-                                                    "polymorphic_id": 3,
-                                                    "ptr_wrapper": {
-                                                        "data": {
-                                                            "numVal": 10,
-                                                            "sub.valutype": 3
-                                                        },
-                                                        "valid": 1
-                                                    }
-                                                }
-                                            },
-                                            "mOperator": 1
-                                        },
-                                        "valid": 1
-                                    }
-                                },
-                                {
-                                    "polymorphic_id": 3,
-                                    "ptr_wrapper": {
-                                        "data": {
-                                            "stringValue": "asdasd",
-                                            "sub.valutype": 1
-                                        },
-                                        "valid": 1
-                                    }
-                                }
-                            ],
-                            "sourceText": "print 1-2*5-10; \"asdasd\""
-                        },
-                        "valid": 1
-                    }
-                }
-            },
-            {
-                "class": "Statement",
-                "content": {
-                    "polymorphic_id": 2147483649,
-                    "polymorphic_name": "ReadStatement",
-                    "ptr_wrapper": {
-                        "data": {
-                            "prompt": "",
-                            "sourceText": "input a",
-                            "variableList": [
-                                "a"
-                            ]
-                        },
-                        "valid": 1
-                    }
-                }
-            },
-            {
-                "class": "Statement",
-                "content": {
-                    "polymorphic_id": 2147483649,
-                    "polymorphic_name": "ErrorStatement",
-                    "ptr_wrapper": {
-                        "data": {
-                            "description": "syntax error, unexpected NUMBER, expecting VAR or SVAR",
-                            "sourceText": "input \"hello:\";5"
-                        },
-                        "valid": 1
-                    }
-                }
-            },
-            {
-                "class": "Statement",
-                "content": {
-                    "polymorphic_id": 2147483649,
-                    "polymorphic_name": "ReadStatement",
-                    "ptr_wrapper": {
-                        "data": {
-                            "prompt": "hello:",
-                            "sourceText": "input \"hello:\";a",
-                            "variableList": [
-                                "a"
-                            ]
-                        },
-                        "valid": 1
-                    }
-                }
-            },
-            {
-                "class": "Statement",
-                "content": {
-                    "polymorphic_id": 2147483649,
-                    "polymorphic_name": "ErrorStatement",
-                    "ptr_wrapper": {
-                        "data": {
-                            "description": "syntax error, unexpected VAR, expecting ';'",
-                            "sourceText": "input \"hello:\"a;b;c"
-                        },
-                        "valid": 1
-                    }
-                }
-            },
-            {
-                "class": "Statement",
-                "content": {
-                    "polymorphic_id": 2147483649,
-                    "polymorphic_name": "ReadStatement",
-                    "ptr_wrapper": {
-                        "data": {
-                            "prompt": "hello:",
-                            "sourceText": "input \"hello:\";a;b;c",
-                            "variableList": [
-                                "a",
-                                "b",
-                                "c"
-                            ]
-                        },
-                        "valid": 1
-                    }
-                }
-            },
-            {
-                "class": "Statement",
-                "content": {
-                    "polymorphic_id": 2147483649,
-                    "polymorphic_name": "ReadStatement",
-                    "ptr_wrapper": {
-                        "data": {
-                            "prompt": "hello:",
-                            "sourceText": "input \"hello:\"; a;b;c",
-                            "variableList": [
-                                "a",
-                                "b",
-                                "c"
-                            ]
-                        },
-                        "valid": 1
-                    }
-                }
-            },
-            {
-                "class": "Statement",
-                "content": {
-                    "polymorphic_id": 2147483649,
-                    "polymorphic_name": "PrintStatement",
-                    "ptr_wrapper": {
-                        "data": {
-                            "printitems": [
-                                {
-                                    "polymorphic_id": 2147483650,
-                                    "polymorphic_name": "GetExpression",
-                                    "ptr_wrapper": {
-                                        "data": {
-                                            "varName": "a"
-                                        },
-                                        "valid": 1
-                                    }
-                                }
-                            ],
-                            "sourceText": "print a"
-                        },
-                        "valid": 1
-                    }
-                }
-            },
-            {
-                "class": "Statement",
-                "content": {
-                    "polymorphic_id": 2147483649,
-                    "polymorphic_name": "LetStatement",
-                    "ptr_wrapper": {
-                        "data": {
-                            "rvalue": {
-                                "polymorphic_id": 2147483650,
-                                "polymorphic_name": "TerminalExpression",
-                                "ptr_wrapper": {
-                                    "data": {
-                                        "numVal": 455,
-                                        "sub.valutype": 3
-                                    },
-                                    "valid": 1
-                                }
-                            },
-                            "variablename": "a"
+                            "sourceText": "print 78+56=2"
                         },
                         "valid": 1
                     }
@@ -1496,7 +1915,8 @@
             }
         ],
         "creator": "rebuild",
-        "type": "historyfile"
+        "type": "historyfile",
+        "version": 2
     },
     "options": {
         "logquite": false
@@ -1514,11 +1934,23 @@
             {
                 "key": "c",
                 "value": 7
+            },
+            {
+                "key": "i",
+                "value": 1
+            },
+            {
+                "key": "k",
+                "value": 1
+            },
+            {
+                "key": "n",
+                "value": 10
             }
         ]
     },
-    "timestamp": "2017-03-19T17:08:32Z",
-    "timestampepoch": 1489943312,
+    "timestamp": "2017-03-23T05:12:09Z",
+    "timestampepoch": 1490245929,
     "type": "rebuildalldb",
     "version": "1.0"
 }

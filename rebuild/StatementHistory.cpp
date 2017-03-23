@@ -11,38 +11,10 @@
 
 
 StatementHistory::StatementHistory()
-: historyIndex(0)
 {
-}
+    historyPointer = history.rbegin();
+    
 
-void StatementHistory::Save(std::string filename)
-{
-    using namespace nlohmann;
-    
-    json root;
-    root["content"] = history;
-    root["type"] = "historyfile";
-    root["creator"] = "rebuild";
-    
-    std::ofstream stream(filename);
-    stream << root.dump(4);
-    //TODO:SAVE LOAD
-}
-
-void StatementHistory::Load(std::string filename)
-{
-//    using namespace nlohmann;
-//    std::ifstream stream(filename);
-//    json root;
-//    
-//    stream >> root;
-//    
-//    json content = root["content"];
-//    for (int i = 0; i < content.size(); i++) {
-//        Add(content[i]);
-//    }
-    
-//TODO:SAVE LOAD
 }
 
 
@@ -79,8 +51,10 @@ void StatementHistory::ReInit()
 {
     
     
-    historyIndex=0;
+    
     InternalAdd(new UnProcessedStatment);
+    historyPointer = history.rbegin();
+
     
 }
 
@@ -89,40 +63,63 @@ void StatementHistory::ReInitDone()
 {
     delete history.back();
     history.pop_back();
+    historyPointer = history.rbegin();
+
 }
 
 std::string
 StatementHistory::Edit(std::string currentBuffer, MoveDirection direction,
                      bool& success)
 {
-    success = true;
-    if (history.size() > 1) {
-        
-        if(historyIndex==0)
-        {
-            delete history[history.size() - 1 - historyIndex];
-            auto anProcessedStatment= new  UnProcessedStatment;
-            anProcessedStatment->sourceText = currentBuffer;
-            
-            history[history.size() - 1 - historyIndex] = anProcessedStatment;
-        }
-        
-        historyIndex += (direction == MoveDirection::prev) ? 1 : -1;
-        
-        if (historyIndex < 0) {
-            historyIndex = 0;
-            success = false;
-            
-        } else if (historyIndex >= history.size()) {
-            historyIndex = (int)history.size() - 1;
-            success = false;
-        }
-    }else
-    {
-        success = false;
+    
+    
+    success = true;//current buffer is changed
+    
+    assert(!history.empty());
+    
+    if(history.size() == 1) {  //No other element than current line
+        success =false;
+        return currentBuffer;
     }
     
-    return history[history.size() - 1 - historyIndex]->dumpToString();
+    
+    
+    
+    
+
+
+    //save current buffer only if it is at the begning
+    if( historyPointer == history.rbegin())
+    {
+        delete history.back();
+        auto anProcessedStatment= new  UnProcessedStatment;
+        anProcessedStatment->sourceText = currentBuffer;
+        history.back() = anProcessedStatment;
+    }
+        
+        
+    
+    if (direction == MoveDirection::next) {
+        
+        if (historyPointer != history.rbegin())
+            historyPointer --;
+        else
+            success = false;
+        
+    } else {
+        
+        historyPointer ++;
+        if (historyPointer == history.rend()) {
+            success = false;
+            historyPointer --;
+        }
+    }
+        
+        
+    
+   
+    
+    return (*historyPointer)->dumpToString();
 }
 
 void StatementHistory::Clear()
@@ -140,12 +137,17 @@ StatementHistory::ToJson()
     json root;
     json rootContent;
     
-    for(auto  statement : history )
-    {
-        rootContent.push_back(statement->ToJson());
+ 
+    //history return in inverse cronographic order
+    for (auto iter =history.rbegin(); iter!=history.rend(); iter++) {
+        rootContent.push_back((*iter)->ToJson());
     }
     
+    
+    
     root["content"] = rootContent;
+    
+    root["version"] = 2;
     
     
     
@@ -162,9 +164,12 @@ void StatementHistory::FromJson(nlohmann::json root)
     using namespace nlohmann;
     
     json content = root["content"];
+    
+    assert(root["version"].get<int>() == 2);
+    
     for (int i = 0; i < content.size(); i++) {
         
-        InternalAdd(Statement::GetFromJson(content[i]));
+        InternalAdd(Statement::GetFromJson(content[content.size()-i-1]));
         
     }
 }
@@ -176,8 +181,8 @@ void PopingLineStatementHistory::PopExtra()
     {
         delete history.back();
         history.pop_back();
-        if(historyIndex>0)
-            historyIndex--;
+        if(historyPointer!= history.rbegin())
+            historyPointer--;
     }
     extracount=0;
     
@@ -194,11 +199,12 @@ void PopingLineStatementHistory::AddExtra(Statement * entry)
 
 void PopingLineStatementHistory::Add(Statement * entry)
 {
-    for (int i=0; i<historyIndex; i++)
-    {
+    
+    while (historyPointer == history.rbegin()) {
         delete history.back();
         history.pop_back();
     }
+    
     
     
     if (ChekDuplicate(entry))

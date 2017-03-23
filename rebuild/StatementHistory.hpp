@@ -15,12 +15,13 @@
 #include "AST.hpp"
 
 #include <string>
-#include <vector>
+#include <list>
 
 class StatementHistory:public LineHistory  {
 protected:
-    int historyIndex;
-    std::vector<Statement*> history;
+    
+    std::list<Statement*> history;
+    std::list<Statement*>::reverse_iterator historyPointer;
     
     
 public:
@@ -30,9 +31,7 @@ public:
 
     
     StatementHistory();
-    
-    void Save(std::string filename);
-    void Load(std::string filename);
+   
     void Add(class Statement * st);
     bool ChekDuplicate(class Statement * st);
     void InternalAdd(class Statement * st);
@@ -40,7 +39,7 @@ public:
      std::string Edit(std::string currentBuffer, MoveDirection direction,bool& success);
     
     
-     const std::vector<Statement*> & GetHistory() const
+     const std::list<Statement*> & GetHistory() const
     {
         return history;
     }
