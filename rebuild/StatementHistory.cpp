@@ -8,6 +8,7 @@
 
 #include "StatementHistory.hpp"
 #include "AST.hpp"
+#include "Logger.hpp"
 
 
 StatementHistory::StatementHistory()
@@ -63,7 +64,6 @@ void StatementHistory::ReInitDone()
 {
     delete history.back();
     history.pop_back();
-    historyPointer = history.rbegin();
 
 }
 
@@ -199,10 +199,14 @@ void PopingLineStatementHistory::AddExtra(Statement * entry)
 
 void PopingLineStatementHistory::Add(Statement * entry)
 {
-    
-    while (historyPointer == history.rbegin()) {
-        delete history.back();
-        history.pop_back();
+  
+
+    size_t a = std::distance( history.rbegin(),historyPointer);
+    while (a>0) {
+        
+            delete history.back();
+            history.pop_back();
+            a--;
     }
     
     
