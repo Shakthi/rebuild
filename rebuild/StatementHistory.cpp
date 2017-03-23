@@ -122,6 +122,11 @@ StatementHistory::Edit(std::string currentBuffer, MoveDirection direction,
     return (*historyPointer)->dumpToString();
 }
 
+Statement *  StatementHistory::GetCurrentStatment()
+{
+    return *historyPointer;
+}
+
 void StatementHistory::Clear()
 {
     history.clear();

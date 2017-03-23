@@ -39,7 +39,7 @@ private:
 
 public:
     std::string getLine(std::string prompt);
-    std::string getLineWithHistory(std::string prompt,LineHistory & inhistory,std::string defaultValue="");
+    std::string getLineWithHistory(std::string prompt,LineHistory & inhistory);
     ExitStatus GetStatus() { return status; }
     EModificationStatus GetModificationStatus() { return mstatus; }
 

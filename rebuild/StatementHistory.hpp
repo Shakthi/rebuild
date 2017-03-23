@@ -46,6 +46,8 @@ public:
     
     void Clear();
     
+    Statement *  GetCurrentStatment();
+    
     
     nlohmann::json ToJson();
     void FromJson(nlohmann::json);

@@ -255,15 +255,23 @@ void BasicStepProcessor::RunStep()
         exitProcessing();
         return;
     }
+    Statement * statment;
+    LineNoiseWrapper::EModificationStatus mstats = rebuild->lineNoiseWrapper->GetModificationStatus();
     
     
+    if(mstats == LineNoiseWrapper::EModificationStatus::history)
+    {
+        statment = rebuild->history->GetCurrentStatment();
+    }
+    else
+    {
+        BasicParser parser;
+        statment = parser.Parse(answer);
+    }
     
-
     
-    BasicParser parser;
-    
-    auto statment = parser.Parse(answer);
     rebuild->history->Add(statment);
+
     Evaluate(statment);
     
     
