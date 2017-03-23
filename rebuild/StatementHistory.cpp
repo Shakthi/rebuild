@@ -201,13 +201,12 @@ void PopingLineStatementHistory::Add(Statement * entry)
 {
   
 
-    size_t a = std::distance( history.rbegin(),historyPointer);
-    while (a>0) {
-        
-            delete history.back();
-            history.pop_back();
-            a--;
+    
+    for (auto i = historyPointer.base() ; i!=history.end(); i++) {
+        delete *i;
     }
+    
+    history.erase(historyPointer.base(),history.end());
     
     
     
