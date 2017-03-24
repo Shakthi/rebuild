@@ -21,7 +21,7 @@ class StatementHistory:public LineHistory  {
 protected:
     
     std::list<Statement*> history;
-    std::list<Statement*>::reverse_iterator historyPointer;
+    std::list<Statement*>::iterator historyPointer;
     
     
 public:

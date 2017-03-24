@@ -13,7 +13,7 @@
 
 StatementHistory::StatementHistory()
 {
-    historyPointer = history.rbegin();
+    historyPointer = history.begin();
     
 
 }
@@ -44,7 +44,7 @@ void StatementHistory::Add(Statement * entry)
 
 void StatementHistory::InternalAdd(Statement * entry)
 {
-    history.push_back(entry);
+    history.push_front(entry);
     
 }
 
@@ -54,7 +54,7 @@ void StatementHistory::ReInit()
     
     
     InternalAdd(new UnProcessedStatment);
-    historyPointer = history.rbegin();
+    historyPointer = history.begin();
 
     
 }
@@ -62,8 +62,8 @@ void StatementHistory::ReInit()
 
 void StatementHistory::ReInitDone()
 {
-    delete history.back();
-    history.pop_back();
+    delete history.front();
+    history.pop_front();
 
 }
 
@@ -89,7 +89,7 @@ StatementHistory::Edit(std::string currentBuffer, MoveDirection direction,
 
 
     //save current buffer only if it is at the begning
-    if( historyPointer == history.rbegin())
+    if( historyPointer == history.begin())
     {
         delete history.back();
         auto anProcessedStatment= new  UnProcessedStatment;
@@ -101,7 +101,7 @@ StatementHistory::Edit(std::string currentBuffer, MoveDirection direction,
     
     if (direction == MoveDirection::next) {
         
-        if (historyPointer != history.rbegin())
+        if (historyPointer != history.begin())
             historyPointer --;
         else
             success = false;
@@ -109,7 +109,7 @@ StatementHistory::Edit(std::string currentBuffer, MoveDirection direction,
     } else {
         
         historyPointer ++;
-        if (historyPointer == history.rend()) {
+        if (historyPointer == history.end()) {
             success = false;
             historyPointer --;
         }
@@ -143,8 +143,8 @@ StatementHistory::ToJson()
     json rootContent;
     
  
-    //history return in inverse cronographic order
-    for (auto iter =history.rbegin(); iter!=history.rend(); iter++) {
+    
+    for (auto iter =history.begin(); iter!=history.end(); iter++) {
         rootContent.push_back((*iter)->ToJson());
     }
     
@@ -184,10 +184,13 @@ void PopingLineStatementHistory::PopExtra()
 {
     for (int i=0; i<extracount; i++)
     {
-        delete history.back();
-        history.pop_back();
-        if(historyPointer!= history.rbegin())
-            historyPointer--;
+        if(historyPointer== history.begin())
+            historyPointer++;
+        
+        delete history.front();
+        history.pop_front();
+        
+            
     }
     extracount=0;
     
@@ -207,11 +210,11 @@ void PopingLineStatementHistory::Add(Statement * entry)
   
 
     
-    for (auto i = historyPointer.base() ; i!=history.end(); i++) {
+    for (auto i = history.begin() ; i!=historyPointer; i++) {
         delete *i;
     }
     
-    history.erase(historyPointer.base(),history.end());
+    history.erase(history.begin(),historyPointer);
     
     
     

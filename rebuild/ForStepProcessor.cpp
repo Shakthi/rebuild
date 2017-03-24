@@ -18,11 +18,10 @@ void ForStepProcessor::Init()
     if(getForVar() <=thisForBlock->forEnd->Evaluate().getNumVal() ) {
              passThrough=true;
     }
-
-    
-
-
 }
+
+
+
 
 
 void ForStepProcessor::RunStep()
@@ -44,6 +43,14 @@ void ForStepProcessor::RunStep()
         return;
     }
     
+        
+    auto endStatement = dynamic_cast< EndStatement*>(result);
+    if (endStatement) {
+        delete result;
+        exitProcessing();
+        return;
+    }
+        
     auto errorStatemnt = dynamic_cast< ErrorStatement*>(result);
     if (errorStatemnt) {
         BasicStepProcessor::Evaluate(errorStatemnt);
