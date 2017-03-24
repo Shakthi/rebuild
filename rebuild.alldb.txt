@@ -6,19 +6,6 @@
                 "class": "Statement",
                 "content": {
                     "polymorphic_id": 2147483649,
-                    "polymorphic_name": "EndStatement",
-                    "ptr_wrapper": {
-                        "data": {
-                            "sourceText": "end"
-                        },
-                        "valid": 1
-                    }
-                }
-            },
-            {
-                "class": "Statement",
-                "content": {
-                    "polymorphic_id": 2147483649,
                     "polymorphic_name": "ForStatment",
                     "ptr_wrapper": {
                         "data": {
@@ -2007,8 +1994,8 @@
             }
         ]
     },
-    "timestamp": "2017-03-23T20:45:52Z",
-    "timestampepoch": 1490301952,
+    "timestamp": "2017-03-24T03:40:30Z",
+    "timestampepoch": 1490326830,
     "type": "rebuildalldb",
     "version": "1.0"
 }
