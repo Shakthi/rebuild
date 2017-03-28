@@ -68,6 +68,24 @@ void ForStepProcessor::RunStep()
 
 
     }
+        
+        auto statemnt = dynamic_cast< ListStatement*>(result);
+        if (statemnt) {
+            
+            std::cout<<std::endl;
+            
+            
+            for (auto currentStatment : popingLineHistory.GetHistory()) {
+                
+                std::cout<<currentStatment->dumpToString()<<std::endl;
+                
+            }
+            
+            
+            delete statemnt;
+            return ;
+        }
+
     
     if(BasicStepProcessor::Evaluate(result))
         popingLineHistory.Add(result);

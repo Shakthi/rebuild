@@ -295,7 +295,7 @@ struct UnaryExpression :Expression
     
     template<class Archive>
     void serialize( Archive & ar )
-    { ar( CEREAL_NVP(mOperator),CEREAL_NVP(sub)); }
+    { ar( CEREAL_NVP(mOperator),CEREAL_NVP(sub) ,CEREAL_NVP_("::base",cereal::base_class<Expression>( this ))); }
 
     
     std::string dumpToString()const;
@@ -315,8 +315,11 @@ struct TerminalExpression :Expression
     template<class Archive>
     void serialize( Archive & ar )
     {
+           ar( CEREAL_NVP_("::base",cereal::base_class<Expression>( this )));
         
         ar( CEREAL_NVP(sub.valutype) );
+        
+        valuetype = sub.valutype;
     
         switch(sub.valutype)
         {
@@ -351,9 +354,10 @@ struct TerminalExpression :Expression
                 break;
                 
         
-        
+                
         }
     
+        
     
     }
     
@@ -379,7 +383,10 @@ struct GetExpression :Expression
     
     template<class Archive>
     void serialize( Archive & ar )
-    { ar( CEREAL_NVP(varName) ); }
+    {
+            ar( CEREAL_NVP_("::base",cereal::base_class<Expression>( this )));
+        
+        ar( CEREAL_NVP(varName) ); }
     
     std::string dumpToString()const{return varName;}
 

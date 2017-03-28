@@ -6,6 +6,34 @@
                 "class": "Statement",
                 "content": {
                     "polymorphic_id": 2147483649,
+                    "polymorphic_name": "PrintStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "printitems": [
+                                {
+                                    "polymorphic_id": 2147483650,
+                                    "polymorphic_name": "GetExpression",
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "::base": {
+                                                "valuetype": 0
+                                            },
+                                            "varName": "y"
+                                        },
+                                        "valid": 1
+                                    }
+                                }
+                            ],
+                            "sourceText": "print y"
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
                     "polymorphic_name": "LetStatement",
                     "ptr_wrapper": {
                         "data": {
@@ -31,6 +59,9 @@
                                                                 "polymorphic_name": "TerminalExpression",
                                                                 "ptr_wrapper": {
                                                                     "data": {
+                                                                        "::base": {
+                                                                            "valuetype": 3
+                                                                        },
                                                                         "numVal": 1,
                                                                         "sub.valutype": 3
                                                                     },
@@ -49,6 +80,9 @@
                                                                                 "polymorphic_id": 3,
                                                                                 "ptr_wrapper": {
                                                                                     "data": {
+                                                                                        "::base": {
+                                                                                            "valuetype": 3
+                                                                                        },
                                                                                         "numVal": 2,
                                                                                         "sub.valutype": 3
                                                                                     },
@@ -59,6 +93,9 @@
                                                                                 "polymorphic_id": 3,
                                                                                 "ptr_wrapper": {
                                                                                     "data": {
+                                                                                        "::base": {
+                                                                                            "valuetype": 3
+                                                                                        },
                                                                                         "numVal": 5,
                                                                                         "sub.valutype": 3
                                                                                     },
@@ -81,6 +118,137 @@
                                                 "polymorphic_id": 3,
                                                 "ptr_wrapper": {
                                                     "data": {
+                                                        "::base": {
+                                                            "valuetype": 3
+                                                        },
+                                                        "numVal": 10,
+                                                        "sub.valutype": 3
+                                                    },
+                                                    "valid": 1
+                                                }
+                                            }
+                                        },
+                                        "mOperator": 1
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "variablename": "y"
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "ReadStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "prompt": "hello:",
+                            "sourceText": "input \"hello:\"; a;b;c",
+                            "variableList": [
+                                "a",
+                                "b",
+                                "c"
+                            ]
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "LetStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "rvalue": {
+                                "polymorphic_id": 2147483650,
+                                "polymorphic_name": "ArithmeticExpression",
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "::base": {
+                                            "::base": {
+                                                "valuetype": 3
+                                            },
+                                            "left": {
+                                                "polymorphic_id": 2,
+                                                "ptr_wrapper": {
+                                                    "data": {
+                                                        "::base": {
+                                                            "::base": {
+                                                                "valuetype": 3
+                                                            },
+                                                            "left": {
+                                                                "polymorphic_id": 2147483651,
+                                                                "polymorphic_name": "TerminalExpression",
+                                                                "ptr_wrapper": {
+                                                                    "data": {
+                                                                        "::base": {
+                                                                            "valuetype": 3
+                                                                        },
+                                                                        "numVal": 1,
+                                                                        "sub.valutype": 3
+                                                                    },
+                                                                    "valid": 1
+                                                                }
+                                                            },
+                                                            "right": {
+                                                                "polymorphic_id": 2,
+                                                                "ptr_wrapper": {
+                                                                    "data": {
+                                                                        "::base": {
+                                                                            "::base": {
+                                                                                "valuetype": 3
+                                                                            },
+                                                                            "left": {
+                                                                                "polymorphic_id": 3,
+                                                                                "ptr_wrapper": {
+                                                                                    "data": {
+                                                                                        "::base": {
+                                                                                            "valuetype": 3
+                                                                                        },
+                                                                                        "numVal": 2,
+                                                                                        "sub.valutype": 3
+                                                                                    },
+                                                                                    "valid": 1
+                                                                                }
+                                                                            },
+                                                                            "right": {
+                                                                                "polymorphic_id": 3,
+                                                                                "ptr_wrapper": {
+                                                                                    "data": {
+                                                                                        "::base": {
+                                                                                            "valuetype": 3
+                                                                                        },
+                                                                                        "numVal": 5,
+                                                                                        "sub.valutype": 3
+                                                                                    },
+                                                                                    "valid": 1
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        "mOperator": 2
+                                                                    },
+                                                                    "valid": 1
+                                                                }
+                                                            }
+                                                        },
+                                                        "mOperator": 1
+                                                    },
+                                                    "valid": 1
+                                                }
+                                            },
+                                            "right": {
+                                                "polymorphic_id": 3,
+                                                "ptr_wrapper": {
+                                                    "data": {
+                                                        "::base": {
+                                                            "valuetype": 3
+                                                        },
                                                         "numVal": 10,
                                                         "sub.valutype": 3
                                                     },
@@ -111,6 +279,9 @@
                                 "polymorphic_name": "TerminalExpression",
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 0.0,
                                         "sub.valutype": 3
                                     },
@@ -121,6 +292,9 @@
                                 "polymorphic_id": 2,
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 2,
                                         "sub.valutype": 3
                                     },
@@ -131,6 +305,9 @@
                                 "polymorphic_id": 2,
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 1,
                                         "sub.valutype": 3
                                     },
@@ -150,6 +327,9 @@
                                                     "polymorphic_id": 2,
                                                     "ptr_wrapper": {
                                                         "data": {
+                                                            "::base": {
+                                                                "valuetype": 3
+                                                            },
                                                             "numVal": 5,
                                                             "sub.valutype": 3
                                                         },
@@ -180,6 +360,9 @@
                                 "polymorphic_name": "TerminalExpression",
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 1,
                                         "sub.valutype": 3
                                     },
@@ -190,6 +373,9 @@
                                 "polymorphic_id": 2,
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 10,
                                         "sub.valutype": 3
                                     },
@@ -200,6 +386,9 @@
                                 "polymorphic_id": 2,
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 1,
                                         "sub.valutype": 3
                                     },
@@ -226,6 +415,9 @@
                                 "polymorphic_name": "TerminalExpression",
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 1,
                                         "sub.valutype": 3
                                     },
@@ -236,6 +428,9 @@
                                 "polymorphic_id": 2,
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 10,
                                         "sub.valutype": 3
                                     },
@@ -246,6 +441,9 @@
                                 "polymorphic_id": 2,
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 1,
                                         "sub.valutype": 3
                                     },
@@ -290,6 +488,9 @@
                                                                     "polymorphic_name": "TerminalExpression",
                                                                     "ptr_wrapper": {
                                                                         "data": {
+                                                                            "::base": {
+                                                                                "valuetype": 3
+                                                                            },
                                                                             "numVal": 1,
                                                                             "sub.valutype": 3
                                                                         },
@@ -308,6 +509,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 2,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -318,6 +522,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 5,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -340,6 +547,9 @@
                                                     "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
+                                                            "::base": {
+                                                                "valuetype": 3
+                                                            },
                                                             "numVal": 10,
                                                             "sub.valutype": 3
                                                         },
@@ -356,6 +566,9 @@
                                     "polymorphic_id": 3,
                                     "ptr_wrapper": {
                                         "data": {
+                                            "::base": {
+                                                "valuetype": 1
+                                            },
                                             "stringValue": "erter",
                                             "sub.valutype": 1
                                         },
@@ -382,6 +595,9 @@
                                     "polymorphic_name": "TerminalExpression",
                                     "ptr_wrapper": {
                                         "data": {
+                                            "::base": {
+                                                "valuetype": 1
+                                            },
                                             "stringValue": "adsaadas+89",
                                             "sub.valutype": 1
                                         },
@@ -408,6 +624,9 @@
                                     "polymorphic_name": "TerminalExpression",
                                     "ptr_wrapper": {
                                         "data": {
+                                            "::base": {
+                                                "valuetype": 1
+                                            },
                                             "stringValue": "adsaadas",
                                             "sub.valutype": 1
                                         },
@@ -434,6 +653,9 @@
                                     "polymorphic_name": "TerminalExpression",
                                     "ptr_wrapper": {
                                         "data": {
+                                            "::base": {
+                                                "valuetype": 1
+                                            },
                                             "stringValue": "aa",
                                             "sub.valutype": 1
                                         },
@@ -460,6 +682,9 @@
                                     "polymorphic_name": "TerminalExpression",
                                     "ptr_wrapper": {
                                         "data": {
+                                            "::base": {
+                                                "valuetype": 1
+                                            },
                                             "stringValue": "1",
                                             "sub.valutype": 1
                                         },
@@ -486,6 +711,9 @@
                                     "polymorphic_name": "TerminalExpression",
                                     "ptr_wrapper": {
                                         "data": {
+                                            "::base": {
+                                                "valuetype": 1
+                                            },
                                             "stringValue": "asdasd",
                                             "sub.valutype": 1
                                         },
@@ -511,6 +739,9 @@
                                 "polymorphic_name": "TerminalExpression",
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 1,
                                         "sub.valutype": 3
                                     },
@@ -521,6 +752,9 @@
                                 "polymorphic_id": 2,
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 10,
                                         "sub.valutype": 3
                                     },
@@ -531,6 +765,9 @@
                                 "polymorphic_id": 2,
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 1,
                                         "sub.valutype": 3
                                     },
@@ -557,6 +794,9 @@
                                 "polymorphic_name": "TerminalExpression",
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 10,
                                         "sub.valutype": 3
                                     },
@@ -567,6 +807,9 @@
                                 "polymorphic_id": 2,
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 3,
                                         "sub.valutype": 3
                                     },
@@ -577,6 +820,9 @@
                                 "polymorphic_id": 2,
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 1,
                                         "sub.valutype": 3
                                     },
@@ -603,6 +849,9 @@
                                 "polymorphic_name": "TerminalExpression",
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 1,
                                         "sub.valutype": 3
                                     },
@@ -613,6 +862,9 @@
                                 "polymorphic_id": 2,
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 10,
                                         "sub.valutype": 3
                                     },
@@ -623,6 +875,9 @@
                                 "polymorphic_id": 2,
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 1,
                                         "sub.valutype": 3
                                     },
@@ -649,6 +904,9 @@
                                 "polymorphic_name": "TerminalExpression",
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 1,
                                         "sub.valutype": 3
                                     },
@@ -659,6 +917,9 @@
                                 "polymorphic_id": 2,
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 10,
                                         "sub.valutype": 3
                                     },
@@ -669,6 +930,9 @@
                                 "polymorphic_id": 2,
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 1,
                                         "sub.valutype": 3
                                     },
@@ -695,6 +959,9 @@
                                 "polymorphic_name": "TerminalExpression",
                                 "ptr_wrapper": {
                                     "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 455,
                                         "sub.valutype": 3
                                     },
@@ -720,6 +987,9 @@
                                     "polymorphic_name": "GetExpression",
                                     "ptr_wrapper": {
                                         "data": {
+                                            "::base": {
+                                                "valuetype": 0
+                                            },
                                             "varName": "a"
                                         },
                                         "valid": 1
@@ -862,6 +1132,9 @@
                                                                     "polymorphic_name": "TerminalExpression",
                                                                     "ptr_wrapper": {
                                                                         "data": {
+                                                                            "::base": {
+                                                                                "valuetype": 3
+                                                                            },
                                                                             "numVal": 1,
                                                                             "sub.valutype": 3
                                                                         },
@@ -880,6 +1153,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 2,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -890,6 +1166,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 5,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -912,6 +1191,9 @@
                                                     "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
+                                                            "::base": {
+                                                                "valuetype": 3
+                                                            },
                                                             "numVal": 10,
                                                             "sub.valutype": 3
                                                         },
@@ -928,6 +1210,9 @@
                                     "polymorphic_id": 3,
                                     "ptr_wrapper": {
                                         "data": {
+                                            "::base": {
+                                                "valuetype": 1
+                                            },
                                             "stringValue": "asdasd",
                                             "sub.valutype": 1
                                         },
@@ -971,6 +1256,9 @@
                                                                     "polymorphic_name": "TerminalExpression",
                                                                     "ptr_wrapper": {
                                                                         "data": {
+                                                                            "::base": {
+                                                                                "valuetype": 3
+                                                                            },
                                                                             "numVal": 1,
                                                                             "sub.valutype": 3
                                                                         },
@@ -989,6 +1277,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 2,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -999,6 +1290,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 5,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1021,6 +1315,9 @@
                                                     "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
+                                                            "::base": {
+                                                                "valuetype": 3
+                                                            },
                                                             "numVal": 10,
                                                             "sub.valutype": 3
                                                         },
@@ -1037,6 +1334,9 @@
                                     "polymorphic_id": 3,
                                     "ptr_wrapper": {
                                         "data": {
+                                            "::base": {
+                                                "valuetype": 1
+                                            },
                                             "stringValue": "erter",
                                             "sub.valutype": 1
                                         },
@@ -1080,6 +1380,9 @@
                                                                     "polymorphic_name": "TerminalExpression",
                                                                     "ptr_wrapper": {
                                                                         "data": {
+                                                                            "::base": {
+                                                                                "valuetype": 3
+                                                                            },
                                                                             "numVal": 1,
                                                                             "sub.valutype": 3
                                                                         },
@@ -1098,6 +1401,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 2,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1108,6 +1414,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 5,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1130,6 +1439,9 @@
                                                     "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
+                                                            "::base": {
+                                                                "valuetype": 3
+                                                            },
                                                             "numVal": 10,
                                                             "sub.valutype": 3
                                                         },
@@ -1147,6 +1459,9 @@
                                     "polymorphic_name": "GetExpression",
                                     "ptr_wrapper": {
                                         "data": {
+                                            "::base": {
+                                                "valuetype": 0
+                                            },
                                             "varName": "erter"
                                         },
                                         "valid": 1
@@ -1203,6 +1518,9 @@
                                                                     "polymorphic_name": "TerminalExpression",
                                                                     "ptr_wrapper": {
                                                                         "data": {
+                                                                            "::base": {
+                                                                                "valuetype": 3
+                                                                            },
                                                                             "numVal": 1,
                                                                             "sub.valutype": 3
                                                                         },
@@ -1221,6 +1539,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 2,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1231,6 +1552,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 5,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1253,6 +1577,9 @@
                                                     "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
+                                                            "::base": {
+                                                                "valuetype": 3
+                                                            },
                                                             "numVal": 10,
                                                             "sub.valutype": 3
                                                         },
@@ -1269,6 +1596,9 @@
                                     "polymorphic_id": 3,
                                     "ptr_wrapper": {
                                         "data": {
+                                            "::base": {
+                                                "valuetype": 1
+                                            },
                                             "stringValue": "erter",
                                             "sub.valutype": 1
                                         },
@@ -1312,6 +1642,9 @@
                                                                     "polymorphic_name": "TerminalExpression",
                                                                     "ptr_wrapper": {
                                                                         "data": {
+                                                                            "::base": {
+                                                                                "valuetype": 3
+                                                                            },
                                                                             "numVal": 1,
                                                                             "sub.valutype": 3
                                                                         },
@@ -1330,6 +1663,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 2,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1340,6 +1676,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 5,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1362,6 +1701,9 @@
                                                     "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
+                                                            "::base": {
+                                                                "valuetype": 3
+                                                            },
                                                             "numVal": 10,
                                                             "sub.valutype": 3
                                                         },
@@ -1411,6 +1753,9 @@
                                                                     "polymorphic_name": "TerminalExpression",
                                                                     "ptr_wrapper": {
                                                                         "data": {
+                                                                            "::base": {
+                                                                                "valuetype": 3
+                                                                            },
                                                                             "numVal": 1,
                                                                             "sub.valutype": 3
                                                                         },
@@ -1429,6 +1774,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 2,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1439,6 +1787,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 5,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1461,6 +1812,9 @@
                                                     "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
+                                                            "::base": {
+                                                                "valuetype": 3
+                                                            },
                                                             "numVal": 10,
                                                             "sub.valutype": 3
                                                         },
@@ -1510,6 +1864,9 @@
                                                                     "polymorphic_name": "TerminalExpression",
                                                                     "ptr_wrapper": {
                                                                         "data": {
+                                                                            "::base": {
+                                                                                "valuetype": 3
+                                                                            },
                                                                             "numVal": 1,
                                                                             "sub.valutype": 3
                                                                         },
@@ -1528,6 +1885,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 2,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1538,6 +1898,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 5,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1560,6 +1923,9 @@
                                                     "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
+                                                            "::base": {
+                                                                "valuetype": 3
+                                                            },
                                                             "numVal": 10,
                                                             "sub.valutype": 3
                                                         },
@@ -1609,6 +1975,9 @@
                                                                     "polymorphic_name": "TerminalExpression",
                                                                     "ptr_wrapper": {
                                                                         "data": {
+                                                                            "::base": {
+                                                                                "valuetype": 3
+                                                                            },
                                                                             "numVal": 1,
                                                                             "sub.valutype": 3
                                                                         },
@@ -1627,6 +1996,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 2,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1637,6 +2009,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 5,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1659,6 +2034,9 @@
                                                     "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
+                                                            "::base": {
+                                                                "valuetype": 3
+                                                            },
                                                             "numVal": 10,
                                                             "sub.valutype": 3
                                                         },
@@ -1708,6 +2086,9 @@
                                                                     "polymorphic_name": "TerminalExpression",
                                                                     "ptr_wrapper": {
                                                                         "data": {
+                                                                            "::base": {
+                                                                                "valuetype": 3
+                                                                            },
                                                                             "numVal": 1,
                                                                             "sub.valutype": 3
                                                                         },
@@ -1726,6 +2107,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 2,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1736,6 +2120,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 5,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1758,6 +2145,9 @@
                                                     "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
+                                                            "::base": {
+                                                                "valuetype": 3
+                                                            },
                                                             "numVal": 10,
                                                             "sub.valutype": 3
                                                         },
@@ -1807,6 +2197,9 @@
                                                                     "polymorphic_name": "TerminalExpression",
                                                                     "ptr_wrapper": {
                                                                         "data": {
+                                                                            "::base": {
+                                                                                "valuetype": 3
+                                                                            },
                                                                             "numVal": 1,
                                                                             "sub.valutype": 3
                                                                         },
@@ -1825,6 +2218,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 2,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1835,6 +2231,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 5,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1857,6 +2256,9 @@
                                                     "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
+                                                            "::base": {
+                                                                "valuetype": 3
+                                                            },
                                                             "numVal": 10,
                                                             "sub.valutype": 3
                                                         },
@@ -1906,6 +2308,9 @@
                                                                     "polymorphic_name": "TerminalExpression",
                                                                     "ptr_wrapper": {
                                                                         "data": {
+                                                                            "::base": {
+                                                                                "valuetype": 3
+                                                                            },
                                                                             "numVal": 1,
                                                                             "sub.valutype": 3
                                                                         },
@@ -1924,6 +2329,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 2,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1934,6 +2342,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 5,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -1956,6 +2367,9 @@
                                                     "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
+                                                            "::base": {
+                                                                "valuetype": 3
+                                                            },
                                                             "numVal": 10,
                                                             "sub.valutype": 3
                                                         },
@@ -2013,6 +2427,9 @@
                                                                                     "polymorphic_name": "TerminalExpression",
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 4,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -2023,6 +2440,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 6,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -2047,6 +2467,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 2,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -2057,6 +2480,9 @@
                                                                                     "polymorphic_id": 3,
                                                                                     "ptr_wrapper": {
                                                                                         "data": {
+                                                                                            "::base": {
+                                                                                                "valuetype": 3
+                                                                                            },
                                                                                             "numVal": 7,
                                                                                             "sub.valutype": 3
                                                                                         },
@@ -2079,6 +2505,9 @@
                                                     "polymorphic_id": 3,
                                                     "ptr_wrapper": {
                                                         "data": {
+                                                            "::base": {
+                                                                "valuetype": 3
+                                                            },
                                                             "numVal": 1,
                                                             "sub.valutype": 3
                                                         },
@@ -2123,15 +2552,15 @@
         "varablelist": [
             {
                 "key": "a",
-                "value": 455
+                "value": 5
             },
             {
                 "key": "b",
-                "value": 6
+                "value": 56
             },
             {
                 "key": "c",
-                "value": 7
+                "value": 3
             },
             {
                 "key": "i",
@@ -2155,8 +2584,8 @@
             }
         ]
     },
-    "timestamp": "2017-03-28T04:55:05Z",
-    "timestampepoch": 1490676905,
+    "timestamp": "2017-03-28T08:30:33Z",
+    "timestampepoch": 1490689833,
     "type": "rebuildalldb",
     "version": "1.0"
 }
