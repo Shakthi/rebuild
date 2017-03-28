@@ -12,11 +12,53 @@
                             "printitems": [
                                 {
                                     "polymorphic_id": 2147483650,
+                                    "polymorphic_name": "TerminalExpression",
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "::base": {
+                                                "valuetype": 1
+                                            },
+                                            "stringValue": "tdrtd",
+                                            "sub.valutype": 1
+                                        },
+                                        "valid": 1
+                                    }
+                                },
+                                {
+                                    "polymorphic_id": 2147483651,
                                     "polymorphic_name": "GetExpression",
                                     "ptr_wrapper": {
                                         "data": {
                                             "::base": {
-                                                "valuetype": 0
+                                                "valuetype": 3
+                                            },
+                                            "varName": "y"
+                                        },
+                                        "valid": 1
+                                    }
+                                }
+                            ],
+                            "sourceText": "print \"tdrtd\";y"
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Statement",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "PrintStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "printitems": [
+                                {
+                                    "polymorphic_id": 2147483650,
+                                    "polymorphic_name": "GetExpression",
+                                    "ptr_wrapper": {
+                                        "data": {
+                                            "::base": {
+                                                "valuetype": 3
                                             },
                                             "varName": "y"
                                         },
@@ -2584,8 +2626,8 @@
             }
         ]
     },
-    "timestamp": "2017-03-28T08:30:33Z",
-    "timestampepoch": 1490689833,
+    "timestamp": "2017-03-28T17:16:13Z",
+    "timestampepoch": 1490721373,
     "type": "rebuildalldb",
     "version": "1.0"
 }

@@ -183,13 +183,11 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     if (statemnt) {
         
         std::cout<<std::endl;
-
         
-        for (auto currentStatment : rebuild->history->GetHistory()) {
-            
-            std::cout<<currentStatment->dumpToString()<<std::endl;
-            
+        for (auto i= rebuild->history->GetHistory().rbegin(); i!= rebuild->history->GetHistory().rend(); i++) {
+                        std::cout<<(*i)->dumpToString()<<std::endl;
         }
+
         
         
         delete statemnt;
