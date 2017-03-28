@@ -261,7 +261,7 @@ Statement * Statement::GetFromJson(nlohmann::json root)
 
 
 
-std::string PrintStatement::dumpToString()
+std::string PrintStatement::dumpToString()const
 {
     std::string result="print ";
     
@@ -283,7 +283,7 @@ std::string PrintStatement::dumpToString()
 
 
 
-std::string ReadStatement::dumpToString()
+std::string ReadStatement::dumpToString()const
 {
     std::string result="input ";
     if(prompt!="")
@@ -306,7 +306,7 @@ std::string ReadStatement::dumpToString()
 }
 
 
-std::string ArithmeticExpression::dumpToString()
+std::string ArithmeticExpression::dumpToString()const
 {
     switch(mOperator)
     {
@@ -329,7 +329,7 @@ std::string ArithmeticExpression::dumpToString()
 }
 
 
-std::string UnaryExpression::dumpToString()
+std::string UnaryExpression::dumpToString()const
 {
     
     switch(mOperator)
@@ -349,7 +349,7 @@ std::string UnaryExpression::dumpToString()
 
 
 
-std::string TerminalExpression::dumpToString()
+std::string TerminalExpression::dumpToString()const
 {
     
     switch(sub.valutype)
@@ -388,7 +388,7 @@ std::string TerminalExpression::dumpToString()
    
 }
 
-std::string RelationalExpression::dumpToString()
+std::string RelationalExpression::dumpToString()const
 {
     
     
@@ -407,5 +407,50 @@ std::string RelationalExpression::dumpToString()
     };
 
     
+}
+
+void Deleter(Statement* )
+{}
+
+template<class Archive>
+void ForStatment::serialize( Archive & ar )
+{
+    ar( CEREAL_NVP(forVar),CEREAL_NVP(forBegin),CEREAL_NVP(forEnd),CEREAL_NVP(forStep) );
+    ar( CEREAL_NVP(sourceText));
+    
+
+    std::vector<std::unique_ptr<Statement>> statementsptr;
+    statementsptr.reserve(statements.size());
+    
+    
+    for(auto st : statements )
+    {
+        statementsptr.push_back( std::unique_ptr<Statement>(st));
+    
+    }
+    
+    ar( CEREAL_NVP(statementsptr));
+    
+    if(statements.empty() && !statementsptr.empty())
+    {
+        statements.reserve(statementsptr.size());
+        for(auto  & st : statementsptr )
+        {
+            statements.push_back(st.release());
+            
+        }
+    
+    }
+    
+    
+        
+}
+
+
+ std::string ForStatment::dumpToString()const{
+    return std::string("for ") + forVar + " = "
+    + forBegin->dumpToString()
+    + " to "
+    + forEnd->dumpToString() ;
 }
 

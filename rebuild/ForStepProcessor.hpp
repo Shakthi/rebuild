@@ -47,7 +47,8 @@ public:
     void RunStep();
     void Init();
     
-    void ExecuteLoop();
+    void ExecuteHistory();
+    void ExecuteStatments(ForStatment  * forstatement);
     
     
     

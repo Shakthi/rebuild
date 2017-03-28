@@ -34,8 +34,9 @@ struct Statement {
     { ar( CEREAL_NVP(sourceText) ); }
     
     
+    virtual bool isEqual(const Statement & that){ return this -> dumpToString()  == that.dumpToString();}
     
-    virtual std::string dumpToString(){return sourceText;}
+    virtual std::string dumpToString()const {return sourceText;}
     
 };
 
@@ -81,6 +82,10 @@ struct NextStatement:public  Statement{
 
 };
 
+struct ListStatement:public  Statement{
+    
+};
+
 
 
 struct RemarkStatement:public  Statement{
@@ -98,14 +103,18 @@ struct ForStatment:public Statement {
     
         std::string forVar;
         std::unique_ptr<Expression> forBegin,forEnd,forStep;
+    
+        std::vector<Statement*>  statements;
+    
+    
+    
+    
         bool foundNext;
+        template<class Archive>
+        void serialize( Archive & ar );
     
-    
-    template<class Archive>
-    void serialize( Archive & ar )
-    { ar( CEREAL_NVP(forVar),CEREAL_NVP(forBegin),CEREAL_NVP(forEnd),CEREAL_NVP(forStep) );
-        { ar( CEREAL_NVP(sourceText)); }
-    }
+     std::string dumpToString()const;
+
  
 };
 
@@ -125,7 +134,7 @@ public:
     { ar( CEREAL_NVP(prompt),CEREAL_NVP(variableList),CEREAL_NVP(sourceText) );
     }
     
-    std::string dumpToString();
+    std::string dumpToString()const;
 
     
 };
@@ -146,7 +155,7 @@ public:
     { ar( CEREAL_NVP(printitems),CEREAL_NVP(sourceText) ); }
     
     
-    std::string dumpToString();
+    std::string dumpToString()const;
 
 }
 ;
@@ -168,7 +177,7 @@ struct Expression
     { ar( CEREAL_NVP(valuetype) ); }
     
     
-    virtual std::string dumpToString(){return "";}
+    virtual std::string dumpToString()const{return "";}
 
 
 };
@@ -214,7 +223,7 @@ struct ArithmeticExpression:BainaryExpression {
     }
     
     
-     std::string dumpToString();
+     std::string dumpToString()const;
     
     
 };
@@ -247,7 +256,7 @@ struct RelationalExpression :BainaryExpression
     
     RelationalExpression(){}
     
-     std::string dumpToString();
+     std::string dumpToString()const;
 };
 
 
@@ -289,7 +298,7 @@ struct UnaryExpression :Expression
     { ar( CEREAL_NVP(mOperator),CEREAL_NVP(sub)); }
 
     
-    std::string dumpToString();
+    std::string dumpToString()const;
 
     
 };
@@ -349,7 +358,7 @@ struct TerminalExpression :Expression
     }
     
     
-     std::string dumpToString();
+     std::string dumpToString()const;
 
     
     
@@ -372,7 +381,7 @@ struct GetExpression :Expression
     void serialize( Archive & ar )
     { ar( CEREAL_NVP(varName) ); }
     
-    std::string dumpToString(){return varName;}
+    std::string dumpToString()const{return varName;}
 
     
 };
@@ -401,9 +410,9 @@ public:
     
     template<class Archive>
     void serialize( Archive & ar )
-    { ar( CEREAL_NVP(variablename),CEREAL_NVP(rvalue)); }
+    { ar( CEREAL_NVP(variablename),CEREAL_NVP(rvalue)),CEREAL_NVP(sourceText);; }
     
-    std::string dumpToString(){return "let "+variablename+" = "+ rvalue->dumpToString();}
+    std::string dumpToString()const{return "let "+variablename+" = "+ rvalue->dumpToString();}
 
     
 };

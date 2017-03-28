@@ -20,11 +20,11 @@ StatementHistory::StatementHistory()
 
 
 
-bool StatementHistory::ChekDuplicate(Statement * entry)
+bool StatementHistory::ChekDuplicate( Statement * entry)
 {
     
         if (!history.empty())
-            if (history.back()->dumpToString() == entry->dumpToString()) {
+            if (history.front()->isEqual(*entry) ) {
                 return false;
             }
     
@@ -62,6 +62,10 @@ void StatementHistory::ReInit()
 
 void StatementHistory::ReInitDone()
 {
+    if(historyPointer == history.begin())
+        historyPointer++;
+        
+        
     delete history.front();
     history.pop_front();
 
@@ -91,10 +95,10 @@ StatementHistory::Edit(std::string currentBuffer, MoveDirection direction,
     //save current buffer only if it is at the begning
     if( historyPointer == history.begin())
     {
-        delete history.back();
+        delete *historyPointer;
         auto anProcessedStatment= new  UnProcessedStatment;
         anProcessedStatment->sourceText = currentBuffer;
-        history.back() = anProcessedStatment;
+        *historyPointer = anProcessedStatment;
     }
         
         

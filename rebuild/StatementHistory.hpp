@@ -39,7 +39,12 @@ public:
      std::string Edit(std::string currentBuffer, MoveDirection direction,bool& success);
     
     
-     const std::list<Statement*> & GetHistory() const
+    const std::list<Statement*> & GetHistory() const
+    {
+        return history;
+    }
+    
+     std::list<Statement*> & GetModifieableHistory()
     {
         return history;
     }

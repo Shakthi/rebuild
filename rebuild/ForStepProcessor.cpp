@@ -23,7 +23,7 @@ void ForStepProcessor::Init()
 
 
 
-
+ 
 void ForStepProcessor::RunStep()
 {
     
@@ -38,7 +38,16 @@ void ForStepProcessor::RunStep()
     auto nextStatemnt = dynamic_cast< NextStatement*>(result);
     if (nextStatemnt) {
         delete result;
-        ExecuteLoop();
+        ExecuteHistory();
+        
+        std::vector<Statement*> v{ std::make_move_iterator(std::begin(popingLineHistory.GetModifieableHistory())),
+            std::make_move_iterator(std::end(popingLineHistory.GetModifieableHistory())) };
+        
+        
+        thisForBlock->statements = std::move(v);
+        
+        
+        
         exitProcessing();
         return;
     }
@@ -96,7 +105,29 @@ void ForStepProcessor::RunStep()
 
 }
 
-void ForStepProcessor::ExecuteLoop()
+
+void ForStepProcessor::ExecuteStatments(ForStatment  * thisForBlock)
+{
+
+    
+    for (varTable[thisForBlock->forVar] =  varTable[thisForBlock->forVar].getNumVal() +thisForBlock->forStep->Evaluate().getNumVal() ;
+         varTable[thisForBlock->forVar].getNumVal() <=thisForBlock->forEnd->Evaluate().getNumVal() ; varTable[thisForBlock->forVar]= varTable[thisForBlock->forVar].getNumVal() +thisForBlock->forStep->Evaluate().getNumVal() )
+        
+    {
+        
+        for (auto i=thisForBlock->statements.rbegin(); i != thisForBlock->statements.rend(); i++) {
+            
+            Evaluate((*i));
+            
+        }
+        
+    }
+    
+
+
+}
+
+void ForStepProcessor::ExecuteHistory()
 {
     popingLineHistory.PopExtra();
 
@@ -104,11 +135,15 @@ void ForStepProcessor::ExecuteLoop()
     for (varTable[thisForBlock->forVar] =  getForVar() +thisForBlock->forStep->Evaluate().getNumVal() ;
          getForVar() <=thisForBlock->forEnd->Evaluate().getNumVal() ; varTable[thisForBlock->forVar]= getForVar() +thisForBlock->forStep->Evaluate().getNumVal() ) {
         
-        for( auto statement :popingLineHistory.GetHistory() )
-        {
-
-            Evaluate(statement);
+        
+        
+        for (auto i=popingLineHistory.GetHistory().rbegin(); i != popingLineHistory.GetHistory().rend(); i++) {
+            
+            Evaluate((*i));
+            
         }
+        
+        
         
     }
     

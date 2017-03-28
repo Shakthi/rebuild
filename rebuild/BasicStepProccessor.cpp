@@ -177,14 +177,51 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         return true;
     }
     
+    
+    
+    auto statemnt = dynamic_cast< ListStatement*>(result);
+    if (statemnt) {
+        
+        std::cout<<std::endl;
+
+        
+        for (auto currentStatment : rebuild->history->GetHistory()) {
+            
+            std::cout<<currentStatment->dumpToString()<<std::endl;
+            
+        }
+        
+        
+        delete statemnt;
+        return false;
+    }
+    
+    
+    
+    
+    
     auto forStatemnt = dynamic_cast< ForStatment*>(result);
     if (forStatemnt) {
         
-        ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild,forStatemnt);
-        readStepProcessor->Init();
+        if(!forStatemnt->statements.empty())
+        {
         
-        
-        rebuild->addNewProcessing(readStepProcessor);
+            ForStepProcessor * processor = new ForStepProcessor(rebuild,forStatemnt);
+            processor->Init();
+            processor->ExecuteStatments(forStatemnt);
+
+        }
+            else
+            {
+                
+                ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild,forStatemnt);
+                readStepProcessor->Init();
+                
+                rebuild->addNewProcessing(readStepProcessor);
+
+            
+            }
+            
         return true;
     }
     
@@ -235,7 +272,7 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     if (letStatemnt) {
         
         varTable[letStatemnt->variablename]=letStatemnt->rvalue->Evaluate();
-        return false;
+        return true;
     }
     
     
@@ -270,9 +307,12 @@ void BasicStepProcessor::RunStep()
     }
     
     
-    rebuild->history->Add(statment);
 
-    Evaluate(statment);
+    if(Evaluate(statment))
+    {
+        rebuild->history->Add(statment);
+
+    }
     
     
 }
