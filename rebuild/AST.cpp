@@ -451,6 +451,6 @@ void ForStatment::serialize( Archive & ar )
     return std::string("for ") + forVar + " = "
     + forBegin->dumpToString()
     + " to "
-    + forEnd->dumpToString() ;
+    + forEnd->dumpToString() + ((statements.empty())?"":":" );
 }
 

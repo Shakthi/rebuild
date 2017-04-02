@@ -209,16 +209,16 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
             processor->ExecuteStatments(forStatemnt);
 
         }
-            else
-            {
-                
-                ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild,forStatemnt);
-                readStepProcessor->Init();
-                
-                rebuild->addNewProcessing(readStepProcessor);
-
+        else
+        {
             
-            }
+            ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild,forStatemnt);
+            readStepProcessor->Init();
+            
+            rebuild->addNewProcessing(readStepProcessor);
+
+        
+        }
             
         return true;
     }
