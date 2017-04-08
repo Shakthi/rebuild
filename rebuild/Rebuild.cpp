@@ -11,7 +11,7 @@
 
 #include "BasicStepProccessor.hpp"
 #include "lineNoiseWrapper.hpp"
-#include "StatementHistory.hpp"
+#include "SentenceHistory.hpp"
 #include <exception>
 #include <stdexcept>
 #include <iostream>
@@ -56,16 +56,23 @@ Rlog  rlog(lbuffer);
 
 std::string Rebuild::prompt;
 
-Rebuild::Rebuild()
+Rebuild::Rebuild(const std::vector<std::string> & argv)
     : exitStatus(exitStatusRIP)
     , alive(true)
+    ,arglist(argv)
+
 {
+    //Rlog rlog;
+    rlog<<arglist.size()<<std::endl;
+    
     Rebuild::prompt="rebuild]";
     rlog << "Hello world...!("<<__DATE__<<"-"<<__TIME__<< ")"<<std::endl;
-    history = new StatementHistory();
+    history = new SentenceHistory();
     lineNoiseWrapper = new LineNoiseWrapper(*history);
     processorStack.push(new BasicStepProcessor(this));
     Load();
+    
+
 }
 
 std::string
@@ -209,6 +216,8 @@ Rebuild::~Rebuild()
     delete lineNoiseWrapper;
 }
 
+
+
 void Rebuild::exitProcessing()
 {
     StepProcessor* last = processorStack.top();
@@ -216,6 +225,7 @@ void Rebuild::exitProcessing()
     lastStepProcessorData = last->ToJson();
     delete last;
 }
+
 
 void Rebuild::addNewProcessing(StepProcessor* stepProcessor)
 {
@@ -232,4 +242,21 @@ void Rebuild::RunStep()
     StepProcessor* stepProcessor = processorStack.top();
 
     stepProcessor->RunStep();
+}
+
+#include <unistd.h>
+
+bool Rebuild::restart()
+{
+    Rlog rlog;
+    rlog<<"Restarting "<<std::endl;
+    
+    SaveIfLatest();
+    char *argm[] = {strdup(arglist[0].c_str()), 0};
+
+    
+    
+    execvp (argm[0],argm );
+
+    return true;
 }

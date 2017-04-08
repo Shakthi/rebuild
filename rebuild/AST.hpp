@@ -18,14 +18,16 @@
 #include "cereal/types/vector.hpp"
 #include "cereal/types/list.hpp"
 
-
-struct Statement {
+struct Sentence
+{
     std::string sourceText; //Debug only
-    virtual ~Statement(){}
+    virtual ~Sentence(){}
+    
+    
     
     
     nlohmann::json ToJson();
-    static  Statement * GetFromJson(nlohmann::json );
+    static  Sentence * GetFromJson(nlohmann::json );
     
     
     
@@ -34,9 +36,21 @@ struct Statement {
     { ar( CEREAL_NVP(sourceText) ); }
     
     
-    virtual bool isEqual(const Statement & that){ return this -> dumpToString()  == that.dumpToString();}
+    virtual bool isEqual(const Sentence & that){ return this -> dumpToString()  == that.dumpToString();}
     
     virtual std::string dumpToString()const {return sourceText;}
+
+
+
+};
+
+struct Statement:Sentence
+{
+    
+};
+
+struct Command:Sentence
+{
     
 };
 
@@ -82,8 +96,13 @@ struct NextStatement:public  Statement{
 
 };
 
-struct ListStatement:public  Statement{
+struct ListCommand:public  Command{
     
+};
+
+
+struct CustomCommand:public  Command{
+    std::string name;
 };
 
 

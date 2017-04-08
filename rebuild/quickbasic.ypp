@@ -21,22 +21,21 @@ Rlog trace("trace");
 #define YYERROR_VERBOSE 1
 #if YYBISON
 int yylex();
-void yyerror(Statement ** statementOut,const char *);
+void yyerror(Sentence ** sentenceOut,const char *);
 
 #endif
 %}
 
 %start line
 
-%parse-param { Statement ** statementOut}
+%parse-param { Sentence ** sentenceOut}
 
 %token PRINT INPUT LET IF ELSE THEN GOTO FOR NEXT TO END  STEP
 ELLIPSIS REM CLS LIST RUN
-%token <getStringVal()> VAR SVAR
+%token <getStringVal()> VAR SVAR CUSTOMCOMMAND
 %token <getStringVal()> STRING_LITERAL STATEMENT_RECORD REMARK_RECORD
 %token <getNumVal()> NUMBER REAL_NUMBER
 
-%type <getNumVal()> lineNumber
 %type <expression> numexpr printItem printlist strexpr boolExression
 
 %type <getStringVal()>  inputItem
@@ -56,15 +55,14 @@ ELLIPSIS REM CLS LIST RUN
 %%
 
 line    :   statement {
-    *statementOut = $$.nodeVal;
+    *sentenceOut = $$.nodeVal;
 
-};
-
-
-
-lineNumber : NUMBER;
-runCommand : RUN    {  std::cout<<"Run to be implemnted"<<std::endl;}
+}
+|command {*sentenceOut = $$.nodeVal;}
 ;
+
+
+
 
 statement   :
     printStatement
@@ -75,12 +73,26 @@ statement   :
 |  forStataement
 |  nextStatement
 | remStatement
-|   clearStatement
 | gotoStament
-| listCommand //It should be command
 ;
 
 
+command : listCommand | clearStatement |customCommand //It should be command
+;
+
+customCommand : CUSTOMCOMMAND  {
+    auto var= new CustomCommand;
+    var->name = $1;
+    $$.nodeVal = var;
+}
+| CUSTOMCOMMAND commandarglist
+;
+
+commandarglist : commandarg
+| commandarglist commandarg
+;
+
+commandarg : NUMBER | 
 
 remStatement : REM REMARK_RECORD {  auto var= new RemarkStatement;  var->comments= $2; $$.nodeVal = var; }
 ;
@@ -93,7 +105,7 @@ clearStatement : CLS { std::cout<<"CLS to be implemnted"<<std::endl;/*  DisplayC
 ;
 listCommand : LIST {
 
-$$.nodeVal = new ListStatement;
+$$.nodeVal = new ListCommand;
 }
 ;
 
@@ -431,7 +443,7 @@ numexpr    :   '(' numexpr ')'
 
 
 %%
-void yyerror( Statement** statement, const char * error)
+void yyerror( Sentence** statement, const char * error)
 {
     
     *statement = new ErrorStatement(error);

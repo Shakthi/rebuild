@@ -154,6 +154,10 @@ CEREAL_REGISTER_TYPE (ReadStatement);
 CEREAL_REGISTER_TYPE(PrintStatement);
 CEREAL_REGISTER_TYPE(LetStatement);
 
+CEREAL_REGISTER_TYPE(ListCommand);
+CEREAL_REGISTER_TYPE(CustomCommand);
+
+
 
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement, LetStatement);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement, PrintStatement);
@@ -166,6 +170,12 @@ CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,ForStatment);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,ReadStatement);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,ErrorStatement);
 
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Command,ListCommand);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Command,CustomCommand);
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Sentence,Command);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Sentence, Statement);
 
 
 
@@ -182,12 +192,14 @@ CEREAL_REGISTER_TYPE(ArithmeticExpression);
 CEREAL_REGISTER_TYPE(RelationalExpression);
 
 
+
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Expression, GetExpression);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Expression, UnaryExpression);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Expression, TerminalExpression);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Expression, BainaryExpression);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(BainaryExpression,RelationalExpression );
 CEREAL_REGISTER_POLYMORPHIC_RELATION(BainaryExpression,ArithmeticExpression );
+
 
 
 
@@ -206,12 +218,12 @@ auto make_smart(T* t)-> std::unique_ptr <T,void (*)(T*)>
 
 
 
-nlohmann::json Statement::ToJson()
+nlohmann::json Sentence::ToJson()
 {
 //    Rlog rlog;
     
     nlohmann::json root;
-    root["class"]="Statement";
+    root["class"]="Sentence";
     
     std::ostringstream os;
     cereal::JSONOutputArchive oarchive( os );
@@ -233,9 +245,9 @@ nlohmann::json Statement::ToJson()
 }
 
 
-Statement * Statement::GetFromJson(nlohmann::json root)
+Sentence * Sentence::GetFromJson(nlohmann::json root)
 {
-    assert(root["class"]=="Statement");
+    assert(root["class"]=="Sentence");
     //Rlog rlog;
 
     nlohmann::json value0;
@@ -248,8 +260,8 @@ Statement * Statement::GetFromJson(nlohmann::json root)
    cereal::JSONInputArchive iarchive( is );
     
     
-    auto deleter=[&](Statement* ){};
-    std::unique_ptr<Statement, decltype(deleter)> st(nullptr, deleter);
+    auto deleter=[&](Sentence* ){};
+    std::unique_ptr<Sentence, decltype(deleter)> st(nullptr, deleter);
     
     
     iarchive(st);
@@ -412,24 +424,33 @@ std::string RelationalExpression::dumpToString()const
 void Deleter(Statement* )
 {}
 
+struct ii{}
+;
+
 template<class Archive>
 void ForStatment::serialize( Archive & ar )
 {
     ar( CEREAL_NVP(forVar),CEREAL_NVP(forBegin),CEREAL_NVP(forEnd),CEREAL_NVP(forStep) );
     ar( CEREAL_NVP(sourceText));
     
-
-    std::vector<std::unique_ptr<Statement>> statementsptr;
+    
+    
+    
+    auto nondeleter=[&](Statement* ){};
+    
+    std::function<void(Statement*)> F = nondeleter;
+    
+    std::vector<std::unique_ptr<Statement,decltype(F)>> statementsptr;
     statementsptr.reserve(statements.size());
     
     
     for(auto st : statements )
     {
-        statementsptr.push_back( std::unique_ptr<Statement>(st));
+        statementsptr.push_back( std::unique_ptr<Statement,decltype(F)>(st,F));
     
     }
-    
-    ar( CEREAL_NVP(statementsptr));
+
+     ar( CEREAL_NVP(statementsptr));
     
     if(statements.empty() && !statementsptr.empty())
     {

@@ -58,5 +58,6 @@ public:
 
     nlohmann::json ToJson();
     void FromJson(nlohmann::json);
+    void ClearScreen();
 };
 #endif /* lineNoiseWrapper_hpp */

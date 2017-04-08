@@ -1,17 +1,17 @@
 //
-//  StatementHistory.cpp
+//  SentenceHistory.cpp
 //  rebuild
 //
 //  Created by Shakthi Prasad G S on 12/03/17.
 //  Copyright © 2017 self. All rights reserved.
 //
 
-#include "StatementHistory.hpp"
+#include "SentenceHistory.hpp"
 #include "AST.hpp"
 #include "Logger.hpp"
 
 
-StatementHistory::StatementHistory()
+SentenceHistory::SentenceHistory()
 {
     historyPointer = history.begin();
     
@@ -20,7 +20,7 @@ StatementHistory::StatementHistory()
 
 
 
-bool StatementHistory::ChekDuplicate( Statement * entry)
+bool SentenceHistory::ChekDuplicate( Sentence * entry)
 {
     
         if (!history.empty())
@@ -31,7 +31,7 @@ bool StatementHistory::ChekDuplicate( Statement * entry)
     return true;
 }
 
-void StatementHistory::Add(Statement * entry)
+void SentenceHistory::Add(Sentence * entry)
 {
     
     
@@ -42,13 +42,13 @@ void StatementHistory::Add(Statement * entry)
     
 }
 
-void StatementHistory::InternalAdd(Statement * entry)
+void SentenceHistory::InternalAdd(Sentence * entry)
 {
     history.push_front(entry);
     
 }
 
-void StatementHistory::ReInit()
+void SentenceHistory::ReInit()
 {
     
     
@@ -60,7 +60,7 @@ void StatementHistory::ReInit()
 }
 
 
-void StatementHistory::ReInitDone()
+void SentenceHistory::ReInitDone()
 {
     if(historyPointer == history.begin())
         historyPointer++;
@@ -72,7 +72,7 @@ void StatementHistory::ReInitDone()
 }
 
 std::string
-StatementHistory::Edit(std::string currentBuffer, MoveDirection direction,
+SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
                      bool& success)
 {
     
@@ -126,12 +126,12 @@ StatementHistory::Edit(std::string currentBuffer, MoveDirection direction,
     return (*historyPointer)->dumpToString();
 }
 
-Statement *  StatementHistory::GetCurrentStatment()
+Sentence *  SentenceHistory::GetCurrentStatment()
 {
     return *historyPointer;
 }
 
-void StatementHistory::Clear()
+void SentenceHistory::Clear()
 {
     history.clear();
 }
@@ -139,7 +139,7 @@ void StatementHistory::Clear()
 
 
 nlohmann::json
-StatementHistory::ToJson()
+SentenceHistory::ToJson()
 {
     using namespace nlohmann;
     
@@ -168,7 +168,7 @@ StatementHistory::ToJson()
     
     return root;
 }
-void StatementHistory::FromJson(nlohmann::json root)
+void SentenceHistory::FromJson(nlohmann::json root)
 {
     using namespace nlohmann;
     
@@ -178,13 +178,13 @@ void StatementHistory::FromJson(nlohmann::json root)
     
     for (int i = 0; i < content.size(); i++) {
         
-        InternalAdd(Statement::GetFromJson(content[content.size()-i-1]));
+        InternalAdd(Sentence::GetFromJson(content[content.size()-i-1]));
         
     }
 }
 
 
-void PopingLineStatementHistory::PopExtra()
+void PopingLineSentenceHistory::PopExtra()
 {
     for (int i=0; i<extracount; i++)
     {
@@ -201,7 +201,7 @@ void PopingLineStatementHistory::PopExtra()
     
 }
 
-void PopingLineStatementHistory::AddExtra(Statement * entry)
+void PopingLineSentenceHistory::AddExtra(Sentence * entry)
 {
     InternalAdd(entry);
     extracount++;
@@ -209,7 +209,7 @@ void PopingLineStatementHistory::AddExtra(Statement * entry)
 }
 
 
-void PopingLineStatementHistory::Add(Statement * entry)
+void PopingLineSentenceHistory::Add(Sentence * entry)
 {
   
 

@@ -12,7 +12,7 @@
 
 #include "BasicStepProccessor.hpp"
 #include "quickbasic.h"
-#include "StatementHistory.hpp"
+#include "SentenceHistory.hpp"
 #include "AST.hpp"
 
 
@@ -24,7 +24,7 @@ class IfStepProcessor : public BasicStepProcessor {
     
     bool passThroughe;
   
-    PopingLineStatementHistory popingLineHistory;
+    PopingLineSentenceHistory popingLineHistory;
     
 
 public:

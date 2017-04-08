@@ -33,7 +33,7 @@ void IfStepProcessor::RunStep()
         std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>if]:",popingLineHistory);
         
         BasicParser parser;
-        Statement * result =  parser.Parse(answer);
+        Sentence * result =  parser.Parse(answer);
         popingLineHistory.PopExtra();
         
         auto nextStatemnt = dynamic_cast< NextStatement*>(result);
@@ -52,8 +52,10 @@ void IfStepProcessor::RunStep()
             
             
         }
+        auto statemnt = dynamic_cast< Statement*>(result);
         
-        if(BasicStepProcessor::Evaluate(result))
+
+        if(BasicStepProcessor::Evaluate(statemnt))
             popingLineHistory.Add(result);
         
         
@@ -62,7 +64,7 @@ void IfStepProcessor::RunStep()
         std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild>if (remarks)]:");
         
         BasicParser parser;
-        Statement * result =  parser.Parse(answer);
+        Sentence * result =  parser.Parse(answer);
         
         auto remarkStatement = dynamic_cast< RemarkStatement*>(result);
         if (remarkStatement) {
@@ -90,7 +92,7 @@ void IfStepProcessor::ExecuteHistory()
     for( auto statement :popingLineHistory.GetHistory() )
     {
         
-        Evaluate(statement);
+        Evaluate(dynamic_cast<Statement*>(statement));
     }
         
     

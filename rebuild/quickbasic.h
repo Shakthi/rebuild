@@ -53,7 +53,7 @@ struct Value
     
     
     Value(class Expression * aExpression):expression(aExpression){valutype = Evaluetype::othertype;}
-    Value(class Statement * anodeVal):nodeVal(anodeVal){valutype = Evaluetype::othertype;}
+    Value(class Sentence * anodeVal):nodeVal(anodeVal){valutype = Evaluetype::othertype;}
 
 
     Value(){ valutype = Evaluetype::emptyType;}
@@ -62,7 +62,7 @@ struct Value
     
     union
     {
-        class Statement * nodeVal;
+        class Sentence * nodeVal;
         class Expression * expression;
     };
 

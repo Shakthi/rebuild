@@ -14,7 +14,7 @@
 #include "ParserWrapper.hpp"
 #include "quickbasic.h"
 #include "Logger.hpp"
-#include "StatementHistory.hpp"
+#include "SentenceHistory.hpp"
 
 
 
@@ -162,11 +162,14 @@ void BasicStepProcessor::FromJson(nlohmann::json j)
 
 bool BasicStepProcessor::Evaluate(Statement  * result)
 {
+    if (result==nullptr) {
+        return false;
+    }
     
     auto endStatement = dynamic_cast< EndStatement*>(result);
     if (endStatement) {
         exitProcessing();
-        return false;
+        return true;
     }
     
     auto readStatemnt = dynamic_cast< ReadStatement*>(result);
@@ -177,22 +180,6 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         return true;
     }
     
-    
-    
-    auto statemnt = dynamic_cast< ListStatement*>(result);
-    if (statemnt) {
-        
-        std::cout<<std::endl;
-        
-        for (auto i= rebuild->history->GetHistory().rbegin(); i!= rebuild->history->GetHistory().rend(); i++) {
-                        std::cout<<(*i)->dumpToString()<<std::endl;
-        }
-
-        
-        
-        delete statemnt;
-        return false;
-    }
     
     
     
@@ -227,7 +214,7 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     if (errorStatemnt) {
         
         std::cout<<Rebuild::prompt<<"! "<<errorStatemnt->description<<std::endl;
-        return false;
+        return true;
     }
     
     
@@ -279,6 +266,59 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     return true;
 }
 
+
+
+bool BasicStepProcessor::Process(Command  * result)
+{
+    if (result==nullptr) {
+        return false;
+    }
+    
+    
+    {
+        
+       
+        auto statemnt = dynamic_cast< ListCommand*>(result);
+        if (statemnt) {
+            
+            std::cout<<std::endl;
+            int count=1;
+            for (auto i=rebuild->history->GetHistory().rbegin(); i!=rebuild->history->GetHistory().rend(); i++) {
+                std::cout<<count<<" "<<(*i)->dumpToString()<<std::endl;
+                count++;
+            }
+            
+            
+            
+            return true;
+        }
+        auto customCommand = dynamic_cast<CustomCommand*>(result);
+        if (customCommand) {
+            
+            if(customCommand->name == "restart")
+            {
+                rebuild->restart();
+            
+            }else if (customCommand->name == "cls")
+            {
+                rebuild->lineNoiseWrapper->ClearScreen();
+                return true;
+
+            }else
+            {   rlog<<Rlog::type::error<<"Not found command"<<customCommand->name<<std::endl;
+                return true;
+            }
+            
+        }
+        
+
+    }
+
+    return false;
+
+}
+
+
 void BasicStepProcessor::RunStep()
 {
     std::string answer = rebuild->lineNoiseWrapper->getLine(Rebuild::prompt+":");
@@ -290,30 +330,37 @@ void BasicStepProcessor::RunStep()
         exitProcessing();
         return;
     }
-    Statement * statment;
+    Sentence * sentence;
     LineNoiseWrapper::EModificationStatus mstats = rebuild->lineNoiseWrapper->GetModificationStatus();
     
     
     if(mstats == LineNoiseWrapper::EModificationStatus::history)
     {
-        statment = rebuild->history->GetCurrentStatment();
+        sentence = rebuild->history->GetCurrentStatment();
     }
     else
     {
         BasicParser parser;
-        statment = parser.Parse(answer);
+        sentence = parser.Parse(answer);
     }
     
-    
+    assert(sentence);
 
-    if(Evaluate(statment))
+    if(Evaluate(dynamic_cast<Statement*>(sentence)))
     {
-        rebuild->history->Add(statment);
+        rebuild->history->Add(sentence);
 
-    }
+    }else if(Process(dynamic_cast<Command*>(sentence)))
+    {
+        rebuild->history->Add(sentence);
+    }else assert(false && "Should not happan");
+        
     
     
 }
+
+
+
 
 
 

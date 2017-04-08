@@ -12,7 +12,9 @@
 
 int main(int argc, const char* argv[])
 {
-    Rebuild rebuild;
+    const std::vector<std::string> arguments(argv, argv + argc);
+
+    Rebuild rebuild(arguments);
 
 
     while (rebuild.IsAlive()) {

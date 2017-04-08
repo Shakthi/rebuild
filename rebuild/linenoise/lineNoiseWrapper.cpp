@@ -79,6 +79,10 @@ std::string LineNoiseWrapper::LinenoiseHistoryCallback(int direction, std::strin
     
 }
 
+void LineNoiseWrapper::ClearScreen()
+{
+    linenoiseClearScreen();
+}
 
 LineNoiseWrapper::LineNoiseWrapper(LineHistory & linehistory)
 :defaultHistory(linehistory)

@@ -16,6 +16,7 @@ class BasicStepProcessor : public StepProcessor {
 public:
     void RunStep();
     virtual bool Evaluate(class Statement* input);
+    virtual bool Process(class Command* input);
 
     BasicStepProcessor(Rebuild* aRebuild)
         : StepProcessor(aRebuild)
