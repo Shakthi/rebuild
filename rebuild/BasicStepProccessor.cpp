@@ -299,12 +299,35 @@ bool BasicStepProcessor::Process(Command  * result)
             {
                 rebuild->restart();
             
-            }else if (customCommand->name == "cls")
+            }
+            else if (customCommand->name == "cls")
             {
+                
                 rebuild->lineNoiseWrapper->ClearScreen();
                 return true;
 
-            }else
+            }
+            else if (customCommand->name == "stepin")
+            {
+                Sentence * sentence = rebuild->history->GetCurrentStatment();
+                auto  forStatment =  dynamic_cast<ForStatment*>(sentence);
+                if(forStatment)
+                {
+                    auto forStepProcessor = new ForStepProcessor(rebuild,forStatment,
+                                                                 ForStepProcessor::InitType::stepin);
+                    forStepProcessor->Init();
+                    
+                    rebuild->addNewProcessing(forStepProcessor);
+
+                    
+                
+                }
+                
+                
+                return true;
+                
+            }
+            else
             {   rlog<<Rlog::type::error<<"Not found command"<<customCommand->name<<std::endl;
                 return true;
             }

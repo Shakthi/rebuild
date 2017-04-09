@@ -23,8 +23,12 @@ class ForStepProcessor : public BasicStepProcessor {
     PopingLineSentenceHistory popingLineHistory;
     bool passThrough;
     
+    
 public:
-    ForStepProcessor(Rebuild* aRebuild,ForStatment * forStatement)
+    
+    enum class InitType {normal,stepin};
+    
+    ForStepProcessor(Rebuild* aRebuild,ForStatment * forStatement,InitType initType = InitType::normal)
     : BasicStepProcessor(aRebuild),thisForBlock(forStatement)
     {
 
