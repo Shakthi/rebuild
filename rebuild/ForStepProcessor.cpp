@@ -40,12 +40,18 @@ void ForStepProcessor::RunStep()
             delete result;
             ExecuteHistory();
             
-            
-            for (auto i =popingLineHistory.GetHistory().begin(); i !=popingLineHistory.GetHistory().begin(); i++) {
+            thisForBlock->statements.clear();
+            for (auto i =popingLineHistory.GetHistory().begin(); i !=popingLineHistory.GetHistory().end();) {
                 
                 auto statement = dynamic_cast<Statement*>(*i);
                 if(statement)
+                {
                     thisForBlock->statements.push_back(statement);
+                    i=popingLineHistory.GetModifieableHistory().erase(i);
+                }else
+                {
+                    i++;
+                }
                 
             }
             
@@ -81,8 +87,8 @@ void ForStepProcessor::RunStep()
             
             if(statemnt && BasicStepProcessor::Evaluate(statemnt))
                 popingLineHistory.Add(result);
-            
-            
+            else if(Process(dynamic_cast< Command*>(result)))
+                ;
             else
             {
                 
@@ -140,7 +146,48 @@ void ForStepProcessor::RunStep()
         
         
     }
-    
+
+
+    bool ForStepProcessor::Process( Command* input)
+    {
+        
+        auto statemnt = dynamic_cast< ListCommand*>(input);
+        if (statemnt) {
+            
+            std::cout<<std::endl;
+            int count=1;
+            for (auto i= popingLineHistory.GetHistory().begin(); i!=popingLineHistory.GetHistory().end(); i++) {
+                std::cout<<count<<" "<<(*i)->dumpToString()<<std::endl;
+                count++;
+            }
+            
+            
+            
+            return true;
+        }
+
+        
+        auto customCommand = dynamic_cast<CustomCommand*>(input);
+        if (customCommand) {
+            
+            if (customCommand->name == "popback")
+            {
+                if(popingLineHistory.GetHistory().size())
+                    popingLineHistory.GetModifieableHistory().pop_front();
+                return true;
+                
+            }
+            else
+            {
+                return BasicStepProcessor::Process(input);
+            }
+        }
+        
+        return false;
+            
+
+    }
+
     void ForStepProcessor::ExecuteHistory()
     {
         popingLineHistory.PopExtra();

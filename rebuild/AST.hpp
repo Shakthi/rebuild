@@ -180,6 +180,25 @@ public:
 ;
 
 
+struct PrintElementStatement:public  PrintStatement{
+    
+    
+public:
+    
+    template<class Archive>
+    void serialize( Archive & ar )
+    { ar( CEREAL_NVP(printitems),CEREAL_NVP(sourceText) ); }
+    
+    
+    
+    std::string dumpToString()const;
+    
+}
+;
+
+
+
+
 
 
 struct Expression

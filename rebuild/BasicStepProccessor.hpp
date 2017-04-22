@@ -17,6 +17,8 @@ public:
     void RunStep();
     virtual bool Evaluate(class Statement* input);
     virtual bool Process(class Command* input);
+    std::string ProcessCtrlKeyStroke(int ctrlchar);
+
 
     BasicStepProcessor(Rebuild* aRebuild)
         : StepProcessor(aRebuild)

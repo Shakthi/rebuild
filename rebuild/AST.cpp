@@ -152,6 +152,7 @@ CEREAL_REGISTER_TYPE (IfStatment);
 CEREAL_REGISTER_TYPE (ForStatment);
 CEREAL_REGISTER_TYPE (ReadStatement);
 CEREAL_REGISTER_TYPE(PrintStatement);
+CEREAL_REGISTER_TYPE(PrintElementStatement);
 CEREAL_REGISTER_TYPE(LetStatement);
 
 CEREAL_REGISTER_TYPE(ListCommand);
@@ -161,6 +162,9 @@ CEREAL_REGISTER_TYPE(CustomCommand);
 
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement, LetStatement);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement, PrintStatement);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(PrintStatement,PrintElementStatement);
+
+
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,UnProcessedStatment);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,EndStatement);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,NextStatement);
@@ -292,6 +296,25 @@ std::string PrintStatement::dumpToString()const
     return result;
 }
 
+
+std::string PrintElementStatement::dumpToString()const
+{
+    std::string result="printe ";
+    
+    
+    bool isFirst=true;
+    for (auto const &  i: printitems)
+    {
+        if(!isFirst)
+            result+="; ";
+        
+        
+        result+=i->dumpToString();
+        
+        isFirst=false;
+    }
+    return result;
+}
 
 
 

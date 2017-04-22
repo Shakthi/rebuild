@@ -31,6 +31,10 @@ public:
     ForStepProcessor(Rebuild* aRebuild,ForStatment * forStatement,InitType initType = InitType::normal)
     : BasicStepProcessor(aRebuild),thisForBlock(forStatement)
     {
+        
+        for (auto st :forStatement->statements ) {
+            popingLineHistory.Add(st);
+        }
 
     }
     
@@ -54,7 +58,9 @@ public:
     void ExecuteHistory();
     void ExecuteStatments(ForStatment  * forstatement);
     
+    virtual bool Process(class Command* input);
     
+
     
 };
 

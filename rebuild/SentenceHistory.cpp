@@ -214,14 +214,6 @@ void PopingLineSentenceHistory::Add(Sentence * entry)
   
 
     
-    for (auto i = history.begin() ; i!=historyPointer; i++) {
-        delete *i;
-    }
-    
-    history.erase(history.begin(),historyPointer);
-    
-    
-    
     if (ChekDuplicate(entry))
     {
         InternalAdd(entry);

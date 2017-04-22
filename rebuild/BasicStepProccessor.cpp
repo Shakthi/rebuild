@@ -248,10 +248,14 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
             
 
         }
-        std::cout<<std::endl;
+        if( ! dynamic_cast< PrintElementStatement*>(result))
+            std::cout<<std::endl;
         
         return true;
     }
+    
+   
+    
     
     auto letStatemnt = dynamic_cast< LetStatement*>(result);
     if (letStatemnt) {
@@ -342,21 +346,54 @@ bool BasicStepProcessor::Process(Command  * result)
 }
 
 
+std::string BasicStepProcessor::ProcessCtrlKeyStroke(int ctrlchar)
+{
+    Rlog rlog;
+    switch (ctrlchar+'a'-1) {
+        case 'z':return ".restart";
+            break;
+        case 'x':return ".stepin";
+            break;
+
+            
+        default:   rlog<<"\n"<<std::string("key")+char('a'+rebuild->lineNoiseWrapper->GetControlKey()-1)<<std::endl;
+            return std::string("key")+char('a'+rebuild->lineNoiseWrapper->GetControlKey()-1);
+            break;
+    }
+    
+}
+
 void BasicStepProcessor::RunStep()
 {
     std::string answer = rebuild->lineNoiseWrapper->getLine(Rebuild::prompt+":");
     
 
-    
+    bool proceedStroke=false;
+
     if (answer == ""){
         if( rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::ExitStatus::ctrl_c)
-        exitProcessing();
-        return;
+        {
+            exitProcessing();
+            return;
+        
+        }
+        
+        
+        if( rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::ExitStatus::ctrl_X)
+        {
+            proceedStroke=true;
+            answer = ProcessCtrlKeyStroke(rebuild->lineNoiseWrapper->GetControlKey());
+        
+        }
+        
+        
     }
+    
     Sentence * sentence;
     LineNoiseWrapper::EModificationStatus mstats = rebuild->lineNoiseWrapper->GetModificationStatus();
     
     
+        
     if(mstats == LineNoiseWrapper::EModificationStatus::history)
     {
         sentence = rebuild->history->GetCurrentStatment();
@@ -375,7 +412,10 @@ void BasicStepProcessor::RunStep()
 
     }else if(Process(dynamic_cast<Command*>(sentence)))
     {
-        rebuild->history->Add(sentence);
+        if (!proceedStroke) {
+            rebuild->history->Add(sentence);
+        }
+        
     }else assert(false && "Should not happan");
         
     

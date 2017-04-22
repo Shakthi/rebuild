@@ -20,8 +20,20 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
     
     std::string returnstring;
     inhistory.ReInit();
-    char* result = linenoise(prompt.c_str());
+    
+    linenoiseOptions option;
+    linenoiseResults results;
+    results.ctrlKey=0;
+    results.printNewln = false;
+    option.printNewln = false;
+    ctrlKey =0;
+    
+    char* result = linenoise(prompt.c_str(),&option,&results);
     inhistory.ReInitDone();
+    
+    if(option.printNewln==false && results.printNewln == false)
+        printf("\n");
+    
     
     if (result) {
         returnstring = result;
@@ -30,6 +42,13 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
     
     if (errno == EAGAIN)
         status = ExitStatus::ctrl_c;
+    
+    else if (results.ctrlKey!=0)
+    {
+        status = ExitStatus::ctrl_X;
+        ctrlKey=results.ctrlKey;
+    }
+        
     
     if(loadedBuffer != returnstring)
         mstatus = EModificationStatus::edited;

@@ -20,6 +20,7 @@ int main(int argc, const char* argv[])
     while (rebuild.IsAlive()) {
         rebuild.RunStep();
     }
-
+    
+    rebuild.SaveIfLatest();
     return rebuild.GetExitStatus();
 }

@@ -47,6 +47,19 @@ typedef struct linenoiseCompletions {
   size_t len;
   char **cvec;
 } linenoiseCompletions;
+    
+    
+typedef struct linenoiseOptions {
+    int printNewln;//Automatically insert new line at the end of reading
+} linenoiseOptions;
+    
+    
+typedef struct linenoiseResults {
+    int printNewln;//Newline is inserted, default 0
+    int ctrlKey;//custom ctrlkey
+} linenoiseResults;
+
+
 
 typedef void(linenoiseCompletionCallback)(const char *, linenoiseCompletions *);
 typedef char*(linenoiseHintsCallback)(const char *, int *color, int *bold);
@@ -58,12 +71,13 @@ void linenoiseAddCompletion(linenoiseCompletions *, const char *);
     
 typedef  char*(linenoiseHistoryCallback)(int direction, const char * oldline,void * context);
 void linenoiseSetHistoryCallback(linenoiseHistoryCallback *,void * context);
-    
-    
+
 
     
 
-char *linenoise(const char *prompt);
+    
+
+char *linenoise(const char *prompt, const linenoiseOptions*,linenoiseResults * );
 void linenoiseFree(void *ptr);
 int linenoiseHistoryAdd(const char *line);
 int linenoiseHistorySetMaxLen(int len);

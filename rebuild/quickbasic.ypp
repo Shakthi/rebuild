@@ -30,7 +30,7 @@ void yyerror(Sentence ** sentenceOut,const char *);
 
 %parse-param { Sentence ** sentenceOut}
 
-%token PRINT INPUT LET IF ELSE THEN GOTO FOR NEXT TO END  STEP
+%token PRINT INPUT LET IF ELSE THEN GOTO FOR NEXT TO END  STEP PRINTE
 ELLIPSIS REM CLS LIST RUN
 %token <getStringVal()> VAR SVAR CUSTOMCOMMAND
 %token <getStringVal()> STRING_LITERAL STATEMENT_RECORD REMARK_RECORD
@@ -66,6 +66,7 @@ line    :   statement {
 
 statement   :
     printStatement
+|printeStatement
 |   letStatement
 |   inputStatement
 |   endstatement
@@ -120,6 +121,19 @@ ifstatment : IF boolExression  {
 printStatement : PRINT printlist    {
     
     auto printnode = new PrintStatement();
+    auto a  = static_cast<ExpressionList*>$2;
+    printnode->printitems = std::move(a->list);
+    $$=printnode;
+    
+    
+    //PrintStatement//std::cout<<std::endl;  /* interpreter.PrintBuffer("\n"); */
+}
+;
+
+
+printeStatement : PRINTE printlist    {
+    
+    auto printnode = new PrintElementStatement();
     auto a  = static_cast<ExpressionList*>$2;
     printnode->printitems = std::move(a->list);
     $$=printnode;

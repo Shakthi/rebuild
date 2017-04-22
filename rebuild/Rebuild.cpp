@@ -210,8 +210,6 @@ void Rebuild::Save()
 
 Rebuild::~Rebuild()
 {
-    SaveIfLatest();
-    rlog << "Goodbye world!... " <<std::endl;
     delete history;
     delete lineNoiseWrapper;
 }

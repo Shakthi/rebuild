@@ -37,6 +37,7 @@ L			[a-zA-Z]
 
 "step"		{  return((int)STEP); }
 "print"		{  return((int)PRINT); }
+"printe"		{  return((int)PRINTE); }
 "input"			{  return((int)INPUT); }
 "let"			{  return((int)LET); }
 "if"			{  return((int)IF); }

@@ -28,7 +28,7 @@ public:
     virtual std::string Edit(std::string currentBuffer, MoveDirection direction,
                      bool& success) =0;
 
-
+    
 
 };
 

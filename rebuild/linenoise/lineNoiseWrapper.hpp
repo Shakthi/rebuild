@@ -22,6 +22,7 @@ public:
     enum class ExitStatus { ok,
         ctrl_c,
         ctrl_d,
+        ctrl_X
         };
  
     enum class EModificationStatus { ok,
@@ -34,6 +35,7 @@ public:
 private:
     ExitStatus status;
     EModificationStatus mstatus;
+    int ctrlKey;
     
     std::string loadedBuffer;
 
@@ -42,6 +44,7 @@ public:
     std::string getLineWithHistory(std::string prompt,LineHistory & inhistory);
     ExitStatus GetStatus() { return status; }
     EModificationStatus GetModificationStatus() { return mstatus; }
+    int GetControlKey(){return ctrlKey;}
 
     ~LineNoiseWrapper();
     LineNoiseWrapper(LineHistory & linehistory);
