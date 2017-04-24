@@ -16,7 +16,7 @@ Achivements
 
 Development
 ------
-- MacOSX/Xcode is only development platform for now.
+- MacOSX/Xcode is the only development platform for now.
 
 
 
