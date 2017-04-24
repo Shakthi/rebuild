@@ -14,7 +14,7 @@ Achivements
 - A linenoise based repl helps it to rebuild.
 
 
-Running
+Development
 ------
 - MacOSX/Xcode is only development platform for now.
 
