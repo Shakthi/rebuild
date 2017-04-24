@@ -39,7 +39,7 @@ void IfStepProcessor::RunStep()
         auto nextStatemnt = dynamic_cast< NextStatement*>(result);
         if (nextStatemnt) {
             delete result;
-            ExecuteLoop();
+            ExecuteHistory();
             exitProcessing();
             return;
         }
@@ -81,7 +81,7 @@ void IfStepProcessor::RunStep()
     
 }
 
-void IfStepProcessor::ExecuteLoop()
+void IfStepProcessor::ExecuteHistory()
 {
     popingLineHistory.PopExtra();
     

@@ -26,19 +26,19 @@ struct Value
     };
     Evaluetype valutype;
     
-    float getNumVal()
+    float getNumVal()const
     {
         assert(Evaluetype::floattype == valutype);
         return numVal;
     }
     
-    std::string getStringVal()
+    std::string getStringVal()const
     {
         assert(Evaluetype::stringtype == valutype);
         return stringVal;
     }
     
-    bool getBoolVal()
+    bool getBoolVal()const
     {
         assert(Evaluetype::booltype == valutype);
         return boolVal;

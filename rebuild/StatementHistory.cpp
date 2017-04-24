@@ -8,50 +8,23 @@
 
 #include "StatementHistory.hpp"
 #include "AST.hpp"
+#include "Logger.hpp"
 
 
 StatementHistory::StatementHistory()
-: historyIndex(0)
 {
-}
+    historyPointer = history.begin();
+    
 
-void StatementHistory::Save(std::string filename)
-{
-    using namespace nlohmann;
-    
-    json root;
-    root["content"] = history;
-    root["type"] = "historyfile";
-    root["creator"] = "rebuild";
-    
-    std::ofstream stream(filename);
-    stream << root.dump(4);
-    //TODO:SAVE LOAD
-}
-
-void StatementHistory::Load(std::string filename)
-{
-//    using namespace nlohmann;
-//    std::ifstream stream(filename);
-//    json root;
-//    
-//    stream >> root;
-//    
-//    json content = root["content"];
-//    for (int i = 0; i < content.size(); i++) {
-//        Add(content[i]);
-//    }
-    
-//TODO:SAVE LOAD
 }
 
 
 
-bool StatementHistory::ChekDuplicate(Statement * entry)
+bool StatementHistory::ChekDuplicate( Statement * entry)
 {
     
         if (!history.empty())
-            if (history.back()->dumpToString() == entry->dumpToString()) {
+            if (history.front()->isEqual(*entry) ) {
                 return false;
             }
     
@@ -71,7 +44,7 @@ void StatementHistory::Add(Statement * entry)
 
 void StatementHistory::InternalAdd(Statement * entry)
 {
-    history.push_back(entry);
+    history.push_front(entry);
     
 }
 
@@ -79,50 +52,83 @@ void StatementHistory::ReInit()
 {
     
     
-    historyIndex=0;
+    
     InternalAdd(new UnProcessedStatment);
+    historyPointer = history.begin();
+
     
 }
 
 
 void StatementHistory::ReInitDone()
 {
-    delete history.back();
-    history.pop_back();
+    if(historyPointer == history.begin())
+        historyPointer++;
+        
+        
+    delete history.front();
+    history.pop_front();
+
 }
 
 std::string
 StatementHistory::Edit(std::string currentBuffer, MoveDirection direction,
                      bool& success)
 {
-    success = true;
-    if (history.size() > 1) {
-        
-        if(historyIndex==0)
-        {
-            delete history[history.size() - 1 - historyIndex];
-            auto anProcessedStatment= new  UnProcessedStatment;
-            anProcessedStatment->sourceText = currentBuffer;
-            
-            history[history.size() - 1 - historyIndex] = anProcessedStatment;
-        }
-        
-        historyIndex += (direction == MoveDirection::prev) ? 1 : -1;
-        
-        if (historyIndex < 0) {
-            historyIndex = 0;
-            success = false;
-            
-        } else if (historyIndex >= history.size()) {
-            historyIndex = (int)history.size() - 1;
-            success = false;
-        }
-    }else
-    {
-        success = false;
+    
+    
+    success = true;//current buffer is changed
+    
+    assert(!history.empty());
+    
+    if(history.size() == 1) {  //No other element than current line
+        success =false;
+        return currentBuffer;
     }
     
-    return history[history.size() - 1 - historyIndex]->dumpToString();
+    
+    
+    
+    
+
+
+    //save current buffer only if it is at the begning
+    if( historyPointer == history.begin())
+    {
+        delete *historyPointer;
+        auto anProcessedStatment= new  UnProcessedStatment;
+        anProcessedStatment->sourceText = currentBuffer;
+        *historyPointer = anProcessedStatment;
+    }
+        
+        
+    
+    if (direction == MoveDirection::next) {
+        
+        if (historyPointer != history.begin())
+            historyPointer --;
+        else
+            success = false;
+        
+    } else {
+        
+        historyPointer ++;
+        if (historyPointer == history.end()) {
+            success = false;
+            historyPointer --;
+        }
+    }
+        
+        
+    
+   
+    
+    return (*historyPointer)->dumpToString();
+}
+
+Statement *  StatementHistory::GetCurrentStatment()
+{
+    return *historyPointer;
 }
 
 void StatementHistory::Clear()
@@ -140,12 +146,17 @@ StatementHistory::ToJson()
     json root;
     json rootContent;
     
-    for(auto  statement : history )
-    {
-        rootContent.push_back(statement->ToJson());
+ 
+    
+    for (auto iter =history.begin(); iter!=history.end(); iter++) {
+        rootContent.push_back((*iter)->ToJson());
     }
     
+    
+    
     root["content"] = rootContent;
+    
+    root["version"] = 2;
     
     
     
@@ -162,9 +173,12 @@ void StatementHistory::FromJson(nlohmann::json root)
     using namespace nlohmann;
     
     json content = root["content"];
+    
+    assert(root["version"].get<int>() == 2);
+    
     for (int i = 0; i < content.size(); i++) {
         
-        InternalAdd(Statement::GetFromJson(content[i]));
+        InternalAdd(Statement::GetFromJson(content[content.size()-i-1]));
         
     }
 }
@@ -174,10 +188,13 @@ void PopingLineStatementHistory::PopExtra()
 {
     for (int i=0; i<extracount; i++)
     {
-        delete history.back();
-        history.pop_back();
-        if(historyIndex>0)
-            historyIndex--;
+        if(historyPointer== history.begin())
+            historyPointer++;
+        
+        delete history.front();
+        history.pop_front();
+        
+            
     }
     extracount=0;
     
@@ -194,11 +211,15 @@ void PopingLineStatementHistory::AddExtra(Statement * entry)
 
 void PopingLineStatementHistory::Add(Statement * entry)
 {
-    for (int i=0; i<historyIndex; i++)
-    {
-        delete history.back();
-        history.pop_back();
+  
+
+    
+    for (auto i = history.begin() ; i!=historyPointer; i++) {
+        delete *i;
     }
+    
+    history.erase(history.begin(),historyPointer);
+    
     
     
     if (ChekDuplicate(entry))

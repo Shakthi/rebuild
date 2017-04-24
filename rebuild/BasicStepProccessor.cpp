@@ -177,14 +177,49 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         return true;
     }
     
+    
+    
+    auto statemnt = dynamic_cast< ListStatement*>(result);
+    if (statemnt) {
+        
+        std::cout<<std::endl;
+        
+        for (auto i= rebuild->history->GetHistory().rbegin(); i!= rebuild->history->GetHistory().rend(); i++) {
+                        std::cout<<(*i)->dumpToString()<<std::endl;
+        }
+
+        
+        
+        delete statemnt;
+        return false;
+    }
+    
+    
+    
+    
+    
     auto forStatemnt = dynamic_cast< ForStatment*>(result);
     if (forStatemnt) {
         
-        ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild,forStatemnt);
-        readStepProcessor->Init();
+        if(!forStatemnt->statements.empty())
+        {
         
-        
-        rebuild->addNewProcessing(readStepProcessor);
+            ForStepProcessor * processor = new ForStepProcessor(rebuild,forStatemnt);
+            processor->Init();
+            processor->ExecuteStatments(forStatemnt);
+
+        }
+            else
+            {
+                
+                ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild,forStatemnt);
+                readStepProcessor->Init();
+                
+                rebuild->addNewProcessing(readStepProcessor);
+
+            
+            }
+            
         return true;
     }
     
@@ -235,7 +270,7 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     if (letStatemnt) {
         
         varTable[letStatemnt->variablename]=letStatemnt->rvalue->Evaluate();
-        return false;
+        return true;
     }
     
     
@@ -251,20 +286,31 @@ void BasicStepProcessor::RunStep()
 
     
     if (answer == ""){
-        if( rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::EStatus::ctrl_c)
+        if( rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::ExitStatus::ctrl_c)
         exitProcessing();
         return;
     }
+    Statement * statment;
+    LineNoiseWrapper::EModificationStatus mstats = rebuild->lineNoiseWrapper->GetModificationStatus();
     
+    
+    if(mstats == LineNoiseWrapper::EModificationStatus::history)
+    {
+        statment = rebuild->history->GetCurrentStatment();
+    }
+    else
+    {
+        BasicParser parser;
+        statment = parser.Parse(answer);
+    }
     
     
 
-    
-    BasicParser parser;
-    
-    auto statment = parser.Parse(answer);
-    rebuild->history->Add(statment);
-    Evaluate(statment);
+    if(Evaluate(statment))
+    {
+        rebuild->history->Add(statment);
+
+    }
     
     
 }
