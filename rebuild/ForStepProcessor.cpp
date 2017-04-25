@@ -29,7 +29,7 @@ void ForStepProcessor::RunStep()
     
     if(passThrough == true){
         
-        std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>for "+ thisForBlock->forVar+"]:",popingLineHistory);
+        std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory(Rebuild::prompt+"for "+ thisForBlock->forVar+"]:",popingLineHistory);
         
         BasicParser parser;
         Sentence * result =  parser.Parse(answer);
