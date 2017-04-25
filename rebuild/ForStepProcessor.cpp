@@ -41,13 +41,14 @@ void ForStepProcessor::RunStep()
             ExecuteHistory();
             
             thisForBlock->statements.clear();
-            for (auto i =popingLineHistory.GetHistory().begin(); i !=popingLineHistory.GetHistory().end();) {
+            for (auto i =popingLineHistory.GetHistory().rbegin(); i !=popingLineHistory.GetHistory().rend();) {
                 
                 auto statement = dynamic_cast<Statement*>(*i);
                 if(statement)
                 {
                     thisForBlock->statements.push_back(statement);
-                    i=popingLineHistory.GetModifieableHistory().erase(i);
+                    popingLineHistory.GetModifieableHistory().erase((++i).base());
+                    
                 }else
                 {
                     i++;
@@ -135,7 +136,7 @@ void ForStepProcessor::RunStep()
             
         {
             
-            for (auto i=thisForBlock->statements.rbegin(); i != thisForBlock->statements.rend(); i++) {
+            for (auto i=thisForBlock->statements.begin(); i != thisForBlock->statements.end(); i++) {
                 
                 Evaluate((*i));
                 
