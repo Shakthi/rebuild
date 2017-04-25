@@ -156,7 +156,7 @@ void ForStepProcessor::RunStep()
             
             std::cout<<std::endl;
             int count=1;
-            for (auto i= popingLineHistory.GetHistory().begin(); i!=popingLineHistory.GetHistory().end(); i++) {
+            for (auto i= popingLineHistory.GetHistory().rbegin(); i!=popingLineHistory.GetHistory().rend(); i++) {
                 std::cout<<count<<" "<<(*i)->dumpToString()<<std::endl;
                 count++;
             }
