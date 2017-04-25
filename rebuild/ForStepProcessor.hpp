@@ -56,6 +56,7 @@ public:
     void Init();
     
     void ExecuteHistory();
+    void ExecuteAStep();
     void ExecuteStatments(ForStatment  * forstatement);
     
     virtual bool Process(class Command* input);

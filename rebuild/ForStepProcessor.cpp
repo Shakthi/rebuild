@@ -131,7 +131,7 @@ void ForStepProcessor::RunStep()
     {
         
         
-        for (varTable[thisForBlock->forVar] =  varTable[thisForBlock->forVar].getNumVal() +thisForBlock->forStep->Evaluate().getNumVal() ;
+        for (varTable[thisForBlock->forVar] =  varTable[thisForBlock->forVar].getNumVal();
              varTable[thisForBlock->forVar].getNumVal() <=thisForBlock->forEnd->Evaluate().getNumVal() ; varTable[thisForBlock->forVar]= varTable[thisForBlock->forVar].getNumVal() +thisForBlock->forStep->Evaluate().getNumVal() )
             
         {
@@ -178,6 +178,13 @@ void ForStepProcessor::RunStep()
                 return true;
                 
             }
+            else if (customCommand->name == "nextstep")
+            {   //This command  makes next iteration of loop
+                //Ideally this should be behaviour of next statement
+                ExecuteAStep();
+                return true;
+                
+            }
             else
             {
                 return BasicStepProcessor::Process(input);
@@ -187,6 +194,26 @@ void ForStepProcessor::RunStep()
         return false;
             
 
+    }
+
+
+    void ForStepProcessor::ExecuteAStep()
+    {
+        bool once=true;
+        for ( ;getForVar() <=thisForBlock->forEnd->Evaluate().getNumVal() && once; varTable[thisForBlock->forVar]= getForVar() +thisForBlock->forStep->Evaluate().getNumVal() ) {
+            
+            
+            
+            for (auto i=popingLineHistory.GetHistory().rbegin(); i != popingLineHistory.GetHistory().rend(); i++) {
+                
+                Evaluate(dynamic_cast<Statement*>((*i)));
+                
+            }
+            
+            once=false   ;
+
+        }
+    
     }
 
     void ForStepProcessor::ExecuteHistory()
