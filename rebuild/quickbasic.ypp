@@ -259,7 +259,7 @@ forStataement 	: FOR VAR '=' numexpr TO numexpr  {
 
 
 
-nextStatement   : NEXT VAR {
+nextStatement   : NEXT  {
     
     auto node = new NextStatement();
     $$=node;
