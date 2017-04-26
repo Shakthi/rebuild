@@ -718,13 +718,20 @@ void linenoiseEditMoveEnd(struct linenoiseState *l) {
 void linenoiseEditHistoryNext(struct linenoiseState *l, int dir) {
     if(historyCallback!=NULL)
     {
-         char * historyrecord = historyCallback(dir,l->buf,linenoiseHistoryCallbackContext);
+        size_t lastCursPos = l->pos;
+         char * historyrecord = historyCallback(dir,l->buf,linenoiseHistoryCallbackContext, &lastCursPos);
         if(historyrecord)
         {
             strncpy(l->buf,historyrecord,l->buflen);
             free(historyrecord);
             l->buf[l->buflen-1] = '\0';
-            l->len = l->pos = strlen(l->buf);
+
+            l->len  = strlen(l->buf);
+
+            if(lastCursPos==-1)
+                l->pos = l->len ;
+            else
+                l->pos = lastCursPos;
             refreshLine(l);
         
         }

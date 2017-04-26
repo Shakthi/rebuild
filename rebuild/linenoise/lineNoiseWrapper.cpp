@@ -71,30 +71,68 @@ LineNoiseWrapper::getLine(std::string prompt)
 
  char*
 LineNoiseWrapper::linenoiseHistoryCallbackStatic(int direction, const char* oldline,
-    void* context)
+    void* context, size_t * cursorPos)
 {
+    std::string filtered;
+    if(*cursorPos!=strlen(oldline))
+        filtered= std::string(oldline).substr(0,*cursorPos+1);
+    else
+        *cursorPos=-1;
+
+
+
     LineNoiseWrapper * that= static_cast<LineNoiseWrapper*>(context);
-    
-    
     bool success;
     std::string result = that->LinenoiseHistoryCallback(direction, oldline, success).c_str();
+    
 
     return (success) ? strdup(result.c_str()) : nullptr;
 }
 
 
+
+namespace  {
+    //http://stackoverflow.com/questions/7913835/check-if-one-string-is-a-prefix-of-another
+    bool prefix(const std::string& a, const std::string& b) {
+        if (a.size() > b.size()) {
+            return a.substr(0,b.size()) == b;
+        }
+        else {
+            return b.substr(0,a.size()) == a;
+        }
+    }
+}
+
+
 std::string LineNoiseWrapper::LinenoiseHistoryCallback(int direction, std::string oldline,bool &  success)
 {
+    if (filter == "") {
+        
+        std::string result = localHistory->Edit(oldline, (direction == 1) ? LineHistory::MoveDirection::prev
+                                                : LineHistory::MoveDirection::next,
+                                                success);
+        
+        mstatus = EModificationStatus::history;
+        loadedBuffer=result;
+        
+        return result;
+
+        
+    } else {
+        
+        std::string result;
+        do {
+            result = localHistory->Edit(oldline, (direction == 1) ? LineHistory::MoveDirection::prev
+                                                    : LineHistory::MoveDirection::next,
+                                                    success);
+            
+            mstatus = EModificationStatus::history;
+            loadedBuffer=result;
+        } while (!prefix(result,filter) ||  success);
+        
+        return result;
+    }
     
-    
-    std::string result = localHistory->Edit(oldline, (direction == 1) ? LineHistory::MoveDirection::prev
-                                      : LineHistory::MoveDirection::next,
-                                      success);
-    
-    mstatus = EModificationStatus::history;
-    loadedBuffer=result;
-    
-    return result;
     
 }
 
