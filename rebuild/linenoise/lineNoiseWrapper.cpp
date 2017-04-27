@@ -69,6 +69,12 @@ LineNoiseWrapper::getLine(std::string prompt)
     return getLineWithHistory(prompt, defaultHistory);
 }
 
+
+void LineNoiseWrapper::SetHistoryFilter(std::string filter){
+    this->filter = filter;
+}
+
+
  char*
 LineNoiseWrapper::linenoiseHistoryCallbackStatic(int direction, const char* oldline,
     void* context, size_t * cursorPos)
@@ -81,7 +87,10 @@ LineNoiseWrapper::linenoiseHistoryCallbackStatic(int direction, const char* oldl
 
 
 
+
     LineNoiseWrapper * that= static_cast<LineNoiseWrapper*>(context);
+
+    that->SetHistoryFilter(filtered);
     bool success;
     std::string result = that->LinenoiseHistoryCallback(direction, oldline, success).c_str();
     
@@ -95,7 +104,7 @@ namespace  {
     //http://stackoverflow.com/questions/7913835/check-if-one-string-is-a-prefix-of-another
     bool prefix(const std::string& a, const std::string& b) {
         if (a.size() > b.size()) {
-            return a.substr(0,b.size()) == b;
+            return false;
         }
         else {
             return b.substr(0,a.size()) == a;
@@ -128,7 +137,7 @@ std::string LineNoiseWrapper::LinenoiseHistoryCallback(int direction, std::strin
             
             mstatus = EModificationStatus::history;
             loadedBuffer=result;
-        } while (!prefix(result,filter) ||  success);
+        } while (!prefix(filter,result) &&  success);
         
         return result;
     }
