@@ -330,7 +330,7 @@ void linenoiseClearScreen(void) {
 
 /* Beep, used for completion when there is nothing to complete or when all
  * the choices were already shown. */
-static void linenoiseBeep(void) {
+ void linenoiseBeep(void) {
     fprintf(stderr, "\x7");
     fflush(stderr);
 }

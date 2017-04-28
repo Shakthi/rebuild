@@ -123,6 +123,10 @@ std::string LineNoiseWrapper::LinenoiseHistoryCallback(int direction, std::strin
         
         mstatus = EModificationStatus::history;
         loadedBuffer=result;
+
+        if(!success)
+            linenoiseBeep();
+
         
         return result;
 
@@ -149,7 +153,10 @@ std::string LineNoiseWrapper::LinenoiseHistoryCallback(int direction, std::strin
             loadedBuffer=result;
 
         } while (success && (!prefix(filter,result)    || (lastReturnedResult == result && prefix(filter,result))));
-        
+
+        if(!success)
+            linenoiseBeep();
+
         return result;
     }
     
