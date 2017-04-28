@@ -129,15 +129,26 @@ std::string LineNoiseWrapper::LinenoiseHistoryCallback(int direction, std::strin
         
     } else {
         
-        std::string result;
+        std::string result,lastReturnedResult;
+        bool firstIteration=true;
+
         do {
+
             result = localHistory->Edit(oldline, (direction == 1) ? LineHistory::MoveDirection::prev
                                                     : LineHistory::MoveDirection::next,
                                                     success);
+            if(firstIteration){
+                lastReturnedResult = oldline;
+                firstIteration =false;
+            }
+
+
+
             
             mstatus = EModificationStatus::history;
             loadedBuffer=result;
-        } while (!prefix(filter,result) &&  success);
+
+        } while (success && (!prefix(filter,result)    || (lastReturnedResult == result && prefix(filter,result))));
         
         return result;
     }
