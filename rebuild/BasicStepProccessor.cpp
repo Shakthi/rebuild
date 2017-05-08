@@ -83,15 +83,15 @@ public:
                 
                 float num;
                 stream >> num;
-                varTable[variableName] = Value(num);
-                rlog<<variableName <<"="<<varTable[variableName].getNumVal()<<std::endl;
+                varTable.GetVar(variableName) = Value(num);
+                rlog<<variableName <<"="<<varTable.GetVar(variableName).getNumVal()<<std::endl;
 
             } else if(variableName.find("$") != std::string::npos){
                 Value value;
                 std::string str;
                 stream >> str;
-                varTable[variableName] = Value(str);
-                rlog<<variableName <<"="<<varTable[variableName].getStringVal()<<std::endl;
+                varTable.GetVar(variableName) = Value(str);
+                rlog<<variableName <<"="<<varTable.GetVar(variableName).getStringVal()<<std::endl;
             }
 
             list.pop_front();
@@ -117,48 +117,6 @@ public:
 
 
 
-
-
-nlohmann::json
-BasicStepProcessor::ToJson()
-{
-    
-    
-    nlohmann::json j;
-
-    for (auto varaible : varTable) {
-        if (varaible.second.valutype == Value::Evaluetype::floattype) {
-            nlohmann::json item;
-            item["key"] = varaible.first;
-            item["value"] = varaible.second.getNumVal();
-            j.push_back(item);
-        } else if (varaible.second.valutype == Value::Evaluetype::stringtype) {
-            nlohmann::json item;
-            item["key"] = varaible.first;
-            item["value"] = varaible.second.getStringVal();
-            j.push_back(item);
-        }
-    }
-
-    nlohmann::json basicStep;
-    basicStep["varablelist"] = j;
-
-    return basicStep;
-}
-
-void BasicStepProcessor::FromJson(nlohmann::json j)
-{
-    nlohmann::json varablelist = j["varablelist"];
-    for (nlohmann::json item : varablelist) {
-        if (item["value"].is_number()) {
-            varTable[item["key"]] = Value((float)item["value"]);
-
-        } else if (item["value"].is_string()) {
-            
-            varTable[item["key"]] = Value(item["value"].get<std::string>());
-        }
-    }
-}
 
 bool BasicStepProcessor::Evaluate(Statement  * result)
 {
@@ -253,14 +211,18 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         
         return true;
     }
-    
+
    
     
     
     auto letStatemnt = dynamic_cast< LetStatement*>(result);
     if (letStatemnt) {
-        
-        varTable[letStatemnt->variablename]=letStatemnt->rvalue->Evaluate();
+        if(varTable.GetVar(letStatemnt->variablename).valutype == Value::Evaluetype::emptyType)
+            varTable.GetVar(letStatemnt->variablename)=letStatemnt->rvalue->Evaluate();
+        else
+            std::cout<<Rebuild::prompt<<"! "<<letStatemnt->variablename<<" already defined"<<std::endl;
+
+
         return true;
     }
     
@@ -269,6 +231,9 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
 
     return true;
 }
+
+
+
 
 
 
@@ -422,6 +387,18 @@ void BasicStepProcessor::RunStep()
     
 }
 
+
+nlohmann::json BasicStepProcessor::ToJson()
+{
+    nlohmann::json j;
+    j["varablelist"]=varTable.ToJson();
+
+    return j;
+}
+void BasicStepProcessor::FromJson(nlohmann::json j)
+{
+    varTable.FromJson(j["varablelist"]);
+}
 
 
 

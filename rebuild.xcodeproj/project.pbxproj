@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5317A4F51EC0EFCB0000269E /* VarTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5317A4F31EC0EFCB0000269E /* VarTable.cpp */; };
 		531B191A1E562EC000F530FA /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 531B19181E562EC000F530FA /* Logger.cpp */; };
 		533AE4E11E3CE896008910D4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4E01E3CE896008910D4 /* main.cpp */; };
 		533AE5021E3FB58B008910D4 /* linenoise.c in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4FC1E3FB180008910D4 /* linenoise.c */; };
@@ -37,6 +38,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5317A4F31EC0EFCB0000269E /* VarTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VarTable.cpp; path = rebuild/VarTable.cpp; sourceTree = "<group>"; };
+		5317A4F41EC0EFCB0000269E /* VarTable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VarTable.hpp; path = rebuild/VarTable.hpp; sourceTree = "<group>"; };
 		531B19181E562EC000F530FA /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Logger.cpp; sourceTree = "<group>"; };
 		531B19191E562EC000F530FA /* Logger.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Logger.hpp; sourceTree = "<group>"; };
 		531C06851E7AF7F400CFCBFF /* json.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
@@ -402,6 +405,8 @@
 				536578751E50F53D00A561D9 /* ParserWrapper.cpp */,
 				536578761E50F53D00A561D9 /* ParserWrapper.hpp */,
 				535FF2571E4117FB00EF0E51 /* quickbasic.lpp */,
+				5317A4F31EC0EFCB0000269E /* VarTable.cpp */,
+				5317A4F41EC0EFCB0000269E /* VarTable.hpp */,
 			);
 			name = quickBasic;
 			sourceTree = "<group>";
@@ -476,6 +481,7 @@
 				5362BDCD1E52BA7600A95798 /* ForStepProcessor.cpp in Sources */,
 				533AE4E11E3CE896008910D4 /* main.cpp in Sources */,
 				53CB858A1E3FC04300E44564 /* Rebuild.cpp in Sources */,
+				5317A4F51EC0EFCB0000269E /* VarTable.cpp in Sources */,
 				53A1E3EF1E4503CC0071C220 /* quickbasic.ypp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

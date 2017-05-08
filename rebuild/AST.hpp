@@ -12,7 +12,9 @@
 #include <list>
 #include <string>
 #include <vector>
+#include "VarTable.hpp"
 #include "quickbasic.h"
+
 #include "nlohmann/json.hpp"
 #include "cereal/cereal.hpp"
 #include "cereal/types/vector.hpp"

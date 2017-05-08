@@ -12,7 +12,6 @@
 #include "AST.hpp"
 
 
-std::map<std::string,Value> varTable;
 Rlog trace("trace");
 
 
@@ -155,12 +154,7 @@ printItem   :   strexpr
 
 
 letStatement     : LET VAR '=' numexpr  {
-    
-   // Value value;
-   // value.valutype = Value::Evaluetype::floattype;
-   // value.numVal = $4;
-    //varTable[$2]=value;
-    
+
    
    auto l = new LetStatement;
    l->variablename= $2;
@@ -169,7 +163,6 @@ letStatement     : LET VAR '=' numexpr  {
     $$=l;
 
    
-   //trace<<"let "<<$2<<" = "<<$4<<std::endl;
    
 }
 | LET SVAR '=' strexpr {
@@ -439,7 +432,8 @@ numexpr    :   '(' numexpr ')'
     
     auto  t =new TerminalExpression;
     t->sub = $1;
-    
+
+
     t->valuetype = Value::Evaluetype::floattype;
     
     $$ = t;

@@ -11,7 +11,7 @@ L			[a-zA-Z]
     #include <string>
     #include "quickbasic.h"
     #include "quickbasic.tab.h"
-    
+    #define YY_NO_INPUT
     namespace {
     std::string trim(const std::string& str,
     const std::string& whitespace = " \t")
@@ -97,10 +97,14 @@ L			[a-zA-Z]
 ">"			{  return yytext[0]; }
 "^"			{  return yytext[0]; }
 
-
 [ \t\v\n\f]		{  }
 .			{  return yytext[0]; }
 
+"t" {
+//    void yyunput (int c, register char * yy_bp );
+  yyunput(1,0);
+  
+}
 %%
 
 

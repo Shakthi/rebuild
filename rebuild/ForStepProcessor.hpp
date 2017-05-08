@@ -13,6 +13,7 @@
 #include "quickbasic.h"
 #include "SentenceHistory.hpp"
 #include "AST.hpp"
+#include "VarTable.hpp"
 
 
 
@@ -40,7 +41,7 @@ public:
     
     float  getForVar()
     {
-        return varTable[thisForBlock->forVar].getNumVal();
+        return varTable.GetVar(thisForBlock->forVar).getNumVal();
     }
     
     

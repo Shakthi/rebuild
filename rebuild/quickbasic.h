@@ -90,8 +90,6 @@ private:
 
 #define YYSTYPE struct Value
 
-extern std::map<std::string,Value> varTable;
-
 extern bool parserQuits;
 
 

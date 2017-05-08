@@ -21,7 +21,7 @@
 
 Value GetExpression::Evaluate(){
     
-    Value v=varTable[varName];
+    Value v=varTable.GetVar(varName);
     assert(v.valutype == valuetype || Value::Evaluetype::emptyType == v.valutype);
     
     return v;
