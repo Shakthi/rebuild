@@ -39,32 +39,6 @@
 /* Begin PBXFileReference section */
 		531B19181E562EC000F530FA /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Logger.cpp; sourceTree = "<group>"; };
 		531B19191E562EC000F530FA /* Logger.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Logger.hpp; sourceTree = "<group>"; };
-		531C06621E786DEA00CFCBFF /* AST.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AST.cpp; sourceTree = "<group>"; };
-		531C06631E786DEA00CFCBFF /* AST.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AST.hpp; sourceTree = "<group>"; };
-		531C06641E786DEA00CFCBFF /* BasicStepProccessor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BasicStepProccessor.cpp; sourceTree = "<group>"; };
-		531C06651E786DEA00CFCBFF /* BasicStepProccessor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BasicStepProccessor.hpp; sourceTree = "<group>"; };
-		531C06671E786DEA00CFCBFF /* ForStepProcessor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ForStepProcessor.cpp; sourceTree = "<group>"; };
-		531C06681E786DEA00CFCBFF /* ForStepProcessor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ForStepProcessor.hpp; sourceTree = "<group>"; };
-		531C06691E786DEA00CFCBFF /* IfStepProccessor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IfStepProccessor.cpp; sourceTree = "<group>"; };
-		531C066A1E786DEA00CFCBFF /* IfStepProccessor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = IfStepProccessor.hpp; sourceTree = "<group>"; };
-		531C066C1E786DEA00CFCBFF /* lineHistory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = lineHistory.cpp; sourceTree = "<group>"; };
-		531C066D1E786DEA00CFCBFF /* lineHistory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = lineHistory.hpp; sourceTree = "<group>"; };
-		531C066E1E786DEA00CFCBFF /* linenoise.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = linenoise.c; sourceTree = "<group>"; };
-		531C066F1E786DEA00CFCBFF /* linenoise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = linenoise.h; sourceTree = "<group>"; };
-		531C06701E786DEA00CFCBFF /* lineNoiseWrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = lineNoiseWrapper.cpp; sourceTree = "<group>"; };
-		531C06711E786DEA00CFCBFF /* lineNoiseWrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = lineNoiseWrapper.hpp; sourceTree = "<group>"; };
-		531C06721E786DEA00CFCBFF /* Logger.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Logger.cpp; sourceTree = "<group>"; };
-		531C06731E786DEA00CFCBFF /* Logger.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Logger.hpp; sourceTree = "<group>"; };
-		531C06741E786DEA00CFCBFF /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		531C06761E786DEA00CFCBFF /* ParserWrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ParserWrapper.cpp; sourceTree = "<group>"; };
-		531C06771E786DEA00CFCBFF /* ParserWrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParserWrapper.hpp; sourceTree = "<group>"; };
-		531C06781E786DEA00CFCBFF /* quickbasic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = quickbasic.h; sourceTree = "<group>"; };
-		531C06791E786DEA00CFCBFF /* quickbasic.lpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.lex; path = quickbasic.lpp; sourceTree = "<group>"; };
-		531C067A1E786DEA00CFCBFF /* quickbasic.ypp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.yacc; path = quickbasic.ypp; sourceTree = "<group>"; };
-		531C067B1E786DEA00CFCBFF /* Rebuild.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Rebuild.cpp; sourceTree = "<group>"; };
-		531C067C1E786DEA00CFCBFF /* Rebuild.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Rebuild.hpp; sourceTree = "<group>"; };
-		531C06811E786DEA00CFCBFF /* StepProcessor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StepProcessor.cpp; sourceTree = "<group>"; };
-		531C06821E786DEA00CFCBFF /* StepProcessor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = StepProcessor.hpp; sourceTree = "<group>"; };
 		531C06851E7AF7F400CFCBFF /* json.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
 		531C06871E7B080500CFCBFF /* access.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = access.hpp; sourceTree = "<group>"; };
 		531C06891E7B080500CFCBFF /* adapters.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = adapters.hpp; sourceTree = "<group>"; };
@@ -187,63 +161,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		531C06611E786DEA00CFCBFF /* rebuild */ = {
-			isa = PBXGroup;
-			children = (
-				531C06621E786DEA00CFCBFF /* AST.cpp */,
-				531C06631E786DEA00CFCBFF /* AST.hpp */,
-				531C06641E786DEA00CFCBFF /* BasicStepProccessor.cpp */,
-				531C06651E786DEA00CFCBFF /* BasicStepProccessor.hpp */,
-				531C06661E786DEA00CFCBFF /* fmt */,
-				531C06671E786DEA00CFCBFF /* ForStepProcessor.cpp */,
-				531C06681E786DEA00CFCBFF /* ForStepProcessor.hpp */,
-				531C06691E786DEA00CFCBFF /* IfStepProccessor.cpp */,
-				531C066A1E786DEA00CFCBFF /* IfStepProccessor.hpp */,
-				531C066B1E786DEA00CFCBFF /* linenoise */,
-				531C06721E786DEA00CFCBFF /* Logger.cpp */,
-				531C06731E786DEA00CFCBFF /* Logger.hpp */,
-				531C06741E786DEA00CFCBFF /* main.cpp */,
-				531C06751E786DEA00CFCBFF /* Parser */,
-				531C06781E786DEA00CFCBFF /* quickbasic.h */,
-				531C06791E786DEA00CFCBFF /* quickbasic.lpp */,
-				531C067A1E786DEA00CFCBFF /* quickbasic.ypp */,
-				531C067B1E786DEA00CFCBFF /* Rebuild.cpp */,
-				531C067C1E786DEA00CFCBFF /* Rebuild.hpp */,
-				531C06811E786DEA00CFCBFF /* StepProcessor.cpp */,
-				531C06821E786DEA00CFCBFF /* StepProcessor.hpp */,
-			);
-			path = rebuild;
-			sourceTree = "<group>";
-		};
-		531C06661E786DEA00CFCBFF /* fmt */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = fmt;
-			sourceTree = "<group>";
-		};
-		531C066B1E786DEA00CFCBFF /* linenoise */ = {
-			isa = PBXGroup;
-			children = (
-				531C066C1E786DEA00CFCBFF /* lineHistory.cpp */,
-				531C066D1E786DEA00CFCBFF /* lineHistory.hpp */,
-				531C066E1E786DEA00CFCBFF /* linenoise.c */,
-				531C066F1E786DEA00CFCBFF /* linenoise.h */,
-				531C06701E786DEA00CFCBFF /* lineNoiseWrapper.cpp */,
-				531C06711E786DEA00CFCBFF /* lineNoiseWrapper.hpp */,
-			);
-			path = linenoise;
-			sourceTree = "<group>";
-		};
-		531C06751E786DEA00CFCBFF /* Parser */ = {
-			isa = PBXGroup;
-			children = (
-				531C06761E786DEA00CFCBFF /* ParserWrapper.cpp */,
-				531C06771E786DEA00CFCBFF /* ParserWrapper.hpp */,
-			);
-			path = Parser;
-			sourceTree = "<group>";
-		};
 		531C06841E7AF7F400CFCBFF /* nlohmann */ = {
 			isa = PBXGroup;
 			children = (
@@ -425,7 +342,6 @@
 			children = (
 				531C06861E7B080500CFCBFF /* cereal */,
 				531C06841E7AF7F400CFCBFF /* nlohmann */,
-				531C06611E786DEA00CFCBFF /* rebuild */,
 				535FF2561E410FE600EF0E51 /* quickBasic */,
 				533AE4DF1E3CE896008910D4 /* rebuild */,
 				533AE4DE1E3CE896008910D4 /* Products */,
