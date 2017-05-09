@@ -10,7 +10,8 @@ L			[a-zA-Z]
 %{
     #include <string>
     #include "quickbasic.h"
-    #include "quickbasic.tab.h"
+
+    #include "quickbasic.y.hpp"
 %}
 
 
@@ -81,5 +82,3 @@ L			[a-zA-Z]
 .			{  return yytext[0]; }
 
 %%
-
-
