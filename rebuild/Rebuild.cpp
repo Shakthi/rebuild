@@ -106,6 +106,8 @@ void Rebuild::SaveIfLatest()
         } else {
             Save();
         }
+    }else {
+        Save();
     }
 }
 
