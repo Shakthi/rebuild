@@ -10,14 +10,14 @@
 		531B191A1E562EC000F530FA /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 531B19181E562EC000F530FA /* Logger.cpp */; };
 		533AE4E11E3CE896008910D4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4E01E3CE896008910D4 /* main.cpp */; };
 		533AE5021E3FB58B008910D4 /* linenoise.c in Sources */ = {isa = PBXBuildFile; fileRef = 533AE4FC1E3FB180008910D4 /* linenoise.c */; };
-		535FF2581E4117FB00EF0E51 /* quickbasic.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 535FF2571E4117FB00EF0E51 /* quickbasic.lpp */; };
 		535FF25D1E42EA2600EF0E51 /* StepProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 535FF25B1E42EA2600EF0E51 /* StepProcessor.cpp */; };
 		5362BDCD1E52BA7600A95798 /* ForStepProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5362BDCB1E52BA7600A95798 /* ForStepProcessor.cpp */; };
 		536373491E74859E0079B2EF /* IfStepProccessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 536373471E74859E0079B2EF /* IfStepProccessor.cpp */; };
 		5363734C1E751CCD0079B2EF /* StatementHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5363734A1E751CCD0079B2EF /* StatementHistory.cpp */; };
 		536578741E50F0D100A561D9 /* AST.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 536578721E50F0D100A561D9 /* AST.cpp */; };
-		536578771E50F53D00A561D9 /* ParserWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 536578751E50F53D00A561D9 /* ParserWrapper.cpp */; };
-		53A1E3EF1E4503CC0071C220 /* quickbasic.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 53A1E3EE1E4503CC0071C220 /* quickbasic.ypp */; };
+		5390BC1C1EC2359C000E061A /* quickbasic.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 5390BC1A1EC2359C000E061A /* quickbasic.lpp */; };
+		5390BC1D1EC2359C000E061A /* quickbasic.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 5390BC1B1EC2359C000E061A /* quickbasic.ypp */; };
+		5390BC1F1EC23652000E061A /* ParserWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5390BC1E1EC23652000E061A /* ParserWrapper.cpp */; };
 		53A1E3F21E4504870071C220 /* lineHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53A1E3F01E4504870071C220 /* lineHistory.cpp */; };
 		53A1E3F51E45A0010071C220 /* BasicStepProccessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53A1E3F31E45A0010071C220 /* BasicStepProccessor.cpp */; };
 		53CB858A1E3FC04300E44564 /* Rebuild.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53CB85881E3FC04300E44564 /* Rebuild.cpp */; };
@@ -56,11 +56,7 @@
 		531C06721E786DEA00CFCBFF /* Logger.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Logger.cpp; sourceTree = "<group>"; };
 		531C06731E786DEA00CFCBFF /* Logger.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Logger.hpp; sourceTree = "<group>"; };
 		531C06741E786DEA00CFCBFF /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		531C06761E786DEA00CFCBFF /* ParserWrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ParserWrapper.cpp; sourceTree = "<group>"; };
 		531C06771E786DEA00CFCBFF /* ParserWrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParserWrapper.hpp; sourceTree = "<group>"; };
-		531C06781E786DEA00CFCBFF /* quickbasic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = quickbasic.h; sourceTree = "<group>"; };
-		531C06791E786DEA00CFCBFF /* quickbasic.lpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.lex; path = quickbasic.lpp; sourceTree = "<group>"; };
-		531C067A1E786DEA00CFCBFF /* quickbasic.ypp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.yacc; path = quickbasic.ypp; sourceTree = "<group>"; };
 		531C067B1E786DEA00CFCBFF /* Rebuild.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Rebuild.cpp; sourceTree = "<group>"; };
 		531C067C1E786DEA00CFCBFF /* Rebuild.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Rebuild.hpp; sourceTree = "<group>"; };
 		531C06811E786DEA00CFCBFF /* StepProcessor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StepProcessor.cpp; sourceTree = "<group>"; };
@@ -151,7 +147,6 @@
 		533AE4E01E3CE896008910D4 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		533AE4FC1E3FB180008910D4 /* linenoise.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = linenoise.c; sourceTree = "<group>"; };
 		533AE4FD1E3FB180008910D4 /* linenoise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = linenoise.h; sourceTree = "<group>"; };
-		535FF2571E4117FB00EF0E51 /* quickbasic.lpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; name = quickbasic.lpp; path = rebuild/quickbasic.lpp; sourceTree = "<group>"; };
 		535FF25B1E42EA2600EF0E51 /* StepProcessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StepProcessor.cpp; sourceTree = "<group>"; };
 		535FF25C1E42EA2600EF0E51 /* StepProcessor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StepProcessor.hpp; sourceTree = "<group>"; };
 		5362BDCB1E52BA7600A95798 /* ForStepProcessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ForStepProcessor.cpp; sourceTree = "<group>"; };
@@ -162,14 +157,14 @@
 		5363734B1E751CCD0079B2EF /* StatementHistory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StatementHistory.hpp; sourceTree = "<group>"; };
 		536578721E50F0D100A561D9 /* AST.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AST.cpp; sourceTree = "<group>"; };
 		536578731E50F0D100A561D9 /* AST.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AST.hpp; sourceTree = "<group>"; };
-		536578751E50F53D00A561D9 /* ParserWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParserWrapper.cpp; path = rebuild/Parser/ParserWrapper.cpp; sourceTree = "<group>"; };
-		536578761E50F53D00A561D9 /* ParserWrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ParserWrapper.hpp; path = rebuild/Parser/ParserWrapper.hpp; sourceTree = "<group>"; };
-		53A1E3EE1E4503CC0071C220 /* quickbasic.ypp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.yacc; name = quickbasic.ypp; path = rebuild/quickbasic.ypp; sourceTree = "<group>"; };
+		5390BC191EC2359C000E061A /* quickbasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = quickbasic.h; sourceTree = "<group>"; };
+		5390BC1A1EC2359C000E061A /* quickbasic.lpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = quickbasic.lpp; sourceTree = "<group>"; };
+		5390BC1B1EC2359C000E061A /* quickbasic.ypp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.yacc; path = quickbasic.ypp; sourceTree = "<group>"; };
+		5390BC1E1EC23652000E061A /* ParserWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParserWrapper.cpp; sourceTree = "<group>"; };
 		53A1E3F01E4504870071C220 /* lineHistory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineHistory.cpp; sourceTree = "<group>"; };
 		53A1E3F11E4504870071C220 /* lineHistory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lineHistory.hpp; sourceTree = "<group>"; };
 		53A1E3F31E45A0010071C220 /* BasicStepProccessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BasicStepProccessor.cpp; sourceTree = "<group>"; };
 		53A1E3F41E45A0010071C220 /* BasicStepProccessor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BasicStepProccessor.hpp; sourceTree = "<group>"; };
-		53A1E3F71E4973630071C220 /* quickbasic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = quickbasic.h; path = rebuild/quickbasic.h; sourceTree = "<group>"; };
 		53CB85881E3FC04300E44564 /* Rebuild.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Rebuild.cpp; sourceTree = "<group>"; };
 		53CB85891E3FC04300E44564 /* Rebuild.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Rebuild.hpp; sourceTree = "<group>"; };
 		53CB858B1E403E8500E44564 /* lineNoiseWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineNoiseWrapper.cpp; sourceTree = "<group>"; };
@@ -194,7 +189,6 @@
 				531C06631E786DEA00CFCBFF /* AST.hpp */,
 				531C06641E786DEA00CFCBFF /* BasicStepProccessor.cpp */,
 				531C06651E786DEA00CFCBFF /* BasicStepProccessor.hpp */,
-				531C06661E786DEA00CFCBFF /* fmt */,
 				531C06671E786DEA00CFCBFF /* ForStepProcessor.cpp */,
 				531C06681E786DEA00CFCBFF /* ForStepProcessor.hpp */,
 				531C06691E786DEA00CFCBFF /* IfStepProccessor.cpp */,
@@ -204,22 +198,12 @@
 				531C06731E786DEA00CFCBFF /* Logger.hpp */,
 				531C06741E786DEA00CFCBFF /* main.cpp */,
 				531C06751E786DEA00CFCBFF /* Parser */,
-				531C06781E786DEA00CFCBFF /* quickbasic.h */,
-				531C06791E786DEA00CFCBFF /* quickbasic.lpp */,
-				531C067A1E786DEA00CFCBFF /* quickbasic.ypp */,
 				531C067B1E786DEA00CFCBFF /* Rebuild.cpp */,
 				531C067C1E786DEA00CFCBFF /* Rebuild.hpp */,
 				531C06811E786DEA00CFCBFF /* StepProcessor.cpp */,
 				531C06821E786DEA00CFCBFF /* StepProcessor.hpp */,
 			);
 			path = rebuild;
-			sourceTree = "<group>";
-		};
-		531C06661E786DEA00CFCBFF /* fmt */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = fmt;
 			sourceTree = "<group>";
 		};
 		531C066B1E786DEA00CFCBFF /* linenoise */ = {
@@ -238,8 +222,11 @@
 		531C06751E786DEA00CFCBFF /* Parser */ = {
 			isa = PBXGroup;
 			children = (
-				531C06761E786DEA00CFCBFF /* ParserWrapper.cpp */,
+				5390BC191EC2359C000E061A /* quickbasic.h */,
+				5390BC1A1EC2359C000E061A /* quickbasic.lpp */,
+				5390BC1B1EC2359C000E061A /* quickbasic.ypp */,
 				531C06771E786DEA00CFCBFF /* ParserWrapper.hpp */,
+				5390BC1E1EC23652000E061A /* ParserWrapper.cpp */,
 			);
 			path = Parser;
 			sourceTree = "<group>";
@@ -481,11 +468,6 @@
 		535FF2561E410FE600EF0E51 /* quickBasic */ = {
 			isa = PBXGroup;
 			children = (
-				53A1E3EE1E4503CC0071C220 /* quickbasic.ypp */,
-				53A1E3F71E4973630071C220 /* quickbasic.h */,
-				536578751E50F53D00A561D9 /* ParserWrapper.cpp */,
-				536578761E50F53D00A561D9 /* ParserWrapper.hpp */,
-				535FF2571E4117FB00EF0E51 /* quickbasic.lpp */,
 			);
 			name = quickBasic;
 			sourceTree = "<group>";
@@ -547,20 +529,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				536578741E50F0D100A561D9 /* AST.cpp in Sources */,
+				5390BC1F1EC23652000E061A /* ParserWrapper.cpp in Sources */,
 				53CB858D1E403E8500E44564 /* lineNoiseWrapper.cpp in Sources */,
-				536578771E50F53D00A561D9 /* ParserWrapper.cpp in Sources */,
 				533AE5021E3FB58B008910D4 /* linenoise.c in Sources */,
 				5363734C1E751CCD0079B2EF /* StatementHistory.cpp in Sources */,
 				53A1E3F21E4504870071C220 /* lineHistory.cpp in Sources */,
 				535FF25D1E42EA2600EF0E51 /* StepProcessor.cpp in Sources */,
-				535FF2581E4117FB00EF0E51 /* quickbasic.lpp in Sources */,
+				5390BC1C1EC2359C000E061A /* quickbasic.lpp in Sources */,
 				531B191A1E562EC000F530FA /* Logger.cpp in Sources */,
 				53A1E3F51E45A0010071C220 /* BasicStepProccessor.cpp in Sources */,
 				536373491E74859E0079B2EF /* IfStepProccessor.cpp in Sources */,
 				5362BDCD1E52BA7600A95798 /* ForStepProcessor.cpp in Sources */,
 				533AE4E11E3CE896008910D4 /* main.cpp in Sources */,
 				53CB858A1E3FC04300E44564 /* Rebuild.cpp in Sources */,
-				53A1E3EF1E4503CC0071C220 /* quickbasic.ypp in Sources */,
+				5390BC1D1EC2359C000E061A /* quickbasic.ypp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
