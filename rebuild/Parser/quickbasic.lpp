@@ -10,8 +10,11 @@ L			[a-zA-Z]
 %{
     #include <string>
     #include "quickbasic.h"
-
+    #if NOTTABDOTH
+    #include "quickbasic.tab.h"
+    #else
     #include "quickbasic.y.hpp"
+    #endif
 %}
 
 
