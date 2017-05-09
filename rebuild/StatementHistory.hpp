@@ -11,7 +11,7 @@
 
 #include "Rebuild.hpp"
 #include "nlohmann/json.hpp"
-#include "lineHistory.hpp"
+#include "linenoise/lineHistory.hpp"
 #include "AST.hpp"
 
 #include <string>

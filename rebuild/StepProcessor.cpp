@@ -8,7 +8,7 @@
 
 #include "StepProcessor.hpp"
 #include "Rebuild.hpp"
-#include "lineNoiseWrapper.hpp"
+#include "linenoise/lineNoiseWrapper.hpp"
 #include <iostream>
 
 void EchoProcessor::RunStep()

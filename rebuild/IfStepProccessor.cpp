@@ -7,8 +7,8 @@
 //
 
 #include "IfStepProccessor.hpp"
-#include "lineNoiseWrapper.hpp"
-#include "ParserWrapper.hpp"
+#include "linenoise/lineNoiseWrapper.hpp"
+#include "Parser/ParserWrapper.hpp"
 
 
 void IfStepProcessor::Init()

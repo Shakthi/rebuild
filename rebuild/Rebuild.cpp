@@ -10,7 +10,7 @@
 #include "Logger.hpp"
 
 #include "BasicStepProccessor.hpp"
-#include "lineNoiseWrapper.hpp"
+#include "linenoise/lineNoiseWrapper.hpp"
 #include "StatementHistory.hpp"
 #include <exception>
 #include <stdexcept>
