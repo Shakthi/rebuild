@@ -9,10 +9,13 @@ L			[a-zA-Z]
 
 %{
     #include <string>
+
+    #if XCODE
     #include "quickbasic.h"
-    #if NOTTABDOTH
     #include "quickbasic.tab.h"
     #else
+
+    #include "Parser/quickbasic.h"
     #include "quickbasic.y.hpp"
     #endif
 %}

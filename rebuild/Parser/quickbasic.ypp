@@ -8,7 +8,13 @@
 
 
 #include "Logger.hpp"
+
+#if XCODE
 #include "quickbasic.h"
+#else
+#include "Parser/quickbasic.h"
+#endif
+
 #include "AST.hpp"
 
 

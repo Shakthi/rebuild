@@ -7,11 +7,11 @@ project (Rebuild)
 
 
 find_package(BISON)
-BISON_TARGET(BasicParser "rebuild/Parser/quickbasic.ypp"  ${CMAKE_CURRENT_BINARY_DIR}/rebuild/Parser/quickbasic.y.cpp)
+BISON_TARGET(BasicParser "rebuild/Parser/quickbasic.ypp"  ${PROJECT_BINARY_DIR}/quickbasic.y.cpp)
 
 
 find_package(FLEX)
-FLEX_TARGET(BasicScanner "rebuild/Parser/quickbasic.lpp"  ${CMAKE_CURRENT_BINARY_DIR}/rebuild/Parser/quickbasic.l.cpp)
+FLEX_TARGET(BasicScanner "rebuild/Parser/quickbasic.lpp"  ${PROJECT_BINARY_DIR}/quickbasic.l.cpp)
 
 ADD_FLEX_BISON_DEPENDENCY( BasicScanner BasicParser)
 
