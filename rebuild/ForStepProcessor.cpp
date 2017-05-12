@@ -14,91 +14,57 @@
 void ForStepProcessor::Init()
 {
     
-    varTable[thisForBlock->forVar] = thisForBlock->forBegin->Evaluate();
-    if(getForVar() <=thisForBlock->forEnd->Evaluate().getNumVal() ) {
-             passThrough=true;
+    localVarTable.GetVar(thisForBlock->forVar) = thisForBlock->forBegin->Evaluate(&localVarTable);
+    if(getForVar() <=thisForBlock->forEnd->Evaluate(&localVarTable).getNumVal() ) {
+        passThrough=true;
     }
 }
 
 
 
 
- 
+
 void ForStepProcessor::RunStep()
 {
     
     if(passThrough == true){
-    
-    std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>for "+ thisForBlock->forVar+"]:",popingLineHistory);
-    
-    BasicParser parser;
-    Statement * result =  parser.Parse(answer);
-    popingLineHistory.PopExtra();
-
-    auto nextStatemnt = dynamic_cast< NextStatement*>(result);
-    if (nextStatemnt) {
-        delete result;
-        ExecuteHistory();
         
-        std::vector<Statement*> v{ std::make_move_iterator(std::begin(popingLineHistory.GetModifieableHistory())),
-            std::make_move_iterator(std::end(popingLineHistory.GetModifieableHistory())) };
+        std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory(Rebuild::prompt+"for "+ thisForBlock->forVar+"]:",popingLineHistory);
         
+        BasicParser parser;
+        Sentence * result =  parser.Parse(answer);
+        popingLineHistory.PopExtra();
         
-        thisForBlock->statements = std::move(v);
-        
-        
-        
-        exitProcessing();
-        return;
-    }
-    
-        
-    auto endStatement = dynamic_cast< EndStatement*>(result);
-    if (endStatement) {
-        delete result;
-        exitProcessing();
-        return;
-    }
-        
-    auto errorStatemnt = dynamic_cast< ErrorStatement*>(result);
-    if (errorStatemnt) {
-        BasicStepProcessor::Evaluate(errorStatemnt);
-        popingLineHistory.AddExtra(errorStatemnt);
-        return;
-
-
-    }
-        
-        auto statemnt = dynamic_cast< ListStatement*>(result);
-        if (statemnt) {
+        auto nextStatemnt = dynamic_cast< NextStatement*>(result);
+        if (nextStatemnt) {
+            delete result;
+            ExecuteHistory();
             
-            std::cout<<std::endl;
-            
-            
-            for (auto currentStatment : popingLineHistory.GetHistory()) {
+            thisForBlock->statements.clear();
+            for (auto i =popingLineHistory.GetHistory().rbegin(); i !=popingLineHistory.GetHistory().rend();) {
                 
-                std::cout<<currentStatment->dumpToString()<<std::endl;
+                auto statement = dynamic_cast<Statement*>(*i);
+                if(statement)
+                {
+                    thisForBlock->statements.push_back(statement);
+                    popingLineHistory.GetModifieableHistory().erase((++i).base());
+                    
+                }else
+                {
+                    i++;
+                }
                 
             }
             
             
-            delete statemnt;
-            return ;
+            
+            
+            
+            
+            exitProcessing();
+            return;
         }
-
-    
-    if(BasicStepProcessor::Evaluate(result))
-        popingLineHistory.Add(result);
         
-    
-    }else 
-    {
-        
-        std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>forelse]:",popingLineHistory);
-
-        BasicParser parser;
-        Statement * result =  parser.Parse(answer);
-        popingLineHistory.PopExtra();
         
         auto endStatement = dynamic_cast< EndStatement*>(result);
         if (endStatement) {
@@ -115,57 +81,162 @@ void ForStepProcessor::RunStep()
             
             
         }
+               
+        {
+            auto statemnt = dynamic_cast< Statement*>(result);
+            
+            
+            if(statemnt && BasicStepProcessor::Evaluate(statemnt))
+                popingLineHistory.Add(result);
+            else if(Process(dynamic_cast< Command*>(result)))
+                ;
+            else
+            {
+                
+                std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>forelse]:",popingLineHistory);
+                
+                BasicParser parser;
+                Sentence * result =  parser.Parse(answer);
+                popingLineHistory.PopExtra();
+                
+                auto endStatement = dynamic_cast< EndStatement*>(result);
+                if (endStatement) {
+                    delete result;
+                    exitProcessing();
+                    return;
+                }
+                
+                auto errorStatemnt = dynamic_cast< ErrorStatement*>(result);
+                if (errorStatemnt) {
+                    BasicStepProcessor::Evaluate(errorStatemnt);
+                    popingLineHistory.AddExtra(errorStatemnt);
+                    return;
+                    
+                    
+                }
+                
+                auto statemnt = dynamic_cast< Statement*>(result);
+                
+                
+                if(BasicStepProcessor::Evaluate(statemnt))
+                    popingLineHistory.Add(result);
+                
+            }
+        }
         
-        if(BasicStepProcessor::Evaluate(result))
-            popingLineHistory.Add(result);
-
     }
-
 }
-
-
-void ForStepProcessor::ExecuteStatments(ForStatment  * thisForBlock)
-{
-
     
-    for (varTable[thisForBlock->forVar] =  varTable[thisForBlock->forVar].getNumVal() +thisForBlock->forStep->Evaluate().getNumVal() ;
-         varTable[thisForBlock->forVar].getNumVal() <=thisForBlock->forEnd->Evaluate().getNumVal() ; varTable[thisForBlock->forVar]= varTable[thisForBlock->forVar].getNumVal() +thisForBlock->forStep->Evaluate().getNumVal() )
-        
+    void ForStepProcessor::ExecuteStatments(ForStatment  * thisForBlock)
     {
         
-        for (auto i=thisForBlock->statements.rbegin(); i != thisForBlock->statements.rend(); i++) {
+        
+        for (localVarTable.GetVar(thisForBlock->forVar) =  localVarTable.GetVar(thisForBlock->forVar).getNumVal();
+             localVarTable.GetValue(thisForBlock->forVar).getNumVal() <=thisForBlock->forEnd->Evaluate(&localVarTable).getNumVal() ; localVarTable.GetVar(thisForBlock->forVar)= localVarTable.GetValue(thisForBlock->forVar).getNumVal() +thisForBlock->forStep->Evaluate(&localVarTable).getNumVal() )
             
-            Evaluate((*i));
+        {
             
-        }
-        
-    }
-    
-
-
-}
-
-void ForStepProcessor::ExecuteHistory()
-{
-    popingLineHistory.PopExtra();
-
-    
-    for (varTable[thisForBlock->forVar] =  getForVar() +thisForBlock->forStep->Evaluate().getNumVal() ;
-         getForVar() <=thisForBlock->forEnd->Evaluate().getNumVal() ; varTable[thisForBlock->forVar]= getForVar() +thisForBlock->forStep->Evaluate().getNumVal() ) {
-        
-        
-        
-        for (auto i=popingLineHistory.GetHistory().rbegin(); i != popingLineHistory.GetHistory().rend(); i++) {
-            
-            Evaluate((*i));
+            for (auto i=thisForBlock->statements.begin(); i != thisForBlock->statements.end(); i++) {
+                
+                Evaluate((*i));
+                
+            }
             
         }
         
         
         
     }
+
+
+    bool ForStepProcessor::Process( Command* input)
+    {
+        
+        auto statemnt = dynamic_cast< ListCommand*>(input);
+        if (statemnt) {
+            
+            std::cout<<std::endl;
+            int count=1;
+            for (auto i= popingLineHistory.GetHistory().rbegin(); i!=popingLineHistory.GetHistory().rend(); i++) {
+                std::cout<<count<<" "<<(*i)->dumpToString()<<std::endl;
+                count++;
+            }
+            
+            
+            
+            return true;
+        }
+
+        
+        auto customCommand = dynamic_cast<CustomCommand*>(input);
+        if (customCommand) {
+            
+            if (customCommand->name == "popback")
+            {
+                if(popingLineHistory.GetHistory().size())
+                    popingLineHistory.GetModifieableHistory().pop_front();
+                return true;
+                
+            }
+            else if (customCommand->name == "nextstep")
+            {   //This command  makes next iteration of loop
+                //Ideally this should be behaviour of next statement
+                ExecuteAStep();
+                return true;
+                
+            }
+            else
+            {
+                return BasicStepProcessor::Process(input);
+            }
+        }
+        
+        return false;
+            
+
+    }
+
+
+    void ForStepProcessor::ExecuteAStep()
+    {
+        bool once=true;
+        for ( ;getForVar() <=thisForBlock->forEnd->Evaluate(&localVarTable).getNumVal() && once; localVarTable.GetVar(thisForBlock->forVar)= getForVar() +thisForBlock->forStep->Evaluate(&localVarTable).getNumVal() ) {
+            
+            
+            
+            for (auto i=popingLineHistory.GetHistory().rbegin(); i != popingLineHistory.GetHistory().rend(); i++) {
+                
+                Evaluate(dynamic_cast<Statement*>((*i)));
+                
+            }
+            
+            once=false   ;
+
+        }
     
-}
+    }
 
-
-
+    void ForStepProcessor::ExecuteHistory()
+    {
+        popingLineHistory.PopExtra();
+        
+        
+        for (localVarTable.GetVar(thisForBlock->forVar) =  getForVar() +thisForBlock->forStep->Evaluate(&localVarTable).getNumVal() ;
+             getForVar() <=thisForBlock->forEnd->Evaluate(&localVarTable).getNumVal() ; localVarTable.GetVar(thisForBlock->forVar)= getForVar() +thisForBlock->forStep->Evaluate(&localVarTable).getNumVal() ) {
+            
+            
+            
+            for (auto i=popingLineHistory.GetHistory().rbegin(); i != popingLineHistory.GetHistory().rend(); i++) {
+                
+                Evaluate(dynamic_cast<Statement*>((*i)));
+                
+            }
+            
+            
+            
+        }
+        
+    }
+    
+    
+    

@@ -18,7 +18,6 @@
 #include "AST.hpp"
 
 
-std::map<std::string,Value> varTable;
 Rlog trace("trace");
 
 
@@ -27,22 +26,21 @@ Rlog trace("trace");
 #define YYERROR_VERBOSE 1
 #if YYBISON
 int yylex();
-void yyerror(Statement ** statementOut,const char *);
+void yyerror(Sentence ** sentenceOut,const char *);
 
 #endif
 %}
 
 %start line
 
-%parse-param { Statement ** statementOut}
+%parse-param { Sentence ** sentenceOut}
 
-%token PRINT INPUT LET IF ELSE THEN GOTO FOR NEXT TO END  STEP
+%token PRINT INPUT LET IF ELSE THEN GOTO FOR NEXT TO END  STEP PRINTE
 ELLIPSIS REM CLS LIST RUN
-%token <getStringVal()> VAR SVAR
+%token <getStringVal()> VAR SVAR CUSTOMCOMMAND
 %token <getStringVal()> STRING_LITERAL STATEMENT_RECORD REMARK_RECORD
 %token <getNumVal()> NUMBER REAL_NUMBER
 
-%type <getNumVal()> lineNumber
 %type <expression> numexpr printItem printlist strexpr boolExression
 
 %type <getStringVal()>  inputItem
@@ -62,18 +60,18 @@ ELLIPSIS REM CLS LIST RUN
 %%
 
 line    :   statement {
-    *statementOut = $$.nodeVal;
+    *sentenceOut = $$.nodeVal;
 
-};
-
-
-
-lineNumber : NUMBER;
-runCommand : RUN    {  std::cout<<"Run to be implemnted"<<std::endl;}
+}
+|command {*sentenceOut = $$.nodeVal;}
 ;
+
+
+
 
 statement   :
     printStatement
+|printeStatement
 |   letStatement
 |   inputStatement
 |   endstatement
@@ -81,12 +79,26 @@ statement   :
 |  forStataement
 |  nextStatement
 | remStatement
-|   clearStatement
 | gotoStament
-| listCommand //It should be command
 ;
 
 
+command : listCommand | clearStatement |customCommand //It should be command
+;
+
+customCommand : CUSTOMCOMMAND  {
+    auto var= new CustomCommand;
+    var->name = $1;
+    $$.nodeVal = var;
+}
+| CUSTOMCOMMAND commandarglist
+;
+
+commandarglist : commandarg
+| commandarglist commandarg
+;
+
+commandarg : NUMBER | 
 
 remStatement : REM REMARK_RECORD {  auto var= new RemarkStatement;  var->comments= $2; $$.nodeVal = var; }
 ;
@@ -99,7 +111,7 @@ clearStatement : CLS { std::cout<<"CLS to be implemnted"<<std::endl;/*  DisplayC
 ;
 listCommand : LIST {
 
-$$.nodeVal = new ListStatement;
+$$.nodeVal = new ListCommand;
 }
 ;
 
@@ -123,6 +135,19 @@ printStatement : PRINT printlist    {
 }
 ;
 
+
+printeStatement : PRINTE printlist    {
+    
+    auto printnode = new PrintElementStatement();
+    auto a  = static_cast<ExpressionList*>$2;
+    printnode->printitems = std::move(a->list);
+    $$=printnode;
+    
+    
+    //PrintStatement//std::cout<<std::endl;  /* interpreter.PrintBuffer("\n"); */
+}
+;
+
 printlist   :   printItem { auto a = new ExpressionList(); a->list.push_back(std::unique_ptr<Expression>($1)); $$=a;}
 |   printlist ';' printItem { auto a  = static_cast<ExpressionList*>$1; a->list.push_back(std::unique_ptr<Expression>($3)); $$=a; }
 ;
@@ -135,12 +160,7 @@ printItem   :   strexpr
 
 
 letStatement     : LET VAR '=' numexpr  {
-    
-   // Value value;
-   // value.valutype = Value::Evaluetype::floattype;
-   // value.numVal = $4;
-    //varTable[$2]=value;
-    
+
    
    auto l = new LetStatement;
    l->variablename= $2;
@@ -149,7 +169,6 @@ letStatement     : LET VAR '=' numexpr  {
     $$=l;
 
    
-   //trace<<"let "<<$2<<" = "<<$4<<std::endl;
    
 }
 | LET SVAR '=' strexpr {
@@ -239,7 +258,7 @@ forStataement 	: FOR VAR '=' numexpr TO numexpr  {
 
 
 
-nextStatement   : NEXT VAR {
+nextStatement   : NEXT  {
     
     auto node = new NextStatement();
     $$=node;
@@ -419,7 +438,8 @@ numexpr    :   '(' numexpr ')'
     
     auto  t =new TerminalExpression;
     t->sub = $1;
-    
+
+
     t->valuetype = Value::Evaluetype::floattype;
     
     $$ = t;
@@ -437,7 +457,7 @@ numexpr    :   '(' numexpr ')'
 
 
 %%
-void yyerror( Statement** statement, const char * error)
+void yyerror( Sentence** statement, const char * error)
 {
     
     *statement = new ErrorStatement(error);

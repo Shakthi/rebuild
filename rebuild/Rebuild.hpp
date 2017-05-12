@@ -10,16 +10,16 @@
 #define Rebuild_hpp
 
 #include <stack>
+#include <vector>
 
 #include "nlohmann/json.hpp"
+#include "VarTable.hpp"
+
+
+
 
 class Rebuild {
-    
-    
-    
-    
-    
-    
+   
     bool alive;
     enum ExitStatus {
         exitStatusRIP = 0,
@@ -32,10 +32,13 @@ class Rebuild {
     
 
     std::stack<class StepProcessor*> processorStack;
+    std::vector<std::string> arglist;
+
+    VarTable varTable;
 
 public:
     class LineNoiseWrapper* lineNoiseWrapper;
-    class StatementHistory * history;
+    class SentenceHistory * history;
     static std::string prompt;
     nlohmann::json lastStepProcessorData;
 
@@ -48,7 +51,7 @@ public:
     bool IsAlive() { return alive; }
     ExitStatus GetExitStatus() { return exitStatus; }
 
-    Rebuild();
+    Rebuild(const std::vector<std::string> & argv);
     ~Rebuild();
     void Save();
     void SaveIfLatest();
@@ -57,6 +60,10 @@ public:
     void RunStep();
     void exitProcessing();
     void addNewProcessing(StepProcessor*);
+    
+    bool restart();
+    
+  
 };
 
 #endif /* Rebuild_hpp */

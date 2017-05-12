@@ -12,20 +12,23 @@
 #include <list>
 #include <string>
 #include <vector>
-#include "Parser/quickbasic.h"
+#include "VarTable.hpp"
+#include "Value.h"
 #include "nlohmann/json.hpp"
 #include "cereal/cereal.hpp"
 #include "cereal/types/vector.hpp"
 #include "cereal/types/list.hpp"
 
-
-struct Statement {
+struct Sentence
+{
     std::string sourceText; //Debug only
-    virtual ~Statement(){}
+    virtual ~Sentence(){}
+    
+    
     
     
     nlohmann::json ToJson();
-    static  Statement * GetFromJson(nlohmann::json );
+    static  Sentence * GetFromJson(nlohmann::json );
     
     
     
@@ -34,9 +37,21 @@ struct Statement {
     { ar( CEREAL_NVP(sourceText) ); }
     
     
-    virtual bool isEqual(const Statement & that){ return this -> dumpToString()  == that.dumpToString();}
+    virtual bool isEqual(const Sentence & that){ return this -> dumpToString()  == that.dumpToString();}
     
     virtual std::string dumpToString()const {return sourceText;}
+
+
+
+};
+
+struct Statement:Sentence
+{
+    
+};
+
+struct Command:Sentence
+{
     
 };
 
@@ -82,8 +97,13 @@ struct NextStatement:public  Statement{
 
 };
 
-struct ListStatement:public  Statement{
+struct ListCommand:public  Command{
     
+};
+
+
+struct CustomCommand:public  Command{
+    std::string name;
 };
 
 
@@ -105,6 +125,7 @@ struct ForStatment:public Statement {
         std::unique_ptr<Expression> forBegin,forEnd,forStep;
     
         std::vector<Statement*>  statements;
+        
     
     
     
@@ -161,13 +182,32 @@ public:
 ;
 
 
+struct PrintElementStatement:public  PrintStatement{
+    
+    
+public:
+    
+    template<class Archive>
+    void serialize( Archive & ar )
+    { ar( CEREAL_NVP(printitems),CEREAL_NVP(sourceText) ); }
+    
+    
+    
+    std::string dumpToString()const;
+    
+}
+;
+
+
+
+
 
 
 struct Expression
 {
     Value::Evaluetype valuetype;
 
-    virtual Value Evaluate()=0;
+    virtual Value Evaluate(VarTable * varTable)=0;
     virtual ~Expression(){}
     
     
@@ -186,7 +226,7 @@ struct Expression
 struct ExpressionList:Expression
 {
     std::vector<std::unique_ptr<Expression>> list;
-    Value Evaluate(){return Value();}
+    Value Evaluate( VarTable * varTable){return Value();}
     
 };
 
@@ -211,7 +251,7 @@ struct BainaryExpression :Expression
 struct ArithmeticExpression:BainaryExpression {
     
     enum class operatorType{ plus,minus,multiply,devide} mOperator;
-    Value Evaluate();
+    Value Evaluate( VarTable * varTable);
 
     
     
@@ -243,7 +283,7 @@ struct RelationalExpression :BainaryExpression
         valuetype = Value::Evaluetype::booltype;
         inputype = ainputtype;
     }
-    Value Evaluate();
+    Value Evaluate( VarTable * varTable);
     
     template<class Archive>
     void serialize( Archive & ar )
@@ -276,17 +316,17 @@ struct UnaryExpression :Expression
 {
     std::unique_ptr<Expression> sub;
     enum class operatorType{ minus,grouping} mOperator;
-    Value Evaluate()
+    Value Evaluate( VarTable * varTable)
     {
 
         switch(mOperator)
         {
             case operatorType::minus:
-                return Value( - sub->Evaluate().getNumVal() ) ;
+                return Value( - sub->Evaluate(varTable).getNumVal() ) ;
                 
                 
             case operatorType::grouping:
-                return Value(  sub->Evaluate().getNumVal() ) ;
+                return Value(  sub->Evaluate(varTable).getNumVal() ) ;
             
         }
     
@@ -307,7 +347,7 @@ struct UnaryExpression :Expression
 struct TerminalExpression :Expression
 {
     Value sub;
-    Value Evaluate()
+    Value Evaluate( VarTable * varTable)
     {
         return sub;
     }
@@ -377,7 +417,7 @@ struct TerminalExpression :Expression
 struct GetExpression :Expression
 {
     std::string varName;
-    Value Evaluate();
+    Value Evaluate( VarTable * varTable);
     
     
     

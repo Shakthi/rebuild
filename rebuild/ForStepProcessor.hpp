@@ -10,9 +10,10 @@
 #define ForStepProcessor_hpp
 
 #include "BasicStepProccessor.hpp"
-#include "Parser/quickbasic.h"
-#include "StatementHistory.hpp"
+#include "Value.h"
+#include "SentenceHistory.hpp"
 #include "AST.hpp"
+#include "VarTable.hpp"
 
 
 
@@ -20,19 +21,28 @@ class ForStepProcessor : public BasicStepProcessor {
     ForStatment * thisForBlock;
     
     std::string remarks;
-    PopingLineStatementHistory popingLineHistory;
+    PopingLineSentenceHistory popingLineHistory;
     bool passThrough;
     
+    
+    
 public:
-    ForStepProcessor(Rebuild* aRebuild,ForStatment * forStatement)
-    : BasicStepProcessor(aRebuild),thisForBlock(forStatement)
+    
+    enum class InitType {normal,stepin};
+    
+    ForStepProcessor(Rebuild* aRebuild,ForStatment * forStatement,VarTable * super,InitType initType = InitType::normal)
+    : BasicStepProcessor(aRebuild,super),thisForBlock(forStatement)
     {
+        
+        for (auto st :forStatement->statements ) {
+            popingLineHistory.Add(st);
+        }
 
     }
     
     float  getForVar()
     {
-        return varTable[thisForBlock->forVar].getNumVal();
+        return localVarTable.GetVar(thisForBlock->forVar).getNumVal();
     }
     
     
@@ -48,9 +58,12 @@ public:
     void Init();
     
     void ExecuteHistory();
+    void ExecuteAStep();
     void ExecuteStatments(ForStatment  * forstatement);
     
+    virtual bool Process(class Command* input);
     
+
     
 };
 

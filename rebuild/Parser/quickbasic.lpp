@@ -18,6 +18,21 @@ L			[a-zA-Z]
     #include "Parser/quickbasic.h"
     #include "quickbasic.y.hpp"
     #endif
+    #define YY_NO_INPUT
+    namespace {
+    std::string trim(const std::string& str,
+    const std::string& whitespace = " \t")
+    {
+        const auto strBegin = str.find_first_not_of(whitespace);
+        if (strBegin == std::string::npos)
+        return ""; // no content
+        
+        const auto strEnd = str.find_last_not_of(whitespace);
+        const auto strRange = strEnd - strBegin + 1;
+        
+        return str.substr(strBegin, strRange);
+    }
+    }
 %}
 
 
@@ -29,6 +44,7 @@ L			[a-zA-Z]
 
 "step"		{  return((int)STEP); }
 "print"		{  return((int)PRINT); }
+"printe"		{  return((int)PRINTE); }
 "input"			{  return((int)INPUT); }
 "let"			{  return((int)LET); }
 "if"			{  return((int)IF); }
@@ -43,6 +59,11 @@ L			[a-zA-Z]
 "cls"			{  return((int)CLS); }
 "list"			{  return((int)LIST); }
 "run"			{  return((int)RUN); }
+^[ ]*\.{L}+			{
+    auto trimmed = trim(yytext);
+    yylval = Value (trimmed.substr(1));
+    return((int)CUSTOMCOMMAND);
+}
 
 
 
@@ -83,8 +104,12 @@ L			[a-zA-Z]
 ">"			{  return yytext[0]; }
 "^"			{  return yytext[0]; }
 
-
 [ \t\v\n\f]		{  }
 .			{  return yytext[0]; }
 
+"t" {
+//    void yyunput (int c, register char * yy_bp );
+  yyunput(1,0);
+  
+}
 %%

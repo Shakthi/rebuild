@@ -11,8 +11,8 @@
 
 
 #include "BasicStepProccessor.hpp"
-#include "Parser/quickbasic.h"
-#include "StatementHistory.hpp"
+#include "Value.h"
+#include "SentenceHistory.hpp"
 #include "AST.hpp"
 
 
@@ -24,12 +24,12 @@ class IfStepProcessor : public BasicStepProcessor {
     
     bool passThroughe;
   
-    PopingLineStatementHistory popingLineHistory;
+    PopingLineSentenceHistory popingLineHistory;
     
 
 public:
-    IfStepProcessor(Rebuild* aRebuild,IfStatment * aifStatment)
-    : BasicStepProcessor(aRebuild),ifStatment(aifStatment)
+    IfStepProcessor(Rebuild* aRebuild,IfStatment * aifStatment,VarTable * superVarTable)
+    : BasicStepProcessor(aRebuild,superVarTable),ifStatment(aifStatment)
     {
         // getForVar()=forblock.forBegin->;
        // isInited=false;

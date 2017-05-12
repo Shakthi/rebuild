@@ -11,15 +11,29 @@
 #include "Rebuild.hpp"
 
 #include "StepProcessor.hpp"
+#include "VarTable.hpp"
 
 class BasicStepProcessor : public StepProcessor {
+
+protected:
+    VarTable  localVarTable;
+
+
 public:
+
+
+
     void RunStep();
     virtual bool Evaluate(class Statement* input);
+    virtual bool Process(class Command* input);
+    std::string ProcessCtrlKeyStroke(int ctrlchar);
 
-    BasicStepProcessor(Rebuild* aRebuild)
+
+    BasicStepProcessor(Rebuild* aRebuild,VarTable * varTable)
         : StepProcessor(aRebuild)
     {
+
+        localVarTable.SetSuper(varTable);
     }
 
     nlohmann::json ToJson();

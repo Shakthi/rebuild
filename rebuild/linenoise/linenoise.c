@@ -330,7 +330,7 @@ void linenoiseClearScreen(void) {
 
 /* Beep, used for completion when there is nothing to complete or when all
  * the choices were already shown. */
-static void linenoiseBeep(void) {
+ void linenoiseBeep(void) {
     fprintf(stderr, "\x7");
     fflush(stderr);
 }
@@ -718,13 +718,20 @@ void linenoiseEditMoveEnd(struct linenoiseState *l) {
 void linenoiseEditHistoryNext(struct linenoiseState *l, int dir) {
     if(historyCallback!=NULL)
     {
-         char * historyrecord = historyCallback(dir,l->buf,linenoiseHistoryCallbackContext);
+        size_t lastCursPos = l->pos;
+         char * historyrecord = historyCallback(dir,l->buf,linenoiseHistoryCallbackContext, &lastCursPos);
         if(historyrecord)
         {
             strncpy(l->buf,historyrecord,l->buflen);
             free(historyrecord);
             l->buf[l->buflen-1] = '\0';
-            l->len = l->pos = strlen(l->buf);
+
+            l->len  = strlen(l->buf);
+
+            if(lastCursPos==-1)
+                l->pos = l->len ;
+            else
+                l->pos = lastCursPos;
             refreshLine(l);
         
         }
@@ -795,7 +802,7 @@ void linenoiseEditDeletePrevWord(struct linenoiseState *l) {
  * when ctrl+d is typed.
  *
  * The function returns the length of the current buffer. */
-static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t buflen, const char *prompt)
+static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t buflen, const char *prompt,linenoiseResults * results)
 {
     struct linenoiseState l;
 
@@ -949,6 +956,12 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
             }
             break;
         default:
+            if (c>0 && c<=26)
+            {
+                results->ctrlKey = c;
+                return -1;
+            }
+                
             if (linenoiseEditInsert(&l,c)) return -1;
             break;
         case CTRL_U: /* Ctrl+u, delete the whole line. */
@@ -974,6 +987,7 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
         case CTRL_W: /* ctrl+w, delete previous word */
             linenoiseEditDeletePrevWord(&l);
             break;
+            
         }
     }
     return l.len;
@@ -1009,7 +1023,7 @@ void linenoisePrintKeyCodes(void) {
 
 /* This function calls the line editing function linenoiseEdit() using
  * the STDIN file descriptor set in raw mode. */
-static size_t linenoiseRaw(char *buf, size_t buflen, const char *prompt) {
+static size_t linenoiseRaw(char *buf, size_t buflen, const char *prompt,const linenoiseOptions * options,linenoiseResults * results) {
     size_t count;
 
     if (buflen == 0) {
@@ -1018,9 +1032,13 @@ static size_t linenoiseRaw(char *buf, size_t buflen, const char *prompt) {
     }
 
     if (enableRawMode(STDIN_FILENO) == -1) return -1;
-    count = linenoiseEdit(STDIN_FILENO, STDOUT_FILENO, buf, buflen, prompt);
+    count = linenoiseEdit(STDIN_FILENO, STDOUT_FILENO, buf, buflen, prompt,results);
     disableRawMode(STDIN_FILENO);
-    printf("\n");
+    if(options && options->printNewln)
+    {
+        printf("\n");
+        results->printNewln = 1;
+    }
     return count;
 }
 
@@ -1065,7 +1083,7 @@ static char *linenoiseNoTTY(void) {
  * for a blacklist of stupid terminals, and later either calls the line
  * editing function or uses dummy fgets() so that you will be able to type
  * something even in the most desperate of the conditions. */
-char *linenoise(const char *prompt) {
+char *linenoise(const char *prompt,const linenoiseOptions * option,linenoiseResults * result ) {
     char buf[LINENOISE_MAX_LINE];
     size_t count;
 
@@ -1091,9 +1109,10 @@ char *linenoise(const char *prompt) {
             len--;
             buf[len] = '\0';
         }
+        result->printNewln=1;
         return strdup(buf);
     } else {
-        count = linenoiseRaw(buf,LINENOISE_MAX_LINE,prompt);
+        count = linenoiseRaw(buf,LINENOISE_MAX_LINE,prompt,option,result);
         if (count == -1) return NULL;
         return strdup(buf);
     }
