@@ -143,10 +143,10 @@
 		536578761E50F53D00A561D9 /* ParserWrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ParserWrapper.hpp; path = rebuild/Parser/ParserWrapper.hpp; sourceTree = "<group>"; };
 		5390BC211EC62A21000E061A /* ReadStepProcessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReadStepProcessor.cpp; sourceTree = "<group>"; };
 		5390BC221EC62A21000E061A /* ReadStepProcessor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ReadStepProcessor.hpp; sourceTree = "<group>"; };
-		5390BC241EC6301F000E061A /* Value.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Value.h; path = ../Value.h; sourceTree = "<group>"; };
 		5390BC251EC635D7000E061A /* quickbasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = quickbasic.h; path = rebuild/Parser/quickbasic.h; sourceTree = "<group>"; };
 		5390BC261EC635D7000E061A /* quickbasic.lpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; name = quickbasic.lpp; path = rebuild/Parser/quickbasic.lpp; sourceTree = "<group>"; };
 		5390BC271EC635D7000E061A /* quickbasic.ypp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.yacc; name = quickbasic.ypp; path = rebuild/Parser/quickbasic.ypp; sourceTree = "<group>"; };
+		5390BC2A1EC63837000E061A /* Value.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Value.h; sourceTree = "<group>"; };
 		53A1E3F01E4504870071C220 /* lineHistory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineHistory.cpp; sourceTree = "<group>"; };
 		53A1E3F11E4504870071C220 /* lineHistory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lineHistory.hpp; sourceTree = "<group>"; };
 		53A1E3F31E45A0010071C220 /* BasicStepProccessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BasicStepProccessor.cpp; sourceTree = "<group>"; };
@@ -366,9 +366,9 @@
 		533AE4DF1E3CE896008910D4 /* rebuild */ = {
 			isa = PBXGroup;
 			children = (
+				5390BC2A1EC63837000E061A /* Value.h */,
 				53CB85881E3FC04300E44564 /* Rebuild.cpp */,
 				5317A4F31EC0EFCB0000269E /* VarTable.cpp */,
-				5390BC241EC6301F000E061A /* Value.h */,
 				5317A4F41EC0EFCB0000269E /* VarTable.hpp */,
 				535FF25B1E42EA2600EF0E51 /* StepProcessor.cpp */,
 				535FF25C1E42EA2600EF0E51 /* StepProcessor.hpp */,
