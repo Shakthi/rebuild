@@ -22,14 +22,17 @@ class VarTable {
 public:
     VarTable();
     Value & GetVar(std::string varName);
+    const Value & GetValue(std::string varName);
+
     void SetVar(std::string varName, Value && val);
     void SetSuper(VarTable * vt);
 
     nlohmann::json ToJson();
     void FromJson(nlohmann::json root);
 
+    void Clear(){ table.clear(); }
+
 };
 
-extern VarTable varTable;
 
 #endif /* VarTable_hpp */

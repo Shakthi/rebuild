@@ -69,7 +69,7 @@ Rebuild::Rebuild(const std::vector<std::string> & argv)
     rlog << "Hello world...!("<<__DATE__<<"-"<<__TIME__<< ")"<<std::endl;
     history = new SentenceHistory();
     lineNoiseWrapper = new LineNoiseWrapper(*history);
-    processorStack.push(new BasicStepProcessor(this));
+    processorStack.push(new BasicStepProcessor(this,&varTable));
     Load();
     
 
@@ -143,7 +143,7 @@ namespace
 
 void Rebuild::Load()
 {
-    //Rlog rlog;
+    Rlog rlog;
     std::string savepath = GetSavePath();
     
     rlog << "Loading main config:" << savepath << std::endl;
@@ -160,6 +160,7 @@ void Rebuild::Load()
             stream >> root;
             if (root["version"] != version)
                 throw version;
+            varTable.FromJson(root["globalVariable"]);
 
             history->FromJson(root["history"]);
             processorStack.top()->FromJson(root["processor"]);
@@ -190,7 +191,7 @@ void Rebuild::Save()
     //return;
     nlohmann::json root;
     //Rlog rlog;
-
+    root["globalVariable"] = varTable.ToJson();
     root["history"] = history->ToJson();
 
     root["timestampepoch"] = std::time(0);

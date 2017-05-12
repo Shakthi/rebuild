@@ -13,6 +13,9 @@
 #include <vector>
 
 #include "nlohmann/json.hpp"
+#include "VarTable.hpp"
+#include "quickbasic.h"
+
 
 
 class Rebuild {
@@ -30,7 +33,8 @@ class Rebuild {
 
     std::stack<class StepProcessor*> processorStack;
     std::vector<std::string> arglist;
-    
+
+    VarTable varTable;
 
 public:
     class LineNoiseWrapper* lineNoiseWrapper;

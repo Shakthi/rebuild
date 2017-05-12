@@ -19,9 +19,9 @@
 #include <sstream>
 
 
-Value GetExpression::Evaluate(){
+Value GetExpression::Evaluate(VarTable * varTable){
     
-    Value v=varTable.GetVar(varName);
+    Value v=varTable->GetValue(varName);
     assert(v.valutype == valuetype || Value::Evaluetype::emptyType == v.valutype);
     
     return v;
@@ -31,7 +31,7 @@ Value GetExpression::Evaluate(){
 
 
 
-Value ArithmeticExpression::Evaluate()
+Value ArithmeticExpression::Evaluate(VarTable * varTable)
 {
     
     switch(valuetype)
@@ -40,7 +40,7 @@ Value ArithmeticExpression::Evaluate()
             switch(mOperator)
             {
                 case operatorType::plus:
-                    return Value ( left->Evaluate().getStringVal() + right->Evaluate().getStringVal());
+                    return Value ( left->Evaluate(varTable).getStringVal() + right->Evaluate(varTable).getStringVal());
                     
                 default:
                     assert(false);//should not come here
@@ -60,18 +60,18 @@ Value ArithmeticExpression::Evaluate()
                 switch(mOperator)
                 {
                     case operatorType::minus:
-                        return Value ( left->Evaluate().getNumVal() - right->Evaluate().getNumVal());;
+                        return Value ( left->Evaluate(varTable).getNumVal() - right->Evaluate(varTable).getNumVal());;
                         
                     case operatorType::plus:
-                        return Value ( left->Evaluate().getNumVal() + right->Evaluate().getNumVal());
+                        return Value ( left->Evaluate(varTable).getNumVal() + right->Evaluate(varTable).getNumVal());
                         
                         
                     case operatorType::devide:
-                        return Value (left->Evaluate().getNumVal() / right->Evaluate().getNumVal());
+                        return Value (left->Evaluate(varTable).getNumVal() / right->Evaluate(varTable).getNumVal());
                         
                         
                     case operatorType::multiply:
-                        return Value( left->Evaluate().getNumVal() * right->Evaluate().getNumVal());
+                        return Value( left->Evaluate(varTable).getNumVal() * right->Evaluate(varTable).getNumVal());
                 };
             
         default:
@@ -90,7 +90,7 @@ Value ArithmeticExpression::Evaluate()
 
 
 
-Value RelationalExpression::Evaluate()
+Value RelationalExpression::Evaluate(VarTable * varTable)
 {
     
     switch(inputype)
@@ -99,7 +99,7 @@ Value RelationalExpression::Evaluate()
             switch(mOperator)
         {
             case operatorType::equal:
-                return Value ( left->Evaluate().getStringVal() == right->Evaluate().getStringVal());
+                return Value ( left->Evaluate(varTable).getStringVal() == right->Evaluate(varTable).getStringVal());
                 
             default:
                 assert(false);//should not come here
@@ -119,14 +119,14 @@ Value RelationalExpression::Evaluate()
             switch(mOperator)
         {
             case operatorType::equal:
-                return Value ( left->Evaluate().getNumVal()  == right->Evaluate().getNumVal());;
+                return Value ( left->Evaluate(varTable).getNumVal()  == right->Evaluate(varTable).getNumVal());;
                 
             case operatorType::less:
-                return Value ( left->Evaluate().getNumVal() < right->Evaluate().getNumVal());
+                return Value ( left->Evaluate(varTable).getNumVal() < right->Evaluate(varTable).getNumVal());
                 
                 
             case operatorType::greater:
-                return Value (left->Evaluate().getNumVal() > right->Evaluate().getNumVal());
+                return Value (left->Evaluate(varTable).getNumVal() > right->Evaluate(varTable).getNumVal());
             
         };
             

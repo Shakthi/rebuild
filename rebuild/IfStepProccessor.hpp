@@ -28,8 +28,8 @@ class IfStepProcessor : public BasicStepProcessor {
     
 
 public:
-    IfStepProcessor(Rebuild* aRebuild,IfStatment * aifStatment)
-    : BasicStepProcessor(aRebuild),ifStatment(aifStatment)
+    IfStepProcessor(Rebuild* aRebuild,IfStatment * aifStatment,VarTable * superVarTable)
+    : BasicStepProcessor(aRebuild,superVarTable),ifStatment(aifStatment)
     {
         // getForVar()=forblock.forBegin->;
        // isInited=false;

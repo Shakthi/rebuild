@@ -66,7 +66,7 @@ struct Value
         class Expression * expression;
     };
 
-    
+    static const Value & nullValue;
     
     
 private:

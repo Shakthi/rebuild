@@ -22,95 +22,7 @@
 #include <map>
 #include <sstream>
 #include <vector>
-
-class ReadStepProcessor : public StepProcessor {
-    std::list<std::string> list;
-    std::string prompt;
-
-public:
-    ReadStepProcessor(Rebuild* aRebuild, std::list<std::string>& alist,std::string aPrompt)
-        : StepProcessor(aRebuild),prompt(aPrompt)
-        , list(alist)
-    {
-        list = alist;
-    }
-
-    nlohmann::json ToJson()
-    {
-        nlohmann::json j;
-        return j;
-    }
-
-    void FromJson(nlohmann::json j) {}
-
-    void RunStep()
-    {
-        std::string readprompt;
-        
-        
-        if(prompt!="")
-        {
-            
-            readprompt=Rebuild::prompt+prompt+"";
-        }
-        
-        else
-        {
-        // create the prompt for reading
-        readprompt = Rebuild::prompt +"input ";
-        bool firstParam = true;
-        for (auto i = list.begin(); i != list.end(); i++) {
-            if (!firstParam)
-                readprompt += " ";
-
-            readprompt += "\'";
-            std::string varName = *i;
-            readprompt += varName;
-            readprompt += "\'";
-
-            firstParam = false;
-        }
-        readprompt += ":";
-        }
-
-        std::string answer = rebuild->lineNoiseWrapper->getLine(readprompt);
-        std::istringstream stream(answer);
-
-        for (auto i = list.begin(); i != list.end(); i++) {
-            auto variableName = *i;
-            
-            if(variableName.find("$") == std::string::npos){ //hack
-                
-                float num;
-                stream >> num;
-                varTable.GetVar(variableName) = Value(num);
-                rlog<<variableName <<"="<<varTable.GetVar(variableName).getNumVal()<<std::endl;
-
-            } else if(variableName.find("$") != std::string::npos){
-                Value value;
-                std::string str;
-                stream >> str;
-                varTable.GetVar(variableName) = Value(str);
-                rlog<<variableName <<"="<<varTable.GetVar(variableName).getStringVal()<<std::endl;
-            }
-
-            list.pop_front();
-            if (stream.eof()) {
-                break;
-            }
-        }
-
-        if (answer == "") {
-            list.clear();
-            exitProcessing();
-        }
-
-        if (list.empty()) {
-            exitProcessing();
-        }
-    }
-};
-
+#include "ReadStepProcessor.hpp"
 
 
 
@@ -133,7 +45,7 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     auto readStatemnt = dynamic_cast< ReadStatement*>(result);
     if (readStatemnt) {
         
-        ReadStepProcessor* readStepProcessor = new ReadStepProcessor(rebuild, readStatemnt->variableList,readStatemnt->prompt);
+        ReadStepProcessor* readStepProcessor = new ReadStepProcessor(rebuild, readStatemnt->variableList,readStatemnt->prompt,localVarTable);
         rebuild->addNewProcessing(readStepProcessor);
         return true;
     }
@@ -149,7 +61,8 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         if(!forStatemnt->statements.empty())
         {
         
-            ForStepProcessor * processor = new ForStepProcessor(rebuild,forStatemnt);
+            ForStepProcessor * processor = new ForStepProcessor(rebuild,forStatemnt,
+                                                                &localVarTable);
             processor->Init();
             processor->ExecuteStatments(forStatemnt);
 
@@ -157,8 +70,9 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         else
         {
             
-            ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild,forStatemnt);
+            ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild,forStatemnt,&localVarTable);
             readStepProcessor->Init();
+            
             
             rebuild->addNewProcessing(readStepProcessor);
 
@@ -178,7 +92,7 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     
     auto ifstment = dynamic_cast< IfStatment*>(result);
     if (ifstment) {
-        auto  * stepprocessor = new IfStepProcessor(rebuild,ifstment);
+        auto  * stepprocessor = new IfStepProcessor(rebuild,ifstment,&localVarTable);
         
         stepprocessor->Init();
         
@@ -194,7 +108,7 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         
         for (auto i= printStatemnt->printitems.begin();i!=printStatemnt->printitems.end();i++) {
             
-            Value value=(*i)->Evaluate();
+            Value value=(*i)->Evaluate(&localVarTable);
             if(value.valutype == Value::Evaluetype::stringtype)
                 std::cout<<value.getStringVal();
             else  if(value.valutype == Value::Evaluetype::floattype)
@@ -217,8 +131,8 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     
     auto letStatemnt = dynamic_cast< LetStatement*>(result);
     if (letStatemnt) {
-        if(varTable.GetVar(letStatemnt->variablename).valutype == Value::Evaluetype::emptyType)
-            varTable.GetVar(letStatemnt->variablename)=letStatemnt->rvalue->Evaluate();
+        if(localVarTable.GetVar(letStatemnt->variablename).valutype == Value::Evaluetype::emptyType)
+            localVarTable.GetVar(letStatemnt->variablename)=letStatemnt->rvalue->Evaluate(&localVarTable);
         else
             std::cout<<Rebuild::prompt<<"! "<<letStatemnt->variablename<<" already defined"<<std::endl;
 
@@ -282,8 +196,7 @@ bool BasicStepProcessor::Process(Command  * result)
                 auto  forStatment =  dynamic_cast<ForStatment*>(sentence);
                 if(forStatment)
                 {
-                    auto forStepProcessor = new ForStepProcessor(rebuild,forStatment,
-                                                                 ForStepProcessor::InitType::stepin);
+                    auto forStepProcessor = new ForStepProcessor(rebuild,forStatment,&localVarTable,ForStepProcessor::InitType::stepin);
                     forStepProcessor->Init();
                     
                     rebuild->addNewProcessing(forStepProcessor);
@@ -391,13 +304,13 @@ void BasicStepProcessor::RunStep()
 nlohmann::json BasicStepProcessor::ToJson()
 {
     nlohmann::json j;
-    j["varablelist"]=varTable.ToJson();
+    j["localvarablelist"]=localVarTable.ToJson();
 
     return j;
 }
 void BasicStepProcessor::FromJson(nlohmann::json j)
 {
-    varTable.FromJson(j["varablelist"]);
+    localVarTable.FromJson(j["localvarablelist"]);
 }
 
 

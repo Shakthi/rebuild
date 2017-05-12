@@ -25,12 +25,13 @@ class ForStepProcessor : public BasicStepProcessor {
     bool passThrough;
     
     
+    
 public:
     
     enum class InitType {normal,stepin};
     
-    ForStepProcessor(Rebuild* aRebuild,ForStatment * forStatement,InitType initType = InitType::normal)
-    : BasicStepProcessor(aRebuild),thisForBlock(forStatement)
+    ForStepProcessor(Rebuild* aRebuild,ForStatment * forStatement,VarTable * super,InitType initType = InitType::normal)
+    : BasicStepProcessor(aRebuild,super),thisForBlock(forStatement)
     {
         
         for (auto st :forStatement->statements ) {
@@ -41,7 +42,7 @@ public:
     
     float  getForVar()
     {
-        return varTable.GetVar(thisForBlock->forVar).getNumVal();
+        return localVarTable.GetVar(thisForBlock->forVar).getNumVal();
     }
     
     

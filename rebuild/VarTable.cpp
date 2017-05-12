@@ -9,18 +9,51 @@
 #include "VarTable.hpp"
 #include "quickbasic.h"
 
+namespace  {
+    Value localNullValue;
+}
+
+const Value & Value::nullValue = localNullValue;
+
 VarTable::VarTable():super(NULL)
 {}
 
 Value & VarTable::GetVar(std::string varName)
 {
     assert(varName!="");
-
-    //auto currentTable = &table;
-
+    
     return table[varName];
-
 }
+
+
+const Value & VarTable::GetValue(std::string varName)
+{
+    assert(varName!="");
+
+    VarTable * current = this;
+
+    do {
+        auto iter = current->table.find(varName);
+        if (iter != current->table.end()) {
+            return iter->second;
+        }
+
+
+        auto superObj = current->super;
+        if (superObj == nullptr) {
+            break;
+        }
+
+        current = superObj;
+
+    } while (true);
+
+    return  Value::nullValue;
+}
+
+
+
+
 void VarTable::SetVar(std::string varName, Value && val)
 {
     table[varName] = val;
@@ -75,4 +108,3 @@ void VarTable::FromJson(nlohmann::json j)
 }
 
 
-VarTable varTable;

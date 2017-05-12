@@ -15,7 +15,7 @@ void IfStepProcessor::Init()
 {
     
     
-    if(ifStatment->expression->Evaluate().getBoolVal() ) {
+    if(ifStatment->expression->Evaluate(&localVarTable).getBoolVal() ) {
         passThroughe=true;
     }
     

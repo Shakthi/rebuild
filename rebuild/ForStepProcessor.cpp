@@ -14,8 +14,8 @@
 void ForStepProcessor::Init()
 {
     
-    varTable.GetVar(thisForBlock->forVar) = thisForBlock->forBegin->Evaluate();
-    if(getForVar() <=thisForBlock->forEnd->Evaluate().getNumVal() ) {
+    localVarTable.GetVar(thisForBlock->forVar) = thisForBlock->forBegin->Evaluate(&localVarTable);
+    if(getForVar() <=thisForBlock->forEnd->Evaluate(&localVarTable).getNumVal() ) {
         passThrough=true;
     }
 }
@@ -131,8 +131,8 @@ void ForStepProcessor::RunStep()
     {
         
         
-        for (varTable.GetVar(thisForBlock->forVar) =  varTable.GetVar(thisForBlock->forVar).getNumVal();
-             varTable.GetVar(thisForBlock->forVar).getNumVal() <=thisForBlock->forEnd->Evaluate().getNumVal() ; varTable.GetVar(thisForBlock->forVar)= varTable.GetVar(thisForBlock->forVar).getNumVal() +thisForBlock->forStep->Evaluate().getNumVal() )
+        for (localVarTable.GetVar(thisForBlock->forVar) =  localVarTable.GetVar(thisForBlock->forVar).getNumVal();
+             localVarTable.GetValue(thisForBlock->forVar).getNumVal() <=thisForBlock->forEnd->Evaluate(&localVarTable).getNumVal() ; localVarTable.GetVar(thisForBlock->forVar)= localVarTable.GetValue(thisForBlock->forVar).getNumVal() +thisForBlock->forStep->Evaluate(&localVarTable).getNumVal() )
             
         {
             
@@ -200,7 +200,7 @@ void ForStepProcessor::RunStep()
     void ForStepProcessor::ExecuteAStep()
     {
         bool once=true;
-        for ( ;getForVar() <=thisForBlock->forEnd->Evaluate().getNumVal() && once; varTable.GetVar(thisForBlock->forVar)= getForVar() +thisForBlock->forStep->Evaluate().getNumVal() ) {
+        for ( ;getForVar() <=thisForBlock->forEnd->Evaluate(&localVarTable).getNumVal() && once; localVarTable.GetVar(thisForBlock->forVar)= getForVar() +thisForBlock->forStep->Evaluate(&localVarTable).getNumVal() ) {
             
             
             
@@ -221,8 +221,8 @@ void ForStepProcessor::RunStep()
         popingLineHistory.PopExtra();
         
         
-        for (varTable.GetVar(thisForBlock->forVar) =  getForVar() +thisForBlock->forStep->Evaluate().getNumVal() ;
-             getForVar() <=thisForBlock->forEnd->Evaluate().getNumVal() ; varTable.GetVar(thisForBlock->forVar)= getForVar() +thisForBlock->forStep->Evaluate().getNumVal() ) {
+        for (localVarTable.GetVar(thisForBlock->forVar) =  getForVar() +thisForBlock->forStep->Evaluate(&localVarTable).getNumVal() ;
+             getForVar() <=thisForBlock->forEnd->Evaluate(&localVarTable).getNumVal() ; localVarTable.GetVar(thisForBlock->forVar)= getForVar() +thisForBlock->forStep->Evaluate(&localVarTable).getNumVal() ) {
             
             
             
