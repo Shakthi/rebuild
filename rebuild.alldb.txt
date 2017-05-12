@@ -1,5 +1,6 @@
 {
     "creator": "rebuild",
+    "globalVariable": null,
     "history": {
         "content": [
             {
@@ -6980,8 +6981,8 @@
             }
         ]
     },
-    "timestamp": "2017-05-08T19:27:57Z",
-    "timestampepoch": 1494271677,
+    "timestamp": "2017-05-10T03:25:24Z",
+    "timestampepoch": 1494386724,
     "type": "rebuildalldb",
     "version": "1.0"
 }
