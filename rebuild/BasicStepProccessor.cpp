@@ -12,7 +12,7 @@
 #include "Rebuild.hpp"
 #include "lineNoiseWrapper.hpp"
 #include "ParserWrapper.hpp"
-#include "quickbasic.h"
+#include "Value.h"
 #include "Logger.hpp"
 #include "SentenceHistory.hpp"
 

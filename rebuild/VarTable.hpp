@@ -11,7 +11,7 @@
 #include <map>
 #include <string>
 #include "nlohmann/json.hpp"
-class Value;
+#include "Value.h"
 
 class VarTable {
 

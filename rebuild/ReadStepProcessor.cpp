@@ -11,7 +11,7 @@
 #include "linenoise/lineNoiseWrapper.hpp"
 #include "Logger.hpp"
 
-#include "quickbasic.h"
+#include "Value.h"
 
 ReadStepProcessor::ReadStepProcessor(Rebuild* aRebuild, std::list<std::string>& alist,std::string aPrompt,VarTable & aVartable)
     : StepProcessor(aRebuild),prompt(aPrompt)

@@ -10,7 +10,7 @@
 #define ForStepProcessor_hpp
 
 #include "BasicStepProccessor.hpp"
-#include "quickbasic.h"
+#include "Value.h"
 #include "SentenceHistory.hpp"
 #include "AST.hpp"
 #include "VarTable.hpp"

@@ -7,7 +7,6 @@
 //
 
 #include "VarTable.hpp"
-#include "quickbasic.h"
 
 namespace  {
     Value localNullValue;
