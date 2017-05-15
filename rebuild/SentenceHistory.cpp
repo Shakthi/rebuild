@@ -87,10 +87,6 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
     }
     
     
-    
-    
-    
-
 
     //save current buffer only if it is at the begning
     if( historyPointer == history.begin())
@@ -183,6 +179,13 @@ void SentenceHistory::FromJson(nlohmann::json root)
     }
 }
 
+
+//void Pop()
+void SentenceHistory::PopHistory(const_iterator iter)
+{
+    history.erase(iter);
+
+}
 
 void PopingLineSentenceHistory::PopExtra()
 {

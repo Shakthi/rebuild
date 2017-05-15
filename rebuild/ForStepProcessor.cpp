@@ -47,7 +47,7 @@ void ForStepProcessor::RunStep()
                 if(statement)
                 {
                     thisForBlock->statements.push_back(statement);
-                    popingLineHistory.GetModifieableHistory().erase((++i).base());
+                    popingLineHistory.PopHistory((++i).base());
                     
                 }else
                 {
@@ -174,7 +174,7 @@ void ForStepProcessor::RunStep()
             if (customCommand->name == "popback")
             {
                 if(popingLineHistory.GetHistory().size())
-                    popingLineHistory.GetModifieableHistory().pop_front();
+                    popingLineHistory.PopHistory(popingLineHistory.GetHistory().begin());
                 return true;
                 
             }

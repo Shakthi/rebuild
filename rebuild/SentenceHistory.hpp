@@ -19,9 +19,11 @@
 
 class SentenceHistory:public LineHistory  {
 protected:
-    
+    typedef std::list<Sentence*>::iterator iterator;
+    typedef std::list<Sentence*>::const_iterator const_iterator;
+    typedef std::list<Sentence*>::reverse_iterator reverse_iterator;
     std::list<Sentence*> history;
-    std::list<Sentence*>::iterator historyPointer;
+    iterator historyPointer;
     
     
 public:
@@ -36,7 +38,7 @@ public:
     bool ChekDuplicate(class Sentence * st);
     void InternalAdd(class Sentence * st);
     
-     std::string Edit(std::string currentBuffer, MoveDirection direction,bool& success);
+    std::string Edit(std::string currentBuffer, MoveDirection direction,bool& success);
     
     
     const std::list<Sentence*> & GetHistory() const
@@ -44,11 +46,9 @@ public:
         return history;
     }
     
-     std::list<Sentence*> & GetModifieableHistory()
-    {
-        return history;
-    }
-    
+
+
+    void PopHistory( const_iterator iter);
     void Clear();
     
     Sentence *  GetCurrentStatment();
@@ -58,6 +58,9 @@ public:
     void FromJson(nlohmann::json);
     ~SentenceHistory(){}
 };
+
+
+
 
 class PopingLineSentenceHistory:public SentenceHistory
 {
