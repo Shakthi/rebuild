@@ -275,7 +275,12 @@ void BasicStepProcessor::RunStep()
         
     if(mstats == LineNoiseWrapper::EModificationStatus::history)
     {
+
+
         sentence = rebuild->history->GetCurrentStatment();
+
+        sentence= new Sentence(*sentence);
+
     }
     else
     {

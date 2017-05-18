@@ -31,7 +31,7 @@ struct Sentence
     static  Sentence * GetFromJson(nlohmann::json );
     
     
-    
+    //TODO make visitor pattern 
     template<class Archive>
     void serialize( Archive & ar )
     { ar( CEREAL_NVP(sourceText) ); }
@@ -47,12 +47,12 @@ struct Sentence
 
 struct Statement:Sentence
 {
-    
+
 };
 
 struct Command:Sentence
 {
-    
+
 };
 
 
@@ -62,6 +62,8 @@ struct UnProcessedStatment:public Statement {
     template<class Archive>
     void serialize( Archive & ar )
     { ar( CEREAL_NVP(sourceText)); }
+
+
 
 };
 
@@ -76,6 +78,8 @@ struct ErrorStatement:public Statement {
 
     
     ErrorStatement(){}
+
+
 
     
 };
@@ -134,7 +138,11 @@ struct ForStatment:public Statement {
         template<class Archive>
         void serialize( Archive & ar );
     
-     std::string dumpToString()const;
+        std::string dumpToString()const;
+
+
+
+        ForStatment(const ForStatment & other);
 
  
 };
@@ -178,6 +186,9 @@ public:
     
     std::string dumpToString()const;
 
+
+    PrintStatement(const PrintStatement & other);
+
 }
 ;
 
@@ -194,7 +205,8 @@ public:
     
     
     std::string dumpToString()const;
-    
+
+
 }
 ;
 
@@ -227,7 +239,10 @@ struct ExpressionList:Expression
 {
     std::vector<std::unique_ptr<Expression>> list;
     Value Evaluate( VarTable * varTable){return Value();}
-    
+
+    ExpressionList(const ExpressionList & other);
+
+
 };
 
 
@@ -244,7 +259,8 @@ struct BainaryExpression :Expression
     { ar( CEREAL_NVP(left),CEREAL_NVP(right),CEREAL_NVP_("::base",cereal::base_class<Expression>( this ) )); }
     
     
-    
+    BainaryExpression(const BainaryExpression & other);
+
 
 };
 
@@ -264,7 +280,9 @@ struct ArithmeticExpression:BainaryExpression {
     
     
      std::string dumpToString()const;
-    
+
+
+
     
 };
 
@@ -309,6 +327,9 @@ struct IfStatment:public Statement {
     template<class Archive>
     void serialize( Archive & ar )
     { ar( CEREAL_NVP(expression) ); }
+
+    IfStatment(const IfStatment & other);
+
 };
 
 
