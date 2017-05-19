@@ -380,6 +380,7 @@ std::string UnaryExpression::dumpToString()const
 
 
 
+
 }
 
 
@@ -497,4 +498,86 @@ void ForStatment::serialize( Archive & ar )
     + " to "
     + forEnd->dumpToString() + ((statements.empty())?"":":" );
 }
+
+
+ExpressionList::ExpressionList(const ExpressionList & other)
+{
+
+    for(const auto &st : other.list )
+    {
+        list.push_back( std::unique_ptr<Expression>(st->clone()));
+
+    }
+
+
+}
+
+
+UnaryExpression::UnaryExpression(const UnaryExpression & other)
+{
+
+    sub =std::unique_ptr<Expression>(other.sub->clone());
+    mOperator =other.mOperator;
+
+    
+
+}
+
+BainaryExpression::BainaryExpression(const BainaryExpression & other)
+{
+
+    left =std::unique_ptr<Expression>(other.left->clone());
+    right =std::unique_ptr<Expression>(other.left->clone());
+
+
+
+    
+}
+
+
+LetStatement::LetStatement(const LetStatement & other)
+{
+    rvalue =std::unique_ptr<Expression>(other.rvalue->clone());
+
+}
+
+IfStatment::IfStatment(const IfStatment & other)
+{
+    expression =std::unique_ptr<RelationalExpression>(other.expression->clone());
+
+}
+
+PrintStatement::PrintStatement(const PrintStatement & other)
+{
+    for(const auto &st : other.printitems )
+    {
+        printitems.push_back( std::unique_ptr<Expression>(st->clone()));
+
+    }
+    
+
+}
+
+
+
+ForStatment::ForStatment(const ForStatment & other)
+{
+
+    for(const auto &st : other.statements )
+    {
+        statements.push_back( st->clone());
+
+    }
+
+    forVar=other.forVar;
+    forBegin = std::unique_ptr<Expression>(other.forBegin->clone());
+    forEnd = std::unique_ptr<Expression>(other.forEnd->clone());
+    forStep = std::unique_ptr<Expression>(other.forStep->clone());
+
+
+
+
+}
+
+
 

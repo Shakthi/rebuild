@@ -279,7 +279,7 @@ void BasicStepProcessor::RunStep()
 
         sentence = rebuild->history->GetCurrentStatment();
 
-        sentence= new Sentence(*sentence);
+        sentence= sentence->clone();
 
     }
     else

@@ -23,8 +23,9 @@ struct Sentence
 {
     std::string sourceText; //Debug only
     virtual ~Sentence(){}
-    
-    
+    virtual Sentence  * clone ()const =0;
+
+
     
     
     nlohmann::json ToJson();
@@ -36,9 +37,8 @@ struct Sentence
     void serialize( Archive & ar )
     { ar( CEREAL_NVP(sourceText) ); }
     
-    
+
     virtual bool isEqual(const Sentence & that){ return this -> dumpToString()  == that.dumpToString();}
-    
     virtual std::string dumpToString()const {return sourceText;}
 
 
@@ -48,10 +48,14 @@ struct Sentence
 struct Statement:Sentence
 {
 
+    virtual Statement  * clone ()const = 0;
+
 };
 
 struct Command:Sentence
 {
+    virtual Command  * clone ()const = 0;
+
 
 };
 
@@ -63,6 +67,7 @@ struct UnProcessedStatment:public Statement {
     void serialize( Archive & ar )
     { ar( CEREAL_NVP(sourceText)); }
 
+    UnProcessedStatment  * clone ()const { return new UnProcessedStatment(*this); }
 
 
 };
@@ -78,6 +83,8 @@ struct ErrorStatement:public Statement {
 
     
     ErrorStatement(){}
+    ErrorStatement  * clone ()const { return new ErrorStatement(*this); }
+
 
 
 
@@ -90,6 +97,8 @@ struct EndStatement:public  Statement{
     template<class Archive>
     void serialize( Archive & ar )
     { ar( CEREAL_NVP(sourceText)); }
+    EndStatement  * clone ()const { return new EndStatement(*this); }
+
 
 };
 
@@ -98,16 +107,22 @@ struct NextStatement:public  Statement{
     template<class Archive>
     void serialize( Archive & ar )
     { ar( CEREAL_NVP(sourceText)); }
+    NextStatement  * clone ()const { return new NextStatement(*this); }
+
 
 };
 
 struct ListCommand:public  Command{
-    
+    ListCommand  * clone ()const { return new ListCommand(*this); }
+
+
 };
 
 
 struct CustomCommand:public  Command{
     std::string name;
+    CustomCommand  * clone ()const { return new CustomCommand(*this); }
+
 };
 
 
@@ -119,6 +134,9 @@ struct RemarkStatement:public  Statement{
     template<class Archive>
     void serialize( Archive & ar )
     { ar( CEREAL_NVP(comments)); ar( CEREAL_NVP(sourceText));  }
+
+    RemarkStatement  * clone ()const { return new RemarkStatement(*this); }
+
 };
 
 
@@ -140,9 +158,10 @@ struct ForStatment:public Statement {
     
         std::string dumpToString()const;
 
-
+        ForStatment(){}
 
         ForStatment(const ForStatment & other);
+        ForStatment  * clone ()const { return new ForStatment(*this); }
 
  
 };
@@ -164,8 +183,9 @@ public:
     }
     
     std::string dumpToString()const;
+    ReadStatement  * clone ()const { return new ReadStatement(*this); }
 
-    
+
 };
 
 
@@ -188,6 +208,9 @@ public:
 
 
     PrintStatement(const PrintStatement & other);
+    PrintStatement(){}
+    PrintStatement  * clone ()const { return new PrintStatement(*this); }
+
 
 }
 ;
@@ -205,6 +228,7 @@ public:
     
     
     std::string dumpToString()const;
+    PrintElementStatement  * clone ()const { return new PrintElementStatement(*this); }
 
 
 }
@@ -220,6 +244,10 @@ struct Expression
     Value::Evaluetype valuetype;
 
     virtual Value Evaluate(VarTable * varTable)=0;
+    virtual Expression *clone() const=0;
+
+
+
     virtual ~Expression(){}
     
     
@@ -239,10 +267,11 @@ struct ExpressionList:Expression
 {
     std::vector<std::unique_ptr<Expression>> list;
     Value Evaluate( VarTable * varTable){return Value();}
+    ExpressionList * clone ()const { return new ExpressionList(*this); }
 
     ExpressionList(const ExpressionList & other);
 
-
+    ExpressionList(){}
 };
 
 
@@ -260,6 +289,7 @@ struct BainaryExpression :Expression
     
     
     BainaryExpression(const BainaryExpression & other);
+    BainaryExpression(){};
 
 
 };
@@ -268,6 +298,7 @@ struct ArithmeticExpression:BainaryExpression {
     
     enum class operatorType{ plus,minus,multiply,devide} mOperator;
     Value Evaluate( VarTable * varTable);
+    ArithmeticExpression * clone ()const { return new ArithmeticExpression(*this); }
 
     
     
@@ -302,7 +333,9 @@ struct RelationalExpression :BainaryExpression
         inputype = ainputtype;
     }
     Value Evaluate( VarTable * varTable);
-    
+    RelationalExpression * clone ()const { return new RelationalExpression(*this); }
+
+
     template<class Archive>
     void serialize( Archive & ar )
     {
@@ -329,6 +362,9 @@ struct IfStatment:public Statement {
     { ar( CEREAL_NVP(expression) ); }
 
     IfStatment(const IfStatment & other);
+    IfStatment  * clone ()const { return new IfStatment(*this); }
+
+    IfStatment(){}
 
 };
 
@@ -338,6 +374,7 @@ struct UnaryExpression :Expression
     std::unique_ptr<Expression> sub;
     enum class operatorType{ minus,grouping} mOperator;
     Value Evaluate( VarTable * varTable)
+    
     {
 
         switch(mOperator)
@@ -352,7 +389,11 @@ struct UnaryExpression :Expression
         }
     
     }
+    UnaryExpression * clone ()const { return new UnaryExpression(*this); }
     
+    UnaryExpression(const UnaryExpression & that);
+    UnaryExpression(){}
+
     
     template<class Archive>
     void serialize( Archive & ar )
@@ -372,7 +413,9 @@ struct TerminalExpression :Expression
     {
         return sub;
     }
-    
+    TerminalExpression * clone ()const { return new TerminalExpression(*this); }
+
+
     template<class Archive>
     void serialize( Archive & ar )
     {
@@ -439,8 +482,9 @@ struct GetExpression :Expression
 {
     std::string varName;
     Value Evaluate( VarTable * varTable);
-    
-    
+    GetExpression * clone ()const { return new GetExpression(*this); }
+
+
     
     template<class Archive>
     void serialize( Archive & ar )
@@ -473,8 +517,11 @@ public:
     std::string variablename;
     
     std::unique_ptr<Expression> rvalue;
+    LetStatement  * clone ()const { return new LetStatement(*this); }
+    LetStatement(const LetStatement & that);
+    LetStatement(){}
 
-    
+
     
     template<class Archive>
     void serialize( Archive & ar )
