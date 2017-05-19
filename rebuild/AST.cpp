@@ -501,6 +501,8 @@ void ForStatment::serialize( Archive & ar )
 
 
 ExpressionList::ExpressionList(const ExpressionList & other)
+:Expression(other)
+
 {
 
     for(const auto &st : other.list )
@@ -514,6 +516,7 @@ ExpressionList::ExpressionList(const ExpressionList & other)
 
 
 UnaryExpression::UnaryExpression(const UnaryExpression & other)
+:Expression(other)
 {
 
     sub =std::unique_ptr<Expression>(other.sub->clone());
@@ -524,6 +527,8 @@ UnaryExpression::UnaryExpression(const UnaryExpression & other)
 }
 
 BainaryExpression::BainaryExpression(const BainaryExpression & other)
+:Expression(other)
+
 {
 
     left =std::unique_ptr<Expression>(other.left->clone());
@@ -536,18 +541,24 @@ BainaryExpression::BainaryExpression(const BainaryExpression & other)
 
 
 LetStatement::LetStatement(const LetStatement & other)
+:Statement(other)
+
 {
     rvalue =std::unique_ptr<Expression>(other.rvalue->clone());
 
 }
 
 IfStatment::IfStatment(const IfStatment & other)
+:Statement(other)
+
 {
     expression =std::unique_ptr<RelationalExpression>(other.expression->clone());
 
 }
 
 PrintStatement::PrintStatement(const PrintStatement & other)
+:Statement(other)
+
 {
     for(const auto &st : other.printitems )
     {
@@ -561,6 +572,7 @@ PrintStatement::PrintStatement(const PrintStatement & other)
 
 
 ForStatment::ForStatment(const ForStatment & other)
+:Statement(other)
 {
 
     for(const auto &st : other.statements )
