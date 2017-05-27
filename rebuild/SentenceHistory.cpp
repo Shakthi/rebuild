@@ -181,9 +181,12 @@ void SentenceHistory::FromJson(nlohmann::json root)
 
 
 //void Pop()
-void SentenceHistory::PopHistory(const_iterator iter)
+void SentenceHistory::PopHistory()
 {
-    history.erase(iter);
+    if (!history.empty()) {
+        history.erase(history.begin());
+    }
+
 
 }
 

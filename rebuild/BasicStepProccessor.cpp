@@ -169,7 +169,7 @@ bool BasicStepProcessor::Process(Command  * result)
             
             std::cout<<std::endl;
             int count=1;
-            for (auto i=rebuild->history->GetHistory().rbegin(); i!=rebuild->history->GetHistory().rend(); i++) {
+            for (auto i=rebuild->history->rbegin(); i!=rebuild->history->rend(); i++) {
                 std::cout<<count<<" "<<(*i)->dumpToString()<<std::endl;
                 count++;
             }

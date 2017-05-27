@@ -88,13 +88,13 @@ void IfStepProcessor::ExecuteHistory()
     popingLineHistory.PopExtra();
     
     
-  
-    for( auto statement :popingLineHistory.GetHistory() )
-    {
-        
-        Evaluate(dynamic_cast<Statement*>(statement));
-    }
-        
+    assert(false);//TODO
+//    for(  const auto & statement :popingLineHistory.GetHistory() )
+//    {
+//        
+//        Evaluate(dynamic_cast<Statement*>(statement.get()));
+//    }
+
     
     
 }

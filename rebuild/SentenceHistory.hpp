@@ -41,14 +41,14 @@ public:
     std::string Edit(std::string currentBuffer, MoveDirection direction,bool& success);
     
     
-    const std::list<Sentence*> & GetHistory() const
-    {
-        return history;
-    }
-    
+
+    reverse_iterator rbegin(){ return history.rbegin();}
+    reverse_iterator rend(){ return history.rend();}
 
 
-    void PopHistory( const_iterator iter);
+
+
+    void PopHistory( );
     void Clear();
     
     Sentence *  GetCurrentStatment();

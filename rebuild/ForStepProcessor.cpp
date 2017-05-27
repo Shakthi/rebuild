@@ -41,7 +41,7 @@ void ForStepProcessor::RunStep()
             ExecuteHistory();
             
             thisForBlock->statements.clear();
-            for (auto i =popingLineHistory.GetHistory().rbegin(); i !=popingLineHistory.GetHistory().rend();) {
+            for (auto i =popingLineHistory.rbegin(); i !=popingLineHistory.rend();i++) {
                 
                 auto statement = dynamic_cast<Statement*>(*i);
                 if(statement)
@@ -156,7 +156,7 @@ void ForStepProcessor::RunStep()
             
             std::cout<<std::endl;
             int count=1;
-            for (auto i= popingLineHistory.GetHistory().rbegin(); i!=popingLineHistory.GetHistory().rend(); i++) {
+            for (auto i= popingLineHistory.rbegin(); i!=popingLineHistory.rend(); i++) {
                 std::cout<<count<<" "<<(*i)->dumpToString()<<std::endl;
                 count++;
             }
@@ -172,8 +172,7 @@ void ForStepProcessor::RunStep()
             
             if (customCommand->name == "popback")
             {
-                if(popingLineHistory.GetHistory().size())
-                    popingLineHistory.PopHistory(popingLineHistory.GetHistory().begin());
+                    popingLineHistory.PopHistory();
                 return true;
                 
             }
@@ -203,7 +202,7 @@ void ForStepProcessor::RunStep()
             
             
             
-            for (auto i=popingLineHistory.GetHistory().rbegin(); i != popingLineHistory.GetHistory().rend(); i++) {
+            for (auto i=popingLineHistory.rbegin(); i != popingLineHistory.rend(); i++) {
                 
                 Evaluate(dynamic_cast<Statement*>((*i)));
                 
@@ -224,7 +223,7 @@ void ForStepProcessor::RunStep()
             
             
             
-            for (auto i=popingLineHistory.GetHistory().rbegin(); i != popingLineHistory.GetHistory().rend(); i++) {
+            for (auto i=popingLineHistory.rbegin(); i != popingLineHistory.rend(); i++) {
                 
                 Evaluate(dynamic_cast<Statement*>((*i)));
                 
