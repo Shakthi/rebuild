@@ -63,9 +63,11 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         {
         
             ForStepProcessor * processor = new ForStepProcessor(rebuild,forStatemnt,
-                                                                &localVarTable);
+                                                                &localVarTable,ForStepProcessor::InitType::reload);
             processor->Init();
-            processor->ExecuteStatments(forStatemnt);
+           processor->ExecuteStatments(forStatemnt);
+
+            
 
         }
         else

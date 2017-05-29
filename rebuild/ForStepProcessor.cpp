@@ -46,13 +46,11 @@ void ForStepProcessor::RunStep()
                 auto statement = dynamic_cast<Statement*>(*i);
                 if(statement)
                 {
-                    thisForBlock->statements.push_back(statement);
-                    popingLineHistory.PopHistory((++i).base());
-                    
-                }else
-                {
-                    i++;
+                    thisForBlock->statements.push_back(statement->clone());
                 }
+
+
+                    i++;
                 
             }
             
@@ -129,6 +127,7 @@ void ForStepProcessor::RunStep()
     
     void ForStepProcessor::ExecuteStatments(ForStatment  * thisForBlock)
     {
+        //localVarTable.SetSuper(&outer);
         
         
         for (localVarTable.GetVar(thisForBlock->forVar) =  localVarTable.GetVar(thisForBlock->forVar).getNumVal();
@@ -213,8 +212,7 @@ void ForStepProcessor::RunStep()
             once=false   ;
 
         }
-    
-    }
+     }
 
     void ForStepProcessor::ExecuteHistory()
     {

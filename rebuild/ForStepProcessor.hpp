@@ -28,15 +28,20 @@ class ForStepProcessor : public BasicStepProcessor {
     
 public:
     
-    enum class InitType {normal,stepin};
+    enum class InitType {normal,stepin,reload};
     
-    ForStepProcessor(Rebuild* aRebuild,ForStatment * forStatement,VarTable * super,InitType initType = InitType::normal)
+    ForStepProcessor(Rebuild* aRebuild, ForStatment * forStatement,VarTable * super,InitType initType = InitType::normal)
     : BasicStepProcessor(aRebuild,super),thisForBlock(forStatement)
     {
-        
-        for (auto st :forStatement->statements ) {
-            popingLineHistory.Add(st);
+        if(initType!= InitType::reload){
+            for (auto st :forStatement->statements ) {
+                popingLineHistory.Add(st);
+            }
         }
+
+
+       
+
 
     }
     
@@ -59,6 +64,8 @@ public:
     
     void ExecuteHistory();
     void ExecuteAStep();
+
+    //should be static
     void ExecuteStatments(ForStatment  * forstatement);
     
     virtual bool Process(class Command* input);
