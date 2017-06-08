@@ -31,7 +31,7 @@ public:
     enum class InitType {normal,stepin,reload};
     
     ForStepProcessor(Rebuild* aRebuild, ForStatment * forStatement,VarTable * superTable,InitType initType = InitType::normal)
-    : BasicStepProcessor(aRebuild,superTable),thisForBlock(forStatement)
+    : BasicStepProcessor(aRebuild,superTable),thisForBlock(forStatement),popingLineHistory(aRebuild->GetHistoryStack())
     {
         history = &popingLineHistory;
 
@@ -41,8 +41,6 @@ public:
             }
         }
 
-
-       
 
 
     }

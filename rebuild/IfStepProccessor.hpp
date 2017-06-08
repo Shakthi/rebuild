@@ -29,7 +29,7 @@ class IfStepProcessor : public BasicStepProcessor {
 
 public:
     IfStepProcessor(Rebuild* aRebuild,IfStatment * aifStatment,VarTable * superVarTable)
-    : BasicStepProcessor(aRebuild,superVarTable),ifStatment(aifStatment)
+    : BasicStepProcessor(aRebuild,superVarTable),ifStatment(aifStatment),popingLineHistory(aRebuild->GetHistoryStack())
     {
         // getForVar()=forblock.forBegin->;
        // isInited=false;

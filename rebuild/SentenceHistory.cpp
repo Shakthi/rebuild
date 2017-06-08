@@ -82,7 +82,7 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
     assert(!history.empty());
     
     if(history.size() == 1) {  //No other element than current line
-        success =false;
+        success = false;
         return currentBuffer;
     }
     
@@ -92,7 +92,7 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
     if( historyPointer == history.begin())
     {
         delete *historyPointer;
-        auto anProcessedStatment= new  UnProcessedStatment;
+        auto anProcessedStatment = new  UnProcessedStatment;
         anProcessedStatment->sourceText = currentBuffer;
         *historyPointer = anProcessedStatment;
     }
@@ -214,6 +214,62 @@ void PopingLineSentenceHistory::AddExtra(Sentence * entry)
     
 }
 
+std::string PopingLineSentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,bool& success)
+{
+    if(!historyStackPointerInited){
+        historyStackPointer =historyStack.rbegin();
+        historyStackPointerInited = true;
+    }
+
+    if(*historyStackPointer == this){
+
+
+    success = true;//current buffer is changed
+
+    assert(!history.empty());
+
+    if(history.size() == 1) {  //No other element than current line
+        success = false;
+        return currentBuffer;
+    }
+
+
+
+    //save current buffer only if it is at the begning
+    if( historyPointer == history.begin())
+    {
+        delete *historyPointer;
+        auto anProcessedStatment = new  UnProcessedStatment;
+        anProcessedStatment->sourceText = currentBuffer;
+        *historyPointer = anProcessedStatment;
+    }
+
+
+
+    if (direction == MoveDirection::next) {
+
+        if (historyPointer != history.begin())
+            historyPointer --;
+        else
+            success = false;
+
+    } else {
+
+        historyPointer ++;
+        if (historyPointer == history.end()) {
+
+            historyStackPointer++;
+            historyPointerForStacks = (*historyStackPointer)->begin();
+            return (*historyPointerForStacks)->dumpToString();
+        }
+    }
+
+
+    return (*historyPointer)->dumpToString();
+    }
+    else return "";
+
+}
 
 void PopingLineSentenceHistory::Add(Sentence * entry)
 {

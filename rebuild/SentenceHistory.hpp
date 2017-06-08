@@ -24,6 +24,7 @@ protected:
     typedef std::list<Sentence*>::reverse_iterator reverse_iterator;
     std::list<Sentence*> history;
     iterator historyPointer;
+    const_iterator historyPointerForStacks;
     
     
 public:
@@ -46,6 +47,8 @@ public:
     reverse_iterator rend(){ return history.rend();}
 
 
+    const_iterator begin(){ return history.begin();}
+    const_iterator end(){ return history.end();}
 
 
     void PopHistory( );
@@ -65,8 +68,20 @@ public:
 class PopingLineSentenceHistory:public SentenceHistory
 {
     int extracount;
+
+
+    const std::vector<class SentenceHistory*> & historyStack;
+
+    std::vector<class SentenceHistory*>::const_reverse_iterator historyStackPointer;
+    bool historyStackPointerInited;
+
 public:
-    PopingLineSentenceHistory():extracount(0){}
+    PopingLineSentenceHistory(const std::vector<class SentenceHistory*> & stack)
+    :extracount(0),historyStack(stack),historyStackPointerInited(false){}
+
+    std::string Edit(std::string currentBuffer, MoveDirection direction,bool& success);
+
+
     void Add(class Sentence * st);
     void AddExtra(class Sentence * st);
     void PopExtra();
