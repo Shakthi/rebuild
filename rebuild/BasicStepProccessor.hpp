@@ -32,6 +32,7 @@ public:
     BasicStepProcessor(Rebuild* aRebuild,VarTable * varTable)
         : StepProcessor(aRebuild)
     {
+        history = aRebuild->history;
 
         localVarTable.SetSuper(varTable);
     }

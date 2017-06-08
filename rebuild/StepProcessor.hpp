@@ -15,6 +15,8 @@
 class StepProcessor : public Rebuild::Serialised {
 protected:
     class Rebuild* rebuild;
+    class SentenceHistory *  history;
+
 
 public:
     StepProcessor(Rebuild* aRebuild)
@@ -22,6 +24,10 @@ public:
     {
     }
 
+
+     SentenceHistory * GetHistory()const{
+        return history;
+    }
     virtual void RunStep() {}
     void exitProcessing();
     virtual ~StepProcessor() {}

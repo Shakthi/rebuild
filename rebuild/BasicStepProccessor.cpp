@@ -169,7 +169,7 @@ bool BasicStepProcessor::Process(Command  * result)
             
             std::cout<<std::endl;
             int count=1;
-            for (auto i=rebuild->history->rbegin(); i!=rebuild->history->rend(); i++) {
+            for (auto i=history->rbegin(); i!=history->rend(); i++) {
                 std::cout<<count<<" "<<(*i)->dumpToString()<<std::endl;
                 count++;
             }
@@ -195,7 +195,7 @@ bool BasicStepProcessor::Process(Command  * result)
             }
             else if (customCommand->name == "stepin")
             {
-                Sentence * sentence = rebuild->history->GetCurrentStatment();
+                Sentence * sentence = history->GetCurrentStatment();
                 auto  forStatment =  dynamic_cast<ForStatment*>(sentence);
                 if(forStatment)
                 {
@@ -279,7 +279,7 @@ void BasicStepProcessor::RunStep()
     {
 
 
-        sentence = rebuild->history->GetCurrentStatment();
+        sentence = history->GetCurrentStatment();
 
         sentence= sentence->clone();
 
@@ -294,12 +294,12 @@ void BasicStepProcessor::RunStep()
 
     if(Evaluate(dynamic_cast<Statement*>(sentence)))
     {
-        rebuild->history->Add(sentence);
+        history->Add(sentence);
 
     }else if(Process(dynamic_cast<Command*>(sentence)))
     {
         if (!proceedStroke) {
-            rebuild->history->Add(sentence);
+            history->Add(sentence);
         }
         
     }else assert(false && "Should not happan");

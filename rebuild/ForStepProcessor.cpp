@@ -50,8 +50,7 @@ void ForStepProcessor::RunStep()
                 }
 
 
-                    i++;
-                
+
             }
             
             
@@ -155,13 +154,29 @@ void ForStepProcessor::RunStep()
         if (statemnt) {
             
             std::cout<<std::endl;
-            int count=1;
-            for (auto i= popingLineHistory.rbegin(); i!=popingLineHistory.rend(); i++) {
-                std::cout<<count<<" "<<(*i)->dumpToString()<<std::endl;
-                count++;
+            int count=1,tabstop=0;
+
+            auto historyStackIter  =rebuild->GetHistoryStack().begin();
+            auto historyStackIterEnd  =rebuild->GetHistoryStack().end();
+
+
+            while (historyStackIter!=historyStackIterEnd) {
+
+                for (auto i= (*historyStackIter)->rbegin(); i!=(*historyStackIter)->rend(); i++) {
+
+
+
+                    std::cout<<count;
+
+                    for(int i=0;i<tabstop+1;i++)
+                        std::cout<<" ";
+                    std::cout<<(*i)->dumpToString()<<std::endl;
+                    count++;
+                }
+                historyStackIter++; tabstop++;
             }
-            
-            
+
+
             
             return true;
         }

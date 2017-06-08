@@ -30,9 +30,11 @@ public:
     
     enum class InitType {normal,stepin,reload};
     
-    ForStepProcessor(Rebuild* aRebuild, ForStatment * forStatement,VarTable * super,InitType initType = InitType::normal)
-    : BasicStepProcessor(aRebuild,super),thisForBlock(forStatement)
+    ForStepProcessor(Rebuild* aRebuild, ForStatment * forStatement,VarTable * superTable,InitType initType = InitType::normal)
+    : BasicStepProcessor(aRebuild,superTable),thisForBlock(forStatement)
     {
+        history = &popingLineHistory;
+
         if(initType!= InitType::reload){
             for (auto st :forStatement->statements ) {
                 popingLineHistory.Add(st);

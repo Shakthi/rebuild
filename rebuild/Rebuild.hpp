@@ -32,6 +32,7 @@ class Rebuild {
     
 
     std::stack<class StepProcessor*> processorStack;
+    std::vector<class SentenceHistory *> historyStack;
     std::vector<std::string> arglist;
 
     VarTable varTable;
@@ -48,7 +49,10 @@ public:
         virtual void FromJson(nlohmann::json) = 0;
     };
 
+    const std::vector<class SentenceHistory*> & GetHistoryStack(){ return historyStack ;}
+
     bool IsAlive() { return alive; }
+
     ExitStatus GetExitStatus() { return exitStatus; }
 
     Rebuild(const std::vector<std::string> & argv);
@@ -56,6 +60,7 @@ public:
     void Save();
     void SaveIfLatest();
     void Load();
+
 
     void RunStep();
     void exitProcessing();
