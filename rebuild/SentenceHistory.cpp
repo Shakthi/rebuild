@@ -14,7 +14,7 @@
 SentenceHistory::SentenceHistory()
 {
     historyPointer = history.begin();
-    
+
 
 }
 
@@ -22,41 +22,41 @@ SentenceHistory::SentenceHistory()
 
 bool SentenceHistory::ChekDuplicate( Sentence * entry)
 {
-    
-        if (!history.empty())
-            if (history.front()->isEqual(*entry) ) {
-                return false;
-            }
-    
+
+    if (!history.empty())
+        if (history.front()->isEqual(*entry) ) {
+            return false;
+        }
+
     return true;
 }
 
 void SentenceHistory::Add(Sentence * entry)
 {
-    
-    
+
+
     if(ChekDuplicate(entry))
     {
         InternalAdd(entry);
     }
-    
+
 }
 
 void SentenceHistory::InternalAdd(Sentence * entry)
 {
     history.push_front(entry);
-    
+
 }
 
 void SentenceHistory::ReInit()
 {
-    
-    
-    
+
+
+
     InternalAdd(new UnProcessedStatment);
     historyPointer = history.begin();
 
-    
+
 }
 
 
@@ -64,8 +64,8 @@ void SentenceHistory::ReInitDone()
 {
     if(historyPointer == history.begin())
         historyPointer++;
-        
-        
+
+
     delete history.front();
     history.pop_front();
 
@@ -73,20 +73,20 @@ void SentenceHistory::ReInitDone()
 
 std::string
 SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
-                     bool& success)
+                      bool& success)
 {
-    
-    
+
+
     success = true;//current buffer is changed
-    
+
     assert(!history.empty());
-    
+
     if(history.size() == 1) {  //No other element than current line
         success = false;
         return currentBuffer;
     }
-    
-    
+
+
 
     //save current buffer only if it is at the begning
     if( historyPointer == history.begin())
@@ -96,29 +96,29 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
         anProcessedStatment->sourceText = currentBuffer;
         *historyPointer = anProcessedStatment;
     }
-        
-        
-    
+
+
+
     if (direction == MoveDirection::next) {
-        
+
         if (historyPointer != history.begin())
             historyPointer --;
         else
             success = false;
-        
+
     } else {
-        
+
         historyPointer ++;
         if (historyPointer == history.end()) {
             success = false;
             historyPointer --;
         }
     }
-        
-        
-    
-   
-    
+
+
+
+
+
     return (*historyPointer)->dumpToString();
 }
 
@@ -138,44 +138,44 @@ nlohmann::json
 SentenceHistory::ToJson()
 {
     using namespace nlohmann;
-    
+
     json root;
     json rootContent;
-    
- 
-    
+
+
+
     for (auto iter =history.begin(); iter!=history.end(); iter++) {
         rootContent.push_back((*iter)->ToJson());
     }
-    
-    
-    
+
+
+
     root["content"] = rootContent;
-    
+
     root["version"] = 2;
-    
-    
-    
-    
+
+
+
+
     root["type"] = "historyfile";
     root["creator"] = "rebuild";
-    
-    
-    
+
+
+
     return root;
 }
 void SentenceHistory::FromJson(nlohmann::json root)
 {
     using namespace nlohmann;
-    
+
     json content = root["content"];
-    
+
     assert(root["version"].get<int>() == 2);
-    
+
     for (int i = 0; i < content.size(); i++) {
-        
+
         InternalAdd(Sentence::GetFromJson(content[content.size()-i-1]));
-        
+
     }
 }
 
@@ -190,91 +190,133 @@ void SentenceHistory::PopHistory()
 
 }
 
+PopingLineSentenceHistory::PopingLineSentenceHistory(const std::vector<class SentenceHistory*> & stack)
+:extracount(0),historyStack(stack),stackPointerInited(false)
+{
+
+    historyPointerForStack = SentenceHistory::begin();
+
+
+}
+
 void PopingLineSentenceHistory::PopExtra()
 {
     for (int i=0; i<extracount; i++)
     {
         if(historyPointer== history.begin())
             historyPointer++;
-        
+
         delete history.front();
         history.pop_front();
-        
-            
+
+
     }
     extracount=0;
-    
-    
+
+
 }
 
 void PopingLineSentenceHistory::AddExtra(Sentence * entry)
 {
     InternalAdd(entry);
     extracount++;
-    
+
 }
 
-std::string PopingLineSentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,bool& success)
+void PopingLineSentenceHistory::InitHistoryStack()
 {
-    if(!historyStackPointerInited){
-        historyStackPointer =historyStack.rbegin();
-        historyStackPointerInited = true;
+
+    //stack pointer cannot be initialized
+    if (!stackPointerInited) {
+        stackPointer = historyStack.rbegin();
+        stackPointerInited = true;
     }
-
-    if(*historyStackPointer == this){
-
-
-    success = true;//current buffer is changed
-
-    assert(!history.empty());
-
-    if(history.size() == 1) {  //No other element than current line
-        success = false;
-        return currentBuffer;
-    }
-
-
-
-    //save current buffer only if it is at the begning
-    if( historyPointer == history.begin())
-    {
-        delete *historyPointer;
-        auto anProcessedStatment = new  UnProcessedStatment;
-        anProcessedStatment->sourceText = currentBuffer;
-        *historyPointer = anProcessedStatment;
-    }
-
-
-
-    if (direction == MoveDirection::next) {
-
-        if (historyPointer != history.begin())
-            historyPointer --;
-        else
-            success = false;
-
-    } else {
-
-        historyPointer ++;
-        if (historyPointer == history.end()) {
-
-            historyStackPointer++;
-            historyPointerForStacks = (*historyStackPointer)->begin();
-            return (*historyPointerForStacks)->dumpToString();
-        }
-    }
-
-
-    return (*historyPointer)->dumpToString();
-    }
-    else return "";
-
 }
+
+std::string PopingLineSentenceHistory::Edit(std::string currentBuffer,
+                                            MoveDirection direction,
+                                            bool &success) {
+  //     <---move Next ->move prevoious
+  //    ABCDEFGHI | abcdef
+  //    historyPointer++->
+  //    stackPointer++->
+
+  success = true;
+  InitHistoryStack();
+
+  if (*stackPointer != this) {
+
+    if (direction == MoveDirection::prev) {
+      const_iterator previousPos = historyPointerForStack;
+      ++previousPos;
+      if (previousPos != (*stackPointer)->end()) // not yet at the end
+        historyPointerForStack = previousPos;
+      else {
+        stack_iterator previousStack = stackPointer;
+        previousStack++;
+
+        if (previousStack == historyStack.rend()) {
+          success = false;
+        } else {
+          stackPointer = previousStack;
+          historyPointerForStack = (*stackPointer)->begin();
+          assert(historyPointerForStack != (*stackPointer)->end());
+        }
+      }
+
+    } else if (direction == MoveDirection::next) {
+
+      if (historyPointerForStack !=
+          (*stackPointer)->begin()) // not yet at the begin
+        historyPointerForStack--;
+      else {
+
+        if (stackPointer == historyStack.rbegin()) {
+          success = false;
+        } else {
+          stackPointer--;
+
+          const_iterator lastIterotr = (*stackPointer)->end();
+          assert(lastIterotr != (*stackPointer)->begin());
+          lastIterotr--;
+
+          historyPointerForStack = lastIterotr;
+
+          if (*stackPointer == this) {
+            iterator nextHistoryPointer = history.end();
+            nextHistoryPointer--;
+            historyPointer = nextHistoryPointer;
+          }
+        }
+      }
+    }
+
+    return (*historyPointerForStack)->dumpToString();
+
+  } else {
+
+    std::string result =
+        SentenceHistory::Edit(currentBuffer, direction, success);
+    if (!success && direction == MoveDirection::prev) {
+
+      stackPointer++;
+      assert(stackPointer != historyStack.rend());
+      historyPointerForStack = (*stackPointer)->begin();
+      assert(historyPointerForStack != (*stackPointer)->end());
+      result = (*historyPointerForStack)->dumpToString();
+      success = true;
+    }
+
+    return result;
+  }
+}
+
+
 
 void PopingLineSentenceHistory::Add(Sentence * entry)
 {
-  
-
+    
+    
     
     if (ChekDuplicate(entry))
     {
@@ -282,7 +324,7 @@ void PopingLineSentenceHistory::Add(Sentence * entry)
         
     }
     
-   
+    
     
     
     
