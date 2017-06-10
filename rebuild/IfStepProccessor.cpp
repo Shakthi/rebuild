@@ -34,8 +34,7 @@ void IfStepProcessor::RunStep()
         
         BasicParser parser;
         Sentence * result =  parser.Parse(answer);
-        popingLineHistory.PopExtra();
-        
+
         auto nextStatemnt = dynamic_cast< NextStatement*>(result);
         if (nextStatemnt) {
             delete result;
@@ -47,7 +46,7 @@ void IfStepProcessor::RunStep()
         auto errorStatemnt = dynamic_cast< ErrorStatement*>(result);
         if (errorStatemnt) {
             BasicStepProcessor::Evaluate(errorStatemnt);
-            popingLineHistory.AddExtra(errorStatemnt);
+            popingLineHistory.Add(errorStatemnt);
             return;
             
             
@@ -85,7 +84,6 @@ void IfStepProcessor::RunStep()
 
 void IfStepProcessor::ExecuteHistory()
 {
-    popingLineHistory.PopExtra();
     
     
     assert(false);//TODO

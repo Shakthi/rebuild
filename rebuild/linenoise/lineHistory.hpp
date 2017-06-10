@@ -68,7 +68,6 @@ class PopingLineHistoryStr:public LineHistoryStr
 public:
     PopingLineHistoryStr():extracount(0){}
     void Add(std::string entry);
-    void AddExtra(std::string entry);
     void PopExtra();
 
 };

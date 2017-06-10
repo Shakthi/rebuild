@@ -33,8 +33,7 @@ void ForStepProcessor::RunStep()
         
         BasicParser parser;
         Sentence * result =  parser.Parse(answer);
-        popingLineHistory.PopExtra();
-        
+
         auto nextStatemnt = dynamic_cast< NextStatement*>(result);
         if (nextStatemnt) {
             delete result;
@@ -48,15 +47,7 @@ void ForStepProcessor::RunStep()
                 {
                     thisForBlock->statements.push_back(statement->clone());
                 }
-
-
-
             }
-            
-            
-            
-            
-            
             
             exitProcessing();
             return;
@@ -73,10 +64,8 @@ void ForStepProcessor::RunStep()
         auto errorStatemnt = dynamic_cast< ErrorStatement*>(result);
         if (errorStatemnt) {
             BasicStepProcessor::Evaluate(errorStatemnt);
-            popingLineHistory.AddExtra(errorStatemnt);
+            popingLineHistory.Add(errorStatemnt);
             return;
-            
-            
         }
                
         {
@@ -94,7 +83,6 @@ void ForStepProcessor::RunStep()
                 
                 BasicParser parser;
                 Sentence * result =  parser.Parse(answer);
-                popingLineHistory.PopExtra();
                 
                 auto endStatement = dynamic_cast< EndStatement*>(result);
                 if (endStatement) {
@@ -106,7 +94,7 @@ void ForStepProcessor::RunStep()
                 auto errorStatemnt = dynamic_cast< ErrorStatement*>(result);
                 if (errorStatemnt) {
                     BasicStepProcessor::Evaluate(errorStatemnt);
-                    popingLineHistory.AddExtra(errorStatemnt);
+                    popingLineHistory.Add(errorStatemnt);
                     return;
                     
                     
@@ -163,8 +151,6 @@ void ForStepProcessor::RunStep()
             while (historyStackIter!=historyStackIterEnd) {
 
                 for (auto i= (*historyStackIter)->rbegin(); i!=(*historyStackIter)->rend(); i++) {
-
-
 
                     std::cout<<count;
 
@@ -230,7 +216,6 @@ void ForStepProcessor::RunStep()
 
     void ForStepProcessor::ExecuteHistory()
     {
-        popingLineHistory.PopExtra();
         
         
         for (localVarTable.GetVar(thisForBlock->forVar) =  getForVar() +thisForBlock->forStep->Evaluate(&localVarTable).getNumVal() ;

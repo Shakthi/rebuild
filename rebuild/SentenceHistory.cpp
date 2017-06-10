@@ -191,7 +191,7 @@ void SentenceHistory::PopHistory()
 }
 
 PopingLineSentenceHistory::PopingLineSentenceHistory(const std::vector<class SentenceHistory*> & stack)
-:extracount(0),historyStack(stack),stackPointerInited(false)
+:historyStack(stack),stackPointerInited(false)
 {
 
     historyPointerForStack = SentenceHistory::begin();
@@ -199,29 +199,7 @@ PopingLineSentenceHistory::PopingLineSentenceHistory(const std::vector<class Sen
 
 }
 
-void PopingLineSentenceHistory::PopExtra()
-{
-    for (int i=0; i<extracount; i++)
-    {
-        if(historyPointer== history.begin())
-            historyPointer++;
 
-        delete history.front();
-        history.pop_front();
-
-
-    }
-    extracount=0;
-
-
-}
-
-void PopingLineSentenceHistory::AddExtra(Sentence * entry)
-{
-    InternalAdd(entry);
-    extracount++;
-
-}
 
 void PopingLineSentenceHistory::InitHistoryStack()
 {

@@ -67,7 +67,6 @@ public:
 
 class PopingLineSentenceHistory:public SentenceHistory
 {
-    int extracount;
 
 
     const std::vector<class SentenceHistory*> & historyStack;
@@ -90,7 +89,6 @@ public:
 
 
     void Add(class Sentence * st);
-    void AddExtra(class Sentence * st);
     void PopExtra();
     
 };

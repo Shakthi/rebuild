@@ -152,13 +152,6 @@ void PopingLineHistoryStr::PopExtra()
     
 }
 
-void PopingLineHistoryStr::AddExtra(std::string entry)
-{
-    InternalAdd(entry);
-    extracount++;
-
-}
-
 
 void PopingLineHistoryStr::Add(std::string entry)
 {
