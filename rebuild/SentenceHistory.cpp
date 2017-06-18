@@ -181,14 +181,23 @@ void SentenceHistory::FromJson(nlohmann::json root)
 
 
 //void Pop()
+void SentenceHistory::Splice(SentenceHistory::const_iterator iter)
+{
+    if (!history.empty()) {
+        history.erase(iter);
+    }
+}
+
+
 void SentenceHistory::PopHistory()
 {
     if (!history.empty()) {
         history.erase(history.begin());
     }
 
-
+    
 }
+
 
 PopingLineSentenceHistory::PopingLineSentenceHistory(const std::vector<class SentenceHistory*> & stack)
 :historyStack(stack),stackPointerInited(false)

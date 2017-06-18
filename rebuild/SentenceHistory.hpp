@@ -52,6 +52,7 @@ public:
 
 
     void PopHistory( );
+    void Splice(const_iterator);
     void Clear();
     
     Sentence *  GetCurrentStatment();

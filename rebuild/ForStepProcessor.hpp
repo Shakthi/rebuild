@@ -22,7 +22,7 @@ class ForStepProcessor : public BasicStepProcessor {
     
     std::string remarks;
     PopingLineSentenceHistory popingLineHistory;
-    bool passThrough;
+    bool initConditionPassed;
     
     
     
@@ -49,7 +49,23 @@ public:
     {
         return localVarTable.GetVar(thisForBlock->forVar).getNumVal();
     }
-    
+
+    static bool IsListableStatement(Sentence * s)
+    {
+        Statement * st = dynamic_cast<Statement*>(s);
+        if (!st) {
+            return false;
+        }
+
+        if(dynamic_cast<NextStatement*>(st)){
+            return false;
+        }
+
+        return true;
+
+
+    }
+
     
     nlohmann::json ToJson()
     {
@@ -64,6 +80,12 @@ public:
     
     void ExecuteHistory();
     void ExecuteAStep();
+    void ExecuteTheStatment(Statement * statment );
+    bool CheckCondition();
+    void ExecuteIncrement(ForStatment  * forstatement=nullptr);
+    void ArchiveStatements();
+    void UnArchiveStatements();
+
 
     //should be static
     void ExecuteStatments(ForStatment  * forstatement);
