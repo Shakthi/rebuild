@@ -136,11 +136,17 @@ std::string LineNoiseWrapper::LinenoiseHistoryCallback(int direction, std::strin
         std::string result,lastReturnedResult;
         bool firstIteration=true;
 
+        //history offset
+
+        int offset=0;
+
         do {
 
             result = localHistory->Edit(oldline, (direction == 1) ? LineHistory::MoveDirection::prev
                                                     : LineHistory::MoveDirection::next,
                                                     success);
+            offset++;
+
             if(firstIteration){
                 lastReturnedResult = oldline;
                 firstIteration =false;
@@ -155,7 +161,22 @@ std::string LineNoiseWrapper::LinenoiseHistoryCallback(int direction, std::strin
         } while (success && (!prefix(filter,result)    || (lastReturnedResult == result && prefix(filter,result))));
 
         if(!success)
+        {
             linenoiseBeep();
+            //We need to restore previous position
+            if(offset)
+                offset--; //failed attempt need to balaced
+            while (offset) {
+                offset--;
+                localHistory->Edit(oldline, (direction != 1) ? LineHistory::MoveDirection::prev
+                                   : LineHistory::MoveDirection::next,
+                                   success);
+            }
+            success = false;
+
+
+        }
+
 
         return result;
     }
