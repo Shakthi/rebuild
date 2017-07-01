@@ -815,8 +815,9 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
     l.buflen = buflen;
     l.prompt = prompt;
     l.plen = strlen(prompt);
-    l.oldpos = l.pos = 0;
     l.len = strlen(buf);
+    l.oldpos = l.pos = l.len;
+
     l.cols = getColumns(stdin_fd, stdout_fd);
     l.maxrows = 0;
     l.history_index = 0;
