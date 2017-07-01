@@ -56,10 +56,14 @@ public:
     static  char* linenoiseHistoryCallbackStatic(int direction,
         const char* oldline,
         void* context,size_t * cursorPos);
-    
+
+    static char* LinenoiseHistoryHintCallbackStatic(const char *, int *color, int *bold);
+    static void LinenoiseHistoryFreeHintsCallback(void*);
+
     
     std::string LinenoiseHistoryCallback(int movedirection,std::string oldline, bool & successStatus );
-    
+
+
     
 
     nlohmann::json ToJson();

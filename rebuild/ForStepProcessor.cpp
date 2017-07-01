@@ -76,6 +76,13 @@ void ForStepProcessor::RunStep()
             delete result;
 
             ArchiveStatements();
+            for (ExecuteIncrement() ;CheckCondition(); ExecuteIncrement()) {
+                for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+                     i++) {
+
+                    ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
+                }
+            }
             exitProcessing();
             return;
         }
@@ -107,6 +114,17 @@ void ForStepProcessor::RunStep()
         if (endStatement) {
             delete result;
             ArchiveStatements();
+            //Exucte pending
+
+            for (ExecuteIncrement() ;CheckCondition(); ExecuteIncrement()) {
+                for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+                     i++) {
+
+                    ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
+                }
+            }
+
+
             exitProcessing();
             return;
         }

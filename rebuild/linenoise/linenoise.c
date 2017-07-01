@@ -417,14 +417,15 @@ void linenoiseSetCompletionCallback(linenoiseCompletionCallback *fn) {
 
 /* Register a hits function to be called to show hits to the user at the
  * right of the prompt. */
-void linenoiseSetHintsCallback(linenoiseHintsCallback *fn) {
+void linenoiseSetHintsCallback(linenoiseHintsCallback *fn,void * context) {
     hintsCallback = fn;
 }
 
 /* Register a function to free the hints returned by the hints callback
  * registered with linenoiseSetHintsCallback(). */
-void linenoiseSetFreeHintsCallback(linenoiseFreeHintsCallback *fn) {
+void linenoiseSetFreeHintsCallback(linenoiseFreeHintsCallback *fn,void * context) {
     freeHintsCallback = fn;
+    linenoiseHistoryCallbackContext = context;
 }
 
 
@@ -829,6 +830,8 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
     linenoiseHistoryAdd("");
 
     if (write(l.ofd,prompt,l.plen) == -1) return -1;
+    refreshLine(&l);
+
     while(1) {
         char c;
         size_t nread;

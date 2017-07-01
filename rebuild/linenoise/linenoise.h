@@ -65,8 +65,8 @@ typedef void(linenoiseCompletionCallback)(const char *, linenoiseCompletions *);
 typedef char*(linenoiseHintsCallback)(const char *, int *color, int *bold);
 typedef void(linenoiseFreeHintsCallback)(void *);
 void linenoiseSetCompletionCallback(linenoiseCompletionCallback *);
-void linenoiseSetHintsCallback(linenoiseHintsCallback *);
-void linenoiseSetFreeHintsCallback(linenoiseFreeHintsCallback *);
+void linenoiseSetHintsCallback(linenoiseHintsCallback *,void * context);
+void linenoiseSetFreeHintsCallback(linenoiseFreeHintsCallback *,void * context);
 void linenoiseAddCompletion(linenoiseCompletions *, const char *);
     
 typedef  char*(linenoiseHistoryCallback)(int direction, const char * oldline,void * context , size_t  * cursorPosition);

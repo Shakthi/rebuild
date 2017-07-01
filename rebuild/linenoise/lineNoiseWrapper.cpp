@@ -74,6 +74,21 @@ void LineNoiseWrapper::SetHistoryFilter(std::string filter){
     this->filter = filter;
 }
 
+void LineNoiseWrapper::LinenoiseHistoryFreeHintsCallback(void * ptr)
+{
+    free(ptr);
+}
+ char* LineNoiseWrapper::LinenoiseHistoryHintCallbackStatic(const char * buf, int *color, int *bold)
+{
+//    *color=1;
+//    *bold=1;
+//    if (buf[0]==0) {
+//        *color = 35;
+//        *bold = 0;
+//        return strdup("World");
+//    }
+    return NULL;
+}
 
  char*
 LineNoiseWrapper::linenoiseHistoryCallbackStatic(int direction, const char* oldline,
@@ -193,6 +208,9 @@ LineNoiseWrapper::LineNoiseWrapper(LineHistory & linehistory)
 :defaultHistory(linehistory)
 {
     linenoiseSetHistoryCallback(LineNoiseWrapper::linenoiseHistoryCallbackStatic, this);
+    linenoiseSetHintsCallback(LineNoiseWrapper::LinenoiseHistoryHintCallbackStatic, this);
+    linenoiseSetFreeHintsCallback(LinenoiseHistoryFreeHintsCallback, this);
+
 }
 
 LineNoiseWrapper::~LineNoiseWrapper()
