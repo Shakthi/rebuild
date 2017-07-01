@@ -823,7 +823,7 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
     l.history_index = 0;
 
     /* Buffer starts empty. */
-   // l.buf[0] = '\0'; //Buffer is not cleared for placeholder value
+   // l.buf[0] = '\0'; //Buffer is not cleared for preFilledInput value
     l.buflen--; /* Make sure there is always space for the nulterm */
 
     /* The latest history entry is always our current buffer, that
@@ -1121,8 +1121,8 @@ char *linenoise(const char *prompt,const linenoiseOptions * option,linenoiseResu
         result->printNewln=1;
         return strdup(buf);
     } else {
-
-        strcpy(buf, placeholder);
+        if(option->preFilledInput)
+            strcpy(buf, option->preFilledInput);
         count = linenoiseRaw(buf,LINENOISE_MAX_LINE,prompt,option,result);
         
         if (count == -1) return NULL;
@@ -1264,4 +1264,12 @@ int linenoiseHistoryLoad(const char *filename) {
     }
     fclose(fp);
     return 0;
+}
+
+
+
+void linenoiseOptionsInitDefaults(linenoiseOptions * options){
+
+    options->printNewln = 1; //Basic behaviour of linenoise to move to nextline after enter
+    options->preFilledInput = NULL;//No place holder at the begening
 }

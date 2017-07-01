@@ -22,6 +22,7 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
     inhistory.ReInit();
     
     linenoiseOptions option;
+    linenoiseOptionsInitDefaults(&option);
     linenoiseResults results;
     results.ctrlKey=0;
     results.printNewln = false;
