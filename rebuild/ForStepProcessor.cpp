@@ -195,6 +195,20 @@ bool ForStepProcessor::Process(Command* input)
     auto customCommand = dynamic_cast<CustomCommand*>(input);
     if (customCommand) {
 
+        if (customCommand->name == "checkback") {
+
+            for (auto i = popingLineHistory.begin(); i != popingLineHistory.end();
+                 i++) {
+                if (dynamic_cast<Statement*>((*i))) {
+                    popingLineHistory.Splice(i);
+                    break;
+                }
+            }
+
+            return true;
+            
+        }else
+
         if (customCommand->name == "popback") {
 
             for (auto i = popingLineHistory.begin(); i != popingLineHistory.end();
