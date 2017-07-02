@@ -40,7 +40,7 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
     auto endStatement = dynamic_cast< EndStatement*>(result);
     if (endStatement) {
         exitProcessing();
-        return true;
+        return false;
     }
     
     auto readStatemnt = dynamic_cast< ReadStatement*>(result);
@@ -294,6 +294,7 @@ void BasicStepProcessor::RunStep()
 
     if(Evaluate(dynamic_cast<Statement*>(sentence)))
     {
+
         history->Add(sentence);
 
     }else if(Process(dynamic_cast<Command*>(sentence)))
@@ -302,7 +303,7 @@ void BasicStepProcessor::RunStep()
             history->Add(sentence);
         }
         
-    }else assert(false && "Should not happan");
+    }else delete sentence;
         
     
     

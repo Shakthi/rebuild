@@ -60,7 +60,14 @@ public:
     
     nlohmann::json ToJson();
     void FromJson(nlohmann::json);
-    ~SentenceHistory(){}
+    ~SentenceHistory(){
+
+        for(auto & i : history )
+        {
+            delete i;
+
+        }
+    }
 };
 
 

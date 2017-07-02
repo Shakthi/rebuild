@@ -163,7 +163,16 @@ struct ForStatment:public Statement {
         ForStatment(const ForStatment & other);
         ForStatment  * clone ()const { return new ForStatment(*this); }
 
- 
+        ~ForStatment()
+        {
+
+            for(auto & i : statements )
+            {
+                delete i;
+                
+            }
+
+        }
 };
 
 
