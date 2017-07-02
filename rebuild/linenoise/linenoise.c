@@ -1123,6 +1123,9 @@ char *linenoise(const char *prompt,const linenoiseOptions * option,linenoiseResu
     } else {
         if(option->preFilledInput)
             strcpy(buf, option->preFilledInput);
+        else
+            buf[0]='\0';
+        
         count = linenoiseRaw(buf,LINENOISE_MAX_LINE,prompt,option,result);
         
         if (count == -1) return NULL;
