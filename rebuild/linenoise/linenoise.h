@@ -60,6 +60,7 @@ void linenoiseOptionsInitDefaults(linenoiseOptions * options);//Result will be d
 typedef struct linenoiseResults {
     int printNewln;//Newline is inserted, default 0
     int ctrlKey;//custom ctrlkey
+    int edited;//Any insert or delete key operated
 } linenoiseResults;
 
 

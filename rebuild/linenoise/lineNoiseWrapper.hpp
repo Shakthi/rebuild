@@ -24,7 +24,8 @@ public:
         ctrl_X
         };
  
-    enum class EModificationStatus { ok,
+    enum class EModificationStatus {
+        ok,
         history,
         edited,
     };

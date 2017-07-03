@@ -51,7 +51,7 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
     }
         
     
-    if(loadedBuffer != returnstring)
+    if(results.edited)
         mstatus = EModificationStatus::edited;
         
     

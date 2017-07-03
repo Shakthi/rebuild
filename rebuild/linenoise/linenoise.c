@@ -876,11 +876,13 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
         case BACKSPACE:   /* backspace */
         case 8:     /* ctrl-h */
             linenoiseEditBackspace(&l);
+            results->edited=1;
             break;
         case CTRL_D:     /* ctrl-d, remove char at right of cursor, or if the
                             line is empty, act as end-of-file. */
             if (l.len > 0) {
                 linenoiseEditDelete(&l);
+                results->edited=1;
             } else {
                 history_len--;
                 free(history[history_len]);
@@ -893,6 +895,7 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
                 buf[l.pos-1] = buf[l.pos];
                 buf[l.pos] = aux;
                 if (l.pos != l.len-1) l.pos++;
+                results->edited=1;
                 refreshLine(&l);
             }
             break;
@@ -924,6 +927,7 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
                         switch(seq[1]) {
                         case '3': /* Delete key. */
                             linenoiseEditDelete(&l);
+                                results->edited=1;
                             break;
                         }
                     }
@@ -970,16 +974,21 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
                 return -1;
             }
                 
-            if (linenoiseEditInsert(&l,c)) return -1;
+            if (linenoiseEditInsert(&l,c))
+                return -1;
+            else
+                results->edited=1;
             break;
         case CTRL_U: /* Ctrl+u, delete the whole line. */
             buf[0] = '\0';
             l.pos = l.len = 0;
+            results->edited=1;
             refreshLine(&l);
             break;
         case CTRL_K: /* Ctrl+k, delete from current to end of line. */
             buf[l.pos] = '\0';
             l.len = l.pos;
+             results->edited=1;
             refreshLine(&l);
             break;
         case CTRL_A: /* Ctrl+a, go to the start of the line */
@@ -994,6 +1003,7 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
             break;
         case CTRL_W: /* ctrl+w, delete previous word */
             linenoiseEditDeletePrevWord(&l);
+            results->edited=1;
             break;
             
         }
@@ -1125,7 +1135,7 @@ char *linenoise(const char *prompt,const linenoiseOptions * option,linenoiseResu
             strcpy(buf, option->preFilledInput);
         else
             buf[0]='\0';
-        
+        result->edited=0;
         count = linenoiseRaw(buf,LINENOISE_MAX_LINE,prompt,option,result);
         
         if (count == -1) return NULL;
