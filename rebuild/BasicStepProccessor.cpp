@@ -169,7 +169,7 @@ bool BasicStepProcessor::Process(Command  * result)
             
             std::cout<<std::endl;
             int count=1;
-            for (auto i=history->rbegin(); i!=history->rend(); i++) {
+            for (auto i=history->rcbegin(); i!=history->rcend(); i++) {
                 std::cout<<count<<" "<<(*i)->dumpToString()<<std::endl;
                 count++;
             }
@@ -289,7 +289,7 @@ void BasicStepProcessor::RunStep()
         BasicParser parser;
         sentence = parser.Parse(answer);
     }
-    
+
     assert(sentence);
 
     if(Evaluate(dynamic_cast<Statement*>(sentence)))

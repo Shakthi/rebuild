@@ -38,7 +38,7 @@ void ForStepProcessor::ExecuteIncrement(ForStatment* statement)
 void ForStepProcessor::ArchiveStatements()
 {
     thisForBlock->statements.clear();
-    for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+    for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
          i++) {
 
         auto statement = dynamic_cast<Statement*>(*i);
@@ -77,7 +77,7 @@ void ForStepProcessor::RunStep()
 
             ArchiveStatements();
             for (ExecuteIncrement() ;CheckCondition(); ExecuteIncrement()) {
-                for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+                for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
                      i++) {
 
                     ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
@@ -117,7 +117,7 @@ void ForStepProcessor::RunStep()
             //Exucte pending
 
             for (ExecuteIncrement() ;CheckCondition(); ExecuteIncrement()) {
-                for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+                for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
                      i++) {
 
                     ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
@@ -173,8 +173,8 @@ bool ForStepProcessor::Process(Command* input)
 
         while (historyStackIter != historyStackIterEnd) {
 
-            for (auto i = (*historyStackIter)->rbegin();
-                 i != (*historyStackIter)->rend(); i++) {
+            for (auto i = (*historyStackIter)->rcbegin();
+                 i != (*historyStackIter)->rcend(); i++) {
 
                 if (ForStepProcessor::IsListableStatement(*i)) {
                     std::cout << count;
@@ -224,7 +224,7 @@ bool ForStepProcessor::Process(Command* input)
         } else if (customCommand->name == "runall") { // This command  makes next iteration of loop
 
             for (Init(); CheckCondition(); ExecuteIncrement()) {
-                for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+                for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
                      i++) {
 
                     ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
@@ -236,7 +236,7 @@ bool ForStepProcessor::Process(Command* input)
         } else if (customCommand->name == "run") { // One loop
 
             for (Init(); CheckCondition();) {
-                for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+                for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
                      i++) {
 
                     ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
@@ -257,8 +257,8 @@ bool ForStepProcessor::Process(Command* input)
 
             while (historyStackIter != historyStackIterEnd) {
 
-                for (auto i = (*historyStackIter)->rbegin();
-                     i != (*historyStackIter)->rend(); i++) {
+                for (auto i = (*historyStackIter)->rcbegin();
+                     i != (*historyStackIter)->rcend(); i++) {
 
                     std::cout << count;
 
@@ -294,7 +294,7 @@ void ForStepProcessor::ExecuteAStep()
     ExecuteIncrement();
     for (; CheckCondition();) {
 
-        for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+        for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
              i++) {
 
             ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
@@ -311,7 +311,7 @@ void ForStepProcessor::ExecuteHistory()
          getForVar() <= thisForBlock->forEnd->Evaluate(&localVarTable).getNumVal();
          localVarTable.GetVar(thisForBlock->forVar) = getForVar() + thisForBlock->forStep->Evaluate(&localVarTable).getNumVal()) {
 
-        for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+        for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
              i++) {
 
             Evaluate(dynamic_cast<Statement*>((*i)));

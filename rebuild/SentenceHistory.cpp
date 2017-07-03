@@ -181,10 +181,11 @@ void SentenceHistory::FromJson(nlohmann::json root)
 
 
 //void Pop()
-void SentenceHistory::Splice(SentenceHistory::const_iterator iter)
+void SentenceHistory::Splice(SentenceHistory::iterator iter)
 {
     if (!history.empty()) {
         history.erase(iter);
+
     }
 }
 
@@ -203,7 +204,7 @@ PopingLineSentenceHistory::PopingLineSentenceHistory(const std::vector<class Sen
 :historyStack(stack),stackPointerInited(false)
 {
 
-    historyPointerForStack = SentenceHistory::begin();
+    historyPointerForStack = SentenceHistory::cbegin();
 
 
 }
@@ -236,7 +237,7 @@ std::string PopingLineSentenceHistory::Edit(std::string currentBuffer,
     if (direction == MoveDirection::prev) {
       const_iterator previousPos = historyPointerForStack;
       ++previousPos;
-      if (previousPos != (*stackPointer)->end()) // not yet at the end
+      if (previousPos != (*stackPointer)->cend()) // not yet at the end
         historyPointerForStack = previousPos;
       else {
         stack_iterator previousStack = stackPointer;
@@ -246,15 +247,15 @@ std::string PopingLineSentenceHistory::Edit(std::string currentBuffer,
           success = false;
         } else {
           stackPointer = previousStack;
-          historyPointerForStack = (*stackPointer)->begin();
-          assert(historyPointerForStack != (*stackPointer)->end());
+          historyPointerForStack = (*stackPointer)->cbegin();
+          assert(historyPointerForStack != (*stackPointer)->cend());
         }
       }
 
     } else if (direction == MoveDirection::next) {
 
       if (historyPointerForStack !=
-          (*stackPointer)->begin()) // not yet at the begin
+          (*stackPointer)->cbegin()) // not yet at the begin
         historyPointerForStack--;
       else {
 
@@ -263,8 +264,8 @@ std::string PopingLineSentenceHistory::Edit(std::string currentBuffer,
         } else {
           stackPointer--;
 
-          const_iterator lastIterotr = (*stackPointer)->end();
-          assert(lastIterotr != (*stackPointer)->begin());
+          const_iterator lastIterotr = (*stackPointer)->cend();
+          assert(lastIterotr != (*stackPointer)->cbegin());
           lastIterotr--;
 
           historyPointerForStack = lastIterotr;
@@ -288,8 +289,8 @@ std::string PopingLineSentenceHistory::Edit(std::string currentBuffer,
 
       stackPointer++;
       assert(stackPointer != historyStack.rend());
-      historyPointerForStack = (*stackPointer)->begin();
-      assert(historyPointerForStack != (*stackPointer)->end());
+      historyPointerForStack = (*stackPointer)->cbegin();
+      assert(historyPointerForStack != (*stackPointer)->cend());
       result = (*historyPointerForStack)->dumpToString();
       success = true;
     }
