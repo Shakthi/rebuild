@@ -63,6 +63,13 @@ void ForStepProcessor::RunStep()
         BasicParser parser;
         Sentence* result = parser.Parse(answer);
 
+        if (answer == "") {
+            if (rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::ExitStatus::ctrl_c) {
+                exitProcessing();
+                return;
+            }
+        }
+
         auto nextStatemnt = dynamic_cast<NextStatement*>(result);
         if (nextStatemnt) {
             ExecuteAStep();
@@ -97,17 +104,16 @@ void ForStepProcessor::RunStep()
         {
             auto statemnt = dynamic_cast<Statement*>(result);
             CmdResult res = BasicStepProcessor::Evaluate(statemnt);
-            if (statemnt && res.handled){
-                if (res.addtoHistory)popingLineHistory.Add(result);
+            if (statemnt && res.handled) {
+                if (res.addtoHistory)
+                    popingLineHistory.Add(result);
+            } else {
+                res = Process(dynamic_cast<Command*>(result));
+                if (res.addtoHistory)
+                    popingLineHistory.Add(result);
             }
-                else{
-                    res = Process(dynamic_cast<Command*>(result));
-                    if (res.addtoHistory)
-                        popingLineHistory.Add(result);
-                }
-
         }
-    } else {
+            } else {
 
         std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory(
             "[rebuild>forelse]:", popingLineHistory);
@@ -166,7 +172,7 @@ void ForStepProcessor::ExecuteStatments(ForStatment* thisForBlock)
 
 BasicStepProcessor::CmdResult ForStepProcessor::Process(Command* input)
 {
-    CmdResult positiveResult{true,true};
+    CmdResult positiveResult{ true, true };
 
     auto statemnt = dynamic_cast<ListCommand*>(input);
     if (statemnt) {
@@ -212,10 +218,8 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(Command* input)
             }
 
             return positiveResult;
-            
-        }else
 
-        if (customCommand->name == "popback") {
+        } else if (customCommand->name == "popback") {
 
             for (auto i = popingLineHistory.begin(); i != popingLineHistory.end();
                  i++) {
@@ -282,7 +286,7 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(Command* input)
         }
     }
 
-    return CmdResult{false,false};
+    return CmdResult{ false, false };
 }
 
 // excute filterring error
