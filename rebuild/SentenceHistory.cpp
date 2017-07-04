@@ -184,6 +184,7 @@ void SentenceHistory::FromJson(nlohmann::json root)
 void SentenceHistory::Splice(SentenceHistory::iterator iter)
 {
     if (!history.empty()) {
+        delete *iter;
         history.erase(iter);
 
     }
@@ -193,6 +194,7 @@ void SentenceHistory::Splice(SentenceHistory::iterator iter)
 void SentenceHistory::PopHistory()
 {
     if (!history.empty()) {
+        delete *history.begin();
         history.erase(history.begin());
     }
 
