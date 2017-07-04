@@ -96,11 +96,16 @@ void ForStepProcessor::RunStep()
 
         {
             auto statemnt = dynamic_cast<Statement*>(result);
+            CmdResult res = BasicStepProcessor::Evaluate(statemnt);
+            if (statemnt && res.handled){
+                if (res.addtoHistory)popingLineHistory.Add(result);
+            }
+                else{
+                    res = Process(dynamic_cast<Command*>(result));
+                    if (res.addtoHistory)
+                        popingLineHistory.Add(result);
+                }
 
-            if (statemnt && BasicStepProcessor::Evaluate(statemnt))
-                popingLineHistory.Add(result);
-            else if (Process(dynamic_cast<Command*>(result)))
-                popingLineHistory.Add(result);
         }
     } else {
 
@@ -138,7 +143,7 @@ void ForStepProcessor::RunStep()
 
         auto statemnt = dynamic_cast<Statement*>(result);
 
-        if (BasicStepProcessor::Evaluate(statemnt))
+        if (BasicStepProcessor::Evaluate(statemnt).addtoHistory )
             popingLineHistory.Add(result);
     }
 }
@@ -159,8 +164,9 @@ void ForStepProcessor::ExecuteStatments(ForStatment* thisForBlock)
     }
 }
 
-bool ForStepProcessor::Process(Command* input)
+BasicStepProcessor::CmdResult ForStepProcessor::Process(Command* input)
 {
+    CmdResult positiveResult{true,true};
 
     auto statemnt = dynamic_cast<ListCommand*>(input);
     if (statemnt) {
@@ -189,7 +195,7 @@ bool ForStepProcessor::Process(Command* input)
             tabstop++;
         }
 
-        return true;
+        return positiveResult;
     }
 
     auto customCommand = dynamic_cast<CustomCommand*>(input);
@@ -205,7 +211,7 @@ bool ForStepProcessor::Process(Command* input)
                 }
             }
 
-            return true;
+            return positiveResult;
             
         }else
 
@@ -219,7 +225,7 @@ bool ForStepProcessor::Process(Command* input)
                 }
             }
 
-            return true;
+            return positiveResult;
 
         } else if (customCommand->name == "runall") { // This command  makes next iteration of loop
 
@@ -231,7 +237,7 @@ bool ForStepProcessor::Process(Command* input)
                 }
             }
 
-            return true;
+            return positiveResult;
 
         } else if (customCommand->name == "run") { // One loop
 
@@ -245,7 +251,7 @@ bool ForStepProcessor::Process(Command* input)
                 break;
             }
 
-            return true;
+            return positiveResult;
 
         } else if (customCommand->name == "list") {
 
@@ -276,7 +282,7 @@ bool ForStepProcessor::Process(Command* input)
         }
     }
 
-    return false;
+    return CmdResult{false,false};
 }
 
 // excute filterring error

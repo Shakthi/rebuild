@@ -31,16 +31,23 @@
 
 
 
-bool BasicStepProcessor::Evaluate(Statement  * result)
+BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
 {
+    CmdResult ret{true,true};
+
     if (result==nullptr) {
-        return false;
+        ret.addtoHistory = false;
+        ret.handled = false;
+        return ret;
     }
     
     auto endStatement = dynamic_cast< EndStatement*>(result);
     if (endStatement) {
         exitProcessing();
-        return false;
+        ret.addtoHistory = false;
+        ret.handled = true;
+        return ret;
+
     }
     
     auto readStatemnt = dynamic_cast< ReadStatement*>(result);
@@ -48,7 +55,7 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         
         ReadStepProcessor* readStepProcessor = new ReadStepProcessor(rebuild, readStatemnt->variableList,readStatemnt->prompt,localVarTable);
         rebuild->addNewProcessing(readStepProcessor);
-        return true;
+        return ret; //TODO:need to add to history later
     }
     
     
@@ -82,14 +89,14 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         
         }
             
-        return true;
+        return ret; //TODO:need to add to history later
     }
     
     auto errorStatemnt = dynamic_cast< ErrorStatement*>(result);
     if (errorStatemnt) {
         
         std::cout<<Rebuild::prompt<<"! "<<errorStatemnt->description<<std::endl;
-        return true;
+        return ret;//TODO and as temporary
     }
     
     
@@ -101,7 +108,7 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         
         
         rebuild->addNewProcessing(stepprocessor);
-        return true;
+        return ret; //TODO:need to add to history later
     }
     
 
@@ -126,7 +133,7 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
         if( ! dynamic_cast< PrintElementStatement*>(result))
             std::cout<<std::endl;
         
-        return true;
+        return ret;
     }
 
    
@@ -140,13 +147,13 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
             std::cout<<Rebuild::prompt<<"! "<<letStatemnt->variablename<<" already defined"<<std::endl;
 
 
-        return true;
+        return ret;
     }
     
     
     
 
-    return true;
+    return ret;
 }
 
 
@@ -154,12 +161,17 @@ bool BasicStepProcessor::Evaluate(Statement  * result)
 
 
 
-bool BasicStepProcessor::Process(Command  * result)
+ BasicStepProcessor::CmdResult BasicStepProcessor::Process(Command  * result)
 {
+
+    CmdResult ret{true,true};
     if (result==nullptr) {
-        return false;
+        ret.addtoHistory = false;
+        ret.handled = false;
+        return ret;
+
     }
-    
+
     
     {
         
@@ -176,7 +188,7 @@ bool BasicStepProcessor::Process(Command  * result)
             
             
             
-            return true;
+            return ret;
         }
         auto customCommand = dynamic_cast<CustomCommand*>(result);
         if (customCommand) {
@@ -190,7 +202,7 @@ bool BasicStepProcessor::Process(Command  * result)
             {
                 
                 rebuild->lineNoiseWrapper->ClearScreen();
-                return true;
+                return ret;
 
             }
             else if (customCommand->name == "stepin")
@@ -209,12 +221,12 @@ bool BasicStepProcessor::Process(Command  * result)
                 }
                 
                 
-                return true;
+                return ret;
                 
             }
             else
             {   rlog<<Rlog::type::error<<"Not found command"<<customCommand->name<<std::endl;
-                return true;
+                return ret;//Need to add temporarray
             }
             
         }
@@ -222,7 +234,10 @@ bool BasicStepProcessor::Process(Command  * result)
 
     }
 
-    return false;
+    ret.addtoHistory = false;
+    ret.handled = false;
+    return ret;
+
 
 }
 
@@ -246,67 +261,61 @@ std::string BasicStepProcessor::ProcessCtrlKeyStroke(int ctrlchar)
 
 void BasicStepProcessor::RunStep()
 {
-    std::string answer = rebuild->lineNoiseWrapper->getLine(Rebuild::prompt+":");
-    
+    std::string answer = rebuild->lineNoiseWrapper->getLine(Rebuild::prompt + ":");
 
-    bool proceedStroke=false;
+    bool proceedStroke = false;
 
-    if (answer == ""){
-        if( rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::ExitStatus::ctrl_c)
-        {
+    if (answer == "") {
+        if (rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::ExitStatus::ctrl_c) {
             exitProcessing();
             return;
-        
         }
-        
-        
-        if( rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::ExitStatus::ctrl_X)
-        {
-            proceedStroke=true;
-            answer = ProcessCtrlKeyStroke(rebuild->lineNoiseWrapper->GetControlKey());
-        
-        }
-        
-        
-    }
-    
-    Sentence * sentence;
-    LineNoiseWrapper::EModificationStatus mstats = rebuild->lineNoiseWrapper->GetModificationStatus();
-    
-    
-        
-    if(mstats == LineNoiseWrapper::EModificationStatus::history)
-    {
 
+        if (rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::ExitStatus::ctrl_X) {
+            proceedStroke = true;
+            answer = ProcessCtrlKeyStroke(rebuild->lineNoiseWrapper->GetControlKey());
+        }
+    }
+
+    Sentence* sentence;
+    LineNoiseWrapper::EModificationStatus mstats = rebuild->lineNoiseWrapper->GetModificationStatus();
+
+    if (mstats == LineNoiseWrapper::EModificationStatus::history) {
 
         sentence = history->GetCurrentStatment();
 
-        sentence= sentence->clone();
+        sentence = sentence->clone();
 
-    }
-    else
-    {
+    } else {
         BasicParser parser;
         sentence = parser.Parse(answer);
     }
 
     assert(sentence);
 
-    if(Evaluate(dynamic_cast<Statement*>(sentence)))
-    {
+    auto result = Evaluate(dynamic_cast<Statement*>(sentence));
 
-        history->Add(sentence);
+    if (result.handled) {
 
-    }else if(Process(dynamic_cast<Command*>(sentence)))
-    {
-        if (!proceedStroke) {
+        if (result.addtoHistory)
             history->Add(sentence);
+        else
+            delete sentence;
+
+    } else {
+        auto result = Process(dynamic_cast<Command*>(sentence));
+
+        if (result.handled) {
+
+            if (!proceedStroke && result.addtoHistory) {
+                history->Add(sentence);
+            } else {
+                delete sentence;
+            }
+        } else {
+            delete sentence;
         }
-        
-    }else delete sentence;
-        
-    
-    
+    }
 }
 
 

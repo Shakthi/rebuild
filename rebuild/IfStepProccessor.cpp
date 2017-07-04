@@ -54,7 +54,7 @@ void IfStepProcessor::RunStep()
         auto statemnt = dynamic_cast< Statement*>(result);
         
 
-        if(BasicStepProcessor::Evaluate(statemnt))
+        if(BasicStepProcessor::Evaluate(statemnt).addtoHistory)
             popingLineHistory.Add(result);
         
         

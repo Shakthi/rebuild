@@ -90,7 +90,7 @@ public:
     //should be static
     void ExecuteStatments(ForStatment  * forstatement);
     
-    virtual bool Process(class Command* input);
+    virtual CmdResult Process(class Command* input);
     
 
     

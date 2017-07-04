@@ -19,13 +19,20 @@ protected:
     VarTable  localVarTable;
 
 
+
+
 public:
+
+    struct CmdResult{
+        bool handled;
+        bool addtoHistory;
+    };
 
 
 
     void RunStep();
-    virtual bool Evaluate(class Statement* input);
-    virtual bool Process(class Command* input);
+    virtual CmdResult Evaluate(class Statement* input);
+    virtual CmdResult Process(class Command* input);
     std::string ProcessCtrlKeyStroke(int ctrlchar);
 
 
