@@ -25,8 +25,10 @@ protected:
     typedef std::list<Sentence*>::const_reverse_iterator const_reverse_iterator;
     std::list<Sentence*> history;
     iterator historyPointer;
-    
-    
+
+    iterator lastStatmentIter;
+
+
     
 public:
     
@@ -61,7 +63,7 @@ public:
     void Splice(iterator);
     void Clear();
     
-    Sentence *  GetCurrentStatment();
+    iterator  GetLastStatmentIter();
     
     
     nlohmann::json ToJson();

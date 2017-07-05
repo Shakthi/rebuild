@@ -207,19 +207,20 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
             }
             else if (customCommand->name == "stepin")
             {
-                Sentence * sentence = history->GetCurrentStatment();
-                auto  forStatment =  dynamic_cast<ForStatment*>(sentence);
-                if(forStatment)
-                {
-                    auto forStepProcessor = new ForStepProcessor(rebuild,forStatment,&localVarTable,ForStepProcessor::InitType::stepin);
-                    forStepProcessor->Init();
+                if (history->GetLastStatmentIter()!= history->end()) {
                     
-                    rebuild->addNewProcessing(forStepProcessor);
+                    Sentence * sentence = *(history->GetLastStatmentIter());
+                    auto  forStatment =  dynamic_cast<ForStatment*>(sentence);
+                    if(forStatment)
+                    {
+                        auto forStepProcessor = new ForStepProcessor(rebuild,forStatment,&localVarTable,ForStepProcessor::InitType::stepin);
+                        forStepProcessor->Init();
 
-                    
-                
+                        rebuild->addNewProcessing(forStepProcessor);
+                    }
+
                 }
-                
+
                 
                 return ret;
                 

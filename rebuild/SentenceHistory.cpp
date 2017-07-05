@@ -63,7 +63,16 @@ void SentenceHistory::ReInit()
 void SentenceHistory::ReInitDone()
 {
     if(historyPointer == history.begin())
+    {
         historyPointer++;
+        lastStatmentIter = history.end();
+    }else
+    {
+        lastStatmentIter = historyPointer;
+    }
+
+
+
 
 
     delete history.front();
@@ -122,9 +131,9 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
     return (*historyPointer)->dumpToString();
 }
 
-Sentence *  SentenceHistory::GetCurrentStatment()
+SentenceHistory::iterator  SentenceHistory::GetLastStatmentIter()
 {
-    return *historyPointer;
+    return lastStatmentIter;
 }
 
 void SentenceHistory::Clear()
@@ -160,10 +169,11 @@ SentenceHistory::ToJson()
     root["type"] = "historyfile";
     root["creator"] = "rebuild";
 
-
-
     return root;
 }
+
+
+
 void SentenceHistory::FromJson(nlohmann::json root)
 {
     using namespace nlohmann;
