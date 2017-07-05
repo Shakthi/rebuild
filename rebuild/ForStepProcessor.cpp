@@ -56,15 +56,17 @@ void ForStepProcessor::RunStep()
 
     if (initConditionPassed == true) {
 
+        LineNoiseWrapper::ExtraResults extraResults;
+
         std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory(
             Rebuild::prompt + "for " + thisForBlock->forVar + "]:",
-            popingLineHistory);
+            popingLineHistory,extraResults);
 
         BasicParser parser;
         Sentence* result = parser.Parse(answer);
 
         if (answer == "") {
-            if (rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::ExitStatus::ctrl_c) {
+            if (extraResults.status == LineNoiseWrapper::ExitStatus::ctrl_c) {
                 exitProcessing();
                 return;
             }
@@ -114,9 +116,9 @@ void ForStepProcessor::RunStep()
             }
         }
             } else {
-
+        LineNoiseWrapper::ExtraResults extraResults;
         std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory(
-            "[rebuild>forelse]:", popingLineHistory);
+            "[rebuild>forelse]:", popingLineHistory,extraResults);
 
         BasicParser parser;
         Sentence* result = parser.Parse(answer);

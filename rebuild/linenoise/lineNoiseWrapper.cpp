@@ -14,7 +14,7 @@
 
 
 
-std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory & inhistory)
+std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory & inhistory,ExtraResults  & extraResults)
 {
     localHistory = &inhistory;
     
@@ -26,8 +26,10 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
     linenoiseResults results;
     results.ctrlKey=0;
     results.printNewln = false;
+
     option.printNewln = false;
-    ctrlKey =0;
+    extraResults.ctrlKey =0;
+    mstatus = EModificationStatus::ok;
     
     char* result = linenoise(prompt.c_str(),&option,&results);
     inhistory.ReInitDone();
@@ -42,18 +44,26 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
     
     
     if (errno == EAGAIN)
-        status = ExitStatus::ctrl_c;
+        extraResults.status = ExitStatus::ctrl_c;
     
     else if (results.ctrlKey!=0)
     {
-        status = ExitStatus::ctrl_X;
-        ctrlKey=results.ctrlKey;
+        extraResults.status = ExitStatus::ctrl_X;
+        extraResults.ctrlKey=results.ctrlKey;
     }
+    else{
+        extraResults.status = ExitStatus::ok;
+
+    }
+
         
     
     if(results.edited)
-        mstatus = EModificationStatus::edited;
-        
+        extraResults.mstatus = EModificationStatus::edited;
+    else
+        extraResults.mstatus =  mstatus;
+
+
     
     linenoiseFree(result);
     
@@ -67,7 +77,8 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
 std::string
 LineNoiseWrapper::getLine(std::string prompt)
 {
-    return getLineWithHistory(prompt, defaultHistory);
+    ExtraResults extraResults;
+    return getLineWithHistory(prompt, defaultHistory,extraResults);
 }
 
 
@@ -138,7 +149,6 @@ std::string LineNoiseWrapper::LinenoiseHistoryCallback(int direction, std::strin
                                                 success);
         
         mstatus = EModificationStatus::history;
-        loadedBuffer=result;
 
         if(!success)
             linenoiseBeep();
@@ -172,7 +182,6 @@ std::string LineNoiseWrapper::LinenoiseHistoryCallback(int direction, std::strin
 
             
             mstatus = EModificationStatus::history;
-            loadedBuffer=result;
 
         } while (success && (!prefix(filter,result)    || (lastReturnedResult == result && prefix(filter,result))));
 

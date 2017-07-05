@@ -252,8 +252,8 @@ std::string BasicStepProcessor::ProcessCtrlKeyStroke(int ctrlchar)
             break;
 
             
-        default:   rlog<<"\n"<<std::string("key")+char('a'+rebuild->lineNoiseWrapper->GetControlKey()-1)<<std::endl;
-            return std::string("key")+char('a'+rebuild->lineNoiseWrapper->GetControlKey()-1);
+        default:   rlog<<"\n"<<std::string("key")+char('a'+ctrlchar-1)<<std::endl;
+            return std::string("key")+char('a'+ctrlchar-1);
             break;
     }
     
@@ -261,30 +261,32 @@ std::string BasicStepProcessor::ProcessCtrlKeyStroke(int ctrlchar)
 
 void BasicStepProcessor::RunStep()
 {
-    std::string answer = rebuild->lineNoiseWrapper->getLine(Rebuild::prompt + ":");
+    LineNoiseWrapper::ExtraResults results;
+    std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory(Rebuild::prompt + ":",*rebuild->history,results);
 
     bool proceedStroke = false;
 
     if (answer == "") {
-        if (rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::ExitStatus::ctrl_c) {
+        if (results.status == LineNoiseWrapper::ExitStatus::ctrl_c) {
             exitProcessing();
             return;
         }
 
-        if (rebuild->lineNoiseWrapper->GetStatus() == LineNoiseWrapper::ExitStatus::ctrl_X) {
+        if (results.status == LineNoiseWrapper::ExitStatus::ctrl_X) {
             proceedStroke = true;
-            answer = ProcessCtrlKeyStroke(rebuild->lineNoiseWrapper->GetControlKey());
+            answer = ProcessCtrlKeyStroke(results.ctrlKey);
         }
     }
 
     Sentence* sentence;
-    LineNoiseWrapper::EModificationStatus mstats = rebuild->lineNoiseWrapper->GetModificationStatus();
+    LineNoiseWrapper::EModificationStatus mstats = results.mstatus;
 
-    if (mstats == LineNoiseWrapper::EModificationStatus::history) {
+    if (results.status == LineNoiseWrapper::ExitStatus::ok && mstats == LineNoiseWrapper::EModificationStatus::history) {
 
-        sentence = history->GetCurrentStatment();
+        auto lastiter = history->GetLastStatmentIter();
 
-        sentence = sentence->clone();
+        assert(*lastiter);
+        sentence = (*lastiter)->clone();
 
     } else {
         BasicParser parser;
