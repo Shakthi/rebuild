@@ -191,10 +191,11 @@ void SentenceHistory::FromJson(nlohmann::json root)
 
 
 //void Pop()
-void SentenceHistory::Splice(SentenceHistory::iterator iter)
+void SentenceHistory::Splice(SentenceHistory::iterator iter,bool deleteStatement)
 {
     if (!history.empty()) {
-        delete *iter;
+        if(deleteStatement)
+            delete *iter;
         history.erase(iter);
 
     }
@@ -203,10 +204,7 @@ void SentenceHistory::Splice(SentenceHistory::iterator iter)
 
 void SentenceHistory::PopHistory()
 {
-    if (!history.empty()) {
-        delete *history.begin();
-        history.erase(history.begin());
-    }
+    Splice(history.begin());
 
     
 }

@@ -14,7 +14,7 @@
 
 
 
-std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory & inhistory,ExtraResults  & extraResults)
+std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory & inhistory,ExtraResults  & extraResults,const  std::string & prefilled)
 {
     localHistory = &inhistory;
     
@@ -24,6 +24,7 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
     linenoiseOptions option;
     linenoiseOptionsInitDefaults(&option);
     linenoiseResults results;
+    option.preFilledInput = prefilled.c_str();
     results.ctrlKey=0;
     results.printNewln = false;
 

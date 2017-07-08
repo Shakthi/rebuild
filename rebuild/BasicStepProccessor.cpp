@@ -252,7 +252,11 @@ std::string BasicStepProcessor::ProcessCtrlKeyStroke(int ctrlchar)
         case 'x':return ".stepin";
             break;
 
-            
+        case 's':return ".checkback";
+            break;
+
+
+
         default:   rlog<<"\n"<<std::string("key")+char('a'+ctrlchar-1)<<std::endl;
             return std::string("key")+char('a'+ctrlchar-1);
             break;

@@ -33,7 +33,7 @@ public:
     void RunStep();
     virtual CmdResult Evaluate(class Statement* input);
     virtual CmdResult Process(class Command* input);
-    std::string ProcessCtrlKeyStroke(int ctrlchar);
+    virtual std::string ProcessCtrlKeyStroke(int ctrlchar);
 
 
     BasicStepProcessor(Rebuild* aRebuild,VarTable * varTable)

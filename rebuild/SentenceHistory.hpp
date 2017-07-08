@@ -60,7 +60,7 @@ public:
 
 
     void PopHistory( );
-    void Splice(iterator);
+    void Splice(iterator,bool deleteStatement=true);
     void Clear();
     
     iterator  GetLastStatmentIter();

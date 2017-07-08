@@ -58,19 +58,62 @@ void ForStepProcessor::RunStep()
 
         LineNoiseWrapper::ExtraResults extraResults;
 
+        std::string prefilled = "";
+        bool proceedStroke = false;
+
+        if(!statementStash.empty()){
+
+            const Statement * statment =  statementStash.back();
+            prefilled = statment->dumpToString();
+
+        }
+
+
+
+
+
         std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory(
             Rebuild::prompt + "for " + thisForBlock->forVar + "]:",
-            popingLineHistory,extraResults);
+            popingLineHistory,extraResults,prefilled);
+        
 
-        BasicParser parser;
-        Sentence* result = parser.Parse(answer);
+        Sentence* result = nullptr;
 
         if (answer == "") {
             if (extraResults.status == LineNoiseWrapper::ExitStatus::ctrl_c) {
                 exitProcessing();
                 return;
             }
+
+
+            if (extraResults.status == LineNoiseWrapper::ExitStatus::ctrl_X) {
+                proceedStroke = true;
+                answer = ProcessCtrlKeyStroke(extraResults.ctrlKey);
+            }
         }
+
+        if (extraResults.status == LineNoiseWrapper::ExitStatus::ok
+            && extraResults.mstatus == LineNoiseWrapper::EModificationStatus::ok) {
+
+            if (!statementStash.empty()) {
+                result =  statementStash.back();
+                statementStash.pop_back();
+            }
+
+
+        }else {
+
+            BasicParser parser;
+            result = parser.Parse(answer);
+            if (!statementStash.empty()) {
+                delete  statementStash.back();
+                statementStash.pop_back();
+            }
+
+
+        }
+
+
 
         auto nextStatemnt = dynamic_cast<NextStatement*>(result);
         if (nextStatemnt) {
@@ -213,8 +256,13 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(Command* input)
 
             for (auto i = popingLineHistory.begin(); i != popingLineHistory.end();
                  i++) {
-                if (dynamic_cast<Statement*>((*i))) {
-                    popingLineHistory.Splice(i);
+
+                auto statmentCasted = dynamic_cast<Statement*>((*i));
+                if (statmentCasted) {
+
+                    statementStash.push_back(statmentCasted);
+                    popingLineHistory.Splice(i,false);
+
                     break;
                 }
             }

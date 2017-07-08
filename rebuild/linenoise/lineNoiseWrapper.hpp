@@ -53,7 +53,7 @@ private:
 public:
     void SetHistoryFilter(std::string filter);//Scroll via only with those
     std::string getLine(std::string prompt);
-    std::string getLineWithHistory(std::string prompt,LineHistory & inhistory,ExtraResults  & extraResults);
+    std::string getLineWithHistory(std::string prompt,LineHistory & inhistory,ExtraResults  & extraResults,const  std::string & prefilled="");
     
     ~LineNoiseWrapper();
     LineNoiseWrapper(LineHistory & linehistory);
