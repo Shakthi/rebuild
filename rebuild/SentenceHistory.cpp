@@ -63,7 +63,16 @@ void SentenceHistory::ReInit()
 void SentenceHistory::ReInitDone()
 {
     if(historyPointer == history.begin())
+    {
         historyPointer++;
+        lastStatmentIter = history.end();
+    }else
+    {
+        lastStatmentIter = historyPointer;
+    }
+
+
+
 
 
     delete history.front();
@@ -122,9 +131,9 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
     return (*historyPointer)->dumpToString();
 }
 
-Sentence *  SentenceHistory::GetCurrentStatment()
+SentenceHistory::iterator  SentenceHistory::GetLastStatmentIter()
 {
-    return *historyPointer;
+    return lastStatmentIter;
 }
 
 void SentenceHistory::Clear()
@@ -160,10 +169,11 @@ SentenceHistory::ToJson()
     root["type"] = "historyfile";
     root["creator"] = "rebuild";
 
-
-
     return root;
 }
+
+
+
 void SentenceHistory::FromJson(nlohmann::json root)
 {
     using namespace nlohmann;
@@ -181,19 +191,20 @@ void SentenceHistory::FromJson(nlohmann::json root)
 
 
 //void Pop()
-void SentenceHistory::Splice(SentenceHistory::const_iterator iter)
+void SentenceHistory::Splice(SentenceHistory::iterator iter,bool deleteStatement)
 {
     if (!history.empty()) {
+        if(deleteStatement)
+            delete *iter;
         history.erase(iter);
+
     }
 }
 
 
 void SentenceHistory::PopHistory()
 {
-    if (!history.empty()) {
-        history.erase(history.begin());
-    }
+    Splice(history.begin());
 
     
 }
@@ -203,7 +214,7 @@ PopingLineSentenceHistory::PopingLineSentenceHistory(const std::vector<class Sen
 :historyStack(stack),stackPointerInited(false)
 {
 
-    historyPointerForStack = SentenceHistory::begin();
+    historyPointerForStack = SentenceHistory::cbegin();
 
 
 }
@@ -236,7 +247,7 @@ std::string PopingLineSentenceHistory::Edit(std::string currentBuffer,
     if (direction == MoveDirection::prev) {
       const_iterator previousPos = historyPointerForStack;
       ++previousPos;
-      if (previousPos != (*stackPointer)->end()) // not yet at the end
+      if (previousPos != (*stackPointer)->cend()) // not yet at the end
         historyPointerForStack = previousPos;
       else {
         stack_iterator previousStack = stackPointer;
@@ -246,15 +257,15 @@ std::string PopingLineSentenceHistory::Edit(std::string currentBuffer,
           success = false;
         } else {
           stackPointer = previousStack;
-          historyPointerForStack = (*stackPointer)->begin();
-          assert(historyPointerForStack != (*stackPointer)->end());
+          historyPointerForStack = (*stackPointer)->cbegin();
+          assert(historyPointerForStack != (*stackPointer)->cend());
         }
       }
 
     } else if (direction == MoveDirection::next) {
 
       if (historyPointerForStack !=
-          (*stackPointer)->begin()) // not yet at the begin
+          (*stackPointer)->cbegin()) // not yet at the begin
         historyPointerForStack--;
       else {
 
@@ -263,8 +274,8 @@ std::string PopingLineSentenceHistory::Edit(std::string currentBuffer,
         } else {
           stackPointer--;
 
-          const_iterator lastIterotr = (*stackPointer)->end();
-          assert(lastIterotr != (*stackPointer)->begin());
+          const_iterator lastIterotr = (*stackPointer)->cend();
+          assert(lastIterotr != (*stackPointer)->cbegin());
           lastIterotr--;
 
           historyPointerForStack = lastIterotr;
@@ -288,8 +299,8 @@ std::string PopingLineSentenceHistory::Edit(std::string currentBuffer,
 
       stackPointer++;
       assert(stackPointer != historyStack.rend());
-      historyPointerForStack = (*stackPointer)->begin();
-      assert(historyPointerForStack != (*stackPointer)->end());
+      historyPointerForStack = (*stackPointer)->cbegin();
+      assert(historyPointerForStack != (*stackPointer)->cend());
       result = (*historyPointerForStack)->dumpToString();
       success = true;
     }

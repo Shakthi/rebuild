@@ -38,7 +38,7 @@ void ForStepProcessor::ExecuteIncrement(ForStatment* statement)
 void ForStepProcessor::ArchiveStatements()
 {
     thisForBlock->statements.clear();
-    for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+    for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
          i++) {
 
         auto statement = dynamic_cast<Statement*>(*i);
@@ -56,12 +56,64 @@ void ForStepProcessor::RunStep()
 
     if (initConditionPassed == true) {
 
+        LineNoiseWrapper::ExtraResults extraResults;
+
+        std::string prefilled = "";
+        bool proceedStroke = false;
+
+        if(!statementStash.empty()){
+
+            const Statement * statment =  statementStash.back();
+            prefilled = statment->dumpToString();
+
+        }
+
+
+
+
+
         std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory(
             Rebuild::prompt + "for " + thisForBlock->forVar + "]:",
-            popingLineHistory);
+            popingLineHistory,extraResults,prefilled);
+        
 
-        BasicParser parser;
-        Sentence* result = parser.Parse(answer);
+        Sentence* result = nullptr;
+
+        if (answer == "") {
+            if (extraResults.status == LineNoiseWrapper::ExitStatus::ctrl_c) {
+                exitProcessing();
+                return;
+            }
+
+
+            if (extraResults.status == LineNoiseWrapper::ExitStatus::ctrl_X) {
+                proceedStroke = true;
+                answer = ProcessCtrlKeyStroke(extraResults.ctrlKey);
+            }
+        }
+
+        if (extraResults.status == LineNoiseWrapper::ExitStatus::ok
+            && extraResults.mstatus == LineNoiseWrapper::EModificationStatus::ok) {
+
+            if (!statementStash.empty()) {
+                result =  statementStash.back();
+                statementStash.pop_back();
+            }
+
+
+        }else {
+
+            BasicParser parser;
+            result = parser.Parse(answer);
+            if (!statementStash.empty()) {
+                delete  statementStash.back();
+                statementStash.pop_back();
+            }
+
+
+        }
+
+
 
         auto nextStatemnt = dynamic_cast<NextStatement*>(result);
         if (nextStatemnt) {
@@ -77,7 +129,7 @@ void ForStepProcessor::RunStep()
 
             ArchiveStatements();
             for (ExecuteIncrement() ;CheckCondition(); ExecuteIncrement()) {
-                for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+                for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
                      i++) {
 
                     ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
@@ -96,16 +148,20 @@ void ForStepProcessor::RunStep()
 
         {
             auto statemnt = dynamic_cast<Statement*>(result);
-
-            if (statemnt && BasicStepProcessor::Evaluate(statemnt))
-                popingLineHistory.Add(result);
-            else if (Process(dynamic_cast<Command*>(result)))
-                popingLineHistory.Add(result);
+            CmdResult res = BasicStepProcessor::Evaluate(statemnt);
+            if (statemnt && res.handled) {
+                if (res.addtoHistory)
+                    popingLineHistory.Add(result);
+            } else {
+                res = Process(dynamic_cast<Command*>(result));
+                if (res.addtoHistory)
+                    popingLineHistory.Add(result);
+            }
         }
-    } else {
-
+            } else {
+        LineNoiseWrapper::ExtraResults extraResults;
         std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory(
-            "[rebuild>forelse]:", popingLineHistory);
+            "[rebuild>forelse]:", popingLineHistory,extraResults);
 
         BasicParser parser;
         Sentence* result = parser.Parse(answer);
@@ -117,7 +173,7 @@ void ForStepProcessor::RunStep()
             //Exucte pending
 
             for (ExecuteIncrement() ;CheckCondition(); ExecuteIncrement()) {
-                for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+                for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
                      i++) {
 
                     ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
@@ -138,7 +194,7 @@ void ForStepProcessor::RunStep()
 
         auto statemnt = dynamic_cast<Statement*>(result);
 
-        if (BasicStepProcessor::Evaluate(statemnt))
+        if (BasicStepProcessor::Evaluate(statemnt).addtoHistory )
             popingLineHistory.Add(result);
     }
 }
@@ -159,8 +215,9 @@ void ForStepProcessor::ExecuteStatments(ForStatment* thisForBlock)
     }
 }
 
-bool ForStepProcessor::Process(Command* input)
+BasicStepProcessor::CmdResult ForStepProcessor::Process(Command* input)
 {
+    CmdResult positiveResult{ true, true };
 
     auto statemnt = dynamic_cast<ListCommand*>(input);
     if (statemnt) {
@@ -173,8 +230,8 @@ bool ForStepProcessor::Process(Command* input)
 
         while (historyStackIter != historyStackIterEnd) {
 
-            for (auto i = (*historyStackIter)->rbegin();
-                 i != (*historyStackIter)->rend(); i++) {
+            for (auto i = (*historyStackIter)->rcbegin();
+                 i != (*historyStackIter)->rcend(); i++) {
 
                 if (ForStepProcessor::IsListableStatement(*i)) {
                     std::cout << count;
@@ -189,13 +246,30 @@ bool ForStepProcessor::Process(Command* input)
             tabstop++;
         }
 
-        return true;
+        return positiveResult;
     }
 
     auto customCommand = dynamic_cast<CustomCommand*>(input);
     if (customCommand) {
 
-        if (customCommand->name == "popback") {
+        if (customCommand->name == "checkback") {
+
+            for (auto i = popingLineHistory.begin(); i != popingLineHistory.end();
+                 i++) {
+
+                auto statmentCasted = dynamic_cast<Statement*>((*i));
+                if (statmentCasted) {
+
+                    statementStash.push_back(statmentCasted);
+                    popingLineHistory.Splice(i,false);
+
+                    break;
+                }
+            }
+
+            return positiveResult;
+
+        } else if (customCommand->name == "popback") {
 
             for (auto i = popingLineHistory.begin(); i != popingLineHistory.end();
                  i++) {
@@ -205,24 +279,24 @@ bool ForStepProcessor::Process(Command* input)
                 }
             }
 
-            return true;
+            return positiveResult;
 
         } else if (customCommand->name == "runall") { // This command  makes next iteration of loop
 
             for (Init(); CheckCondition(); ExecuteIncrement()) {
-                for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+                for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
                      i++) {
 
                     ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
                 }
             }
 
-            return true;
+            return positiveResult;
 
         } else if (customCommand->name == "run") { // One loop
 
             for (Init(); CheckCondition();) {
-                for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+                for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
                      i++) {
 
                     ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
@@ -231,7 +305,7 @@ bool ForStepProcessor::Process(Command* input)
                 break;
             }
 
-            return true;
+            return positiveResult;
 
         } else if (customCommand->name == "list") {
 
@@ -243,8 +317,8 @@ bool ForStepProcessor::Process(Command* input)
 
             while (historyStackIter != historyStackIterEnd) {
 
-                for (auto i = (*historyStackIter)->rbegin();
-                     i != (*historyStackIter)->rend(); i++) {
+                for (auto i = (*historyStackIter)->rcbegin();
+                     i != (*historyStackIter)->rcend(); i++) {
 
                     std::cout << count;
 
@@ -262,7 +336,7 @@ bool ForStepProcessor::Process(Command* input)
         }
     }
 
-    return false;
+    return CmdResult{ false, false };
 }
 
 // excute filterring error
@@ -280,7 +354,7 @@ void ForStepProcessor::ExecuteAStep()
     ExecuteIncrement();
     for (; CheckCondition();) {
 
-        for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+        for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
              i++) {
 
             ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
@@ -297,7 +371,7 @@ void ForStepProcessor::ExecuteHistory()
          getForVar() <= thisForBlock->forEnd->Evaluate(&localVarTable).getNumVal();
          localVarTable.GetVar(thisForBlock->forVar) = getForVar() + thisForBlock->forStep->Evaluate(&localVarTable).getNumVal()) {
 
-        for (auto i = popingLineHistory.rbegin(); i != popingLineHistory.rend();
+        for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
              i++) {
 
             Evaluate(dynamic_cast<Statement*>((*i)));

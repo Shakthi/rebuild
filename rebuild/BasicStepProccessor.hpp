@@ -19,14 +19,21 @@ protected:
     VarTable  localVarTable;
 
 
+
+
 public:
+
+    struct CmdResult{
+        bool handled;
+        bool addtoHistory;
+    };
 
 
 
     void RunStep();
-    virtual bool Evaluate(class Statement* input);
-    virtual bool Process(class Command* input);
-    std::string ProcessCtrlKeyStroke(int ctrlchar);
+    virtual CmdResult Evaluate(class Statement* input);
+    virtual CmdResult Process(class Command* input);
+    virtual std::string ProcessCtrlKeyStroke(int ctrlchar);
 
 
     BasicStepProcessor(Rebuild* aRebuild,VarTable * varTable)

@@ -22,10 +22,13 @@ protected:
     typedef std::list<Sentence*>::iterator iterator;
     typedef std::list<Sentence*>::const_iterator const_iterator;
     typedef std::list<Sentence*>::reverse_iterator reverse_iterator;
+    typedef std::list<Sentence*>::const_reverse_iterator const_reverse_iterator;
     std::list<Sentence*> history;
     iterator historyPointer;
-    
-    
+
+    iterator lastStatmentIter;
+
+
     
 public:
     
@@ -43,24 +46,36 @@ public:
     
     
 
+    const_reverse_iterator rcbegin()const{ return history.rbegin();}
+    const_reverse_iterator rcend()const{ return history.rend();}
+
     reverse_iterator rbegin(){ return history.rbegin();}
     reverse_iterator rend(){ return history.rend();}
 
 
-    const_iterator begin()const{ return history.begin();}
-    const_iterator end()const{ return history.end();}
+    const_iterator cbegin()const{ return history.begin();}
+    const_iterator cend()const{ return history.end();}
+    iterator begin(){ return history.begin();}
+    iterator end(){ return history.end();}
 
 
     void PopHistory( );
-    void Splice(const_iterator);
+    void Splice(iterator,bool deleteStatement=true);
     void Clear();
     
-    Sentence *  GetCurrentStatment();
+    iterator  GetLastStatmentIter();
     
     
     nlohmann::json ToJson();
     void FromJson(nlohmann::json);
-    ~SentenceHistory(){}
+    ~SentenceHistory(){
+
+        for(auto & i : history )
+        {
+            delete i;
+
+        }
+    }
 };
 
 

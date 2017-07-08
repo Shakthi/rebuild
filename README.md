@@ -13,6 +13,10 @@ Achivements
 - Code is not written, its stored and loaded via json formated AST.
 - A linenoise based repl helps it to rebuild.
 
+Features
+------
+- Added checkback feature, undo  last statement in statmentbuffer, with provision to modify it
+
 
 Development
 ------

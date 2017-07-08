@@ -815,22 +815,27 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
     l.buflen = buflen;
     l.prompt = prompt;
     l.plen = strlen(prompt);
-    l.oldpos = l.pos = 0;
-    l.len = 0;
+    l.len = strlen(buf);
+    l.oldpos = l.pos = l.len;
+
     l.cols = getColumns(stdin_fd, stdout_fd);
     l.maxrows = 0;
     l.history_index = 0;
 
     /* Buffer starts empty. */
-    l.buf[0] = '\0';
+   // l.buf[0] = '\0'; //Buffer is not cleared for preFilledInput value
     l.buflen--; /* Make sure there is always space for the nulterm */
 
     /* The latest history entry is always our current buffer, that
      * initially is just an empty string. */
     linenoiseHistoryAdd("");
+    
+
 
     if (write(l.ofd,prompt,l.plen) == -1) return -1;
     refreshLine(&l);
+    //if (write(l.ofd,l.buf,l.len) == -1) return -1; check if required for placeholdrer
+
 
     while(1) {
         char c;
@@ -871,11 +876,13 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
         case BACKSPACE:   /* backspace */
         case 8:     /* ctrl-h */
             linenoiseEditBackspace(&l);
+            results->edited=1;
             break;
         case CTRL_D:     /* ctrl-d, remove char at right of cursor, or if the
                             line is empty, act as end-of-file. */
             if (l.len > 0) {
                 linenoiseEditDelete(&l);
+                results->edited=1;
             } else {
                 history_len--;
                 free(history[history_len]);
@@ -888,6 +895,7 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
                 buf[l.pos-1] = buf[l.pos];
                 buf[l.pos] = aux;
                 if (l.pos != l.len-1) l.pos++;
+                results->edited=1;
                 refreshLine(&l);
             }
             break;
@@ -919,6 +927,7 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
                         switch(seq[1]) {
                         case '3': /* Delete key. */
                             linenoiseEditDelete(&l);
+                                results->edited=1;
                             break;
                         }
                     }
@@ -965,16 +974,21 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
                 return -1;
             }
                 
-            if (linenoiseEditInsert(&l,c)) return -1;
+            if (linenoiseEditInsert(&l,c))
+                return -1;
+            else
+                results->edited=1;
             break;
         case CTRL_U: /* Ctrl+u, delete the whole line. */
             buf[0] = '\0';
             l.pos = l.len = 0;
+            results->edited=1;
             refreshLine(&l);
             break;
         case CTRL_K: /* Ctrl+k, delete from current to end of line. */
             buf[l.pos] = '\0';
             l.len = l.pos;
+             results->edited=1;
             refreshLine(&l);
             break;
         case CTRL_A: /* Ctrl+a, go to the start of the line */
@@ -989,6 +1003,7 @@ static size_t linenoiseEdit(int stdin_fd, int stdout_fd, char *buf, size_t bufle
             break;
         case CTRL_W: /* ctrl+w, delete previous word */
             linenoiseEditDeletePrevWord(&l);
+            results->edited=1;
             break;
             
         }
@@ -1098,6 +1113,7 @@ char *linenoise(const char *prompt,const linenoiseOptions * option,linenoiseResu
         size_t len;
 
         printf("%s",prompt);
+        
         fflush(stdout);
         do {
             if (fgets(buf,LINENOISE_MAX_LINE,stdin) == NULL && errno != EINTR ) {
@@ -1115,7 +1131,13 @@ char *linenoise(const char *prompt,const linenoiseOptions * option,linenoiseResu
         result->printNewln=1;
         return strdup(buf);
     } else {
+        if(option->preFilledInput)
+            strcpy(buf, option->preFilledInput);
+        else
+            buf[0]='\0';
+        result->edited=0;
         count = linenoiseRaw(buf,LINENOISE_MAX_LINE,prompt,option,result);
+        
         if (count == -1) return NULL;
         return strdup(buf);
     }
@@ -1255,4 +1277,12 @@ int linenoiseHistoryLoad(const char *filename) {
     }
     fclose(fp);
     return 0;
+}
+
+
+
+void linenoiseOptionsInitDefaults(linenoiseOptions * options){
+
+    options->printNewln = 1; //Basic behaviour of linenoise to move to nextline after enter
+    options->preFilledInput = NULL;//No place holder at the begening
 }

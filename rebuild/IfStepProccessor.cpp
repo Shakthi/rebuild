@@ -29,8 +29,8 @@ void IfStepProcessor::RunStep()
 {
     
     if(passThroughe == true){
-        
-        std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>if]:",popingLineHistory);
+        LineNoiseWrapper::ExtraResults results;
+        std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>if]:",popingLineHistory,results);
         
         BasicParser parser;
         Sentence * result =  parser.Parse(answer);
@@ -54,7 +54,7 @@ void IfStepProcessor::RunStep()
         auto statemnt = dynamic_cast< Statement*>(result);
         
 
-        if(BasicStepProcessor::Evaluate(statemnt))
+        if(BasicStepProcessor::Evaluate(statemnt).addtoHistory)
             popingLineHistory.Add(result);
         
         

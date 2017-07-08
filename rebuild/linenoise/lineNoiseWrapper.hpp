@@ -18,37 +18,43 @@ class LineNoiseWrapper  {
     LineHistory * localHistory;
     
 public:
-    enum class ExitStatus { ok,
-        ctrl_c,
-        ctrl_d,
-        ctrl_X
+    enum class ExitStatus {
+        ok,//Normal exit with result
+        ctrl_c,//Exit pressing key ctrl-c : exit operation
+        ctrl_d,//Exit pressing key ctrl-d : end of buffer
+        ctrl_X//Any other cotrol keys
         };
  
-    enum class EModificationStatus { ok,
-        history,
-        edited,
+    enum class EModificationStatus {
+        ok,//User niether pressed edit keys or moved through history
+        history,//User selected inout from history
+        edited,//User edited the buffer
     };
 
     
 
-private:
-    ExitStatus status;
-    EModificationStatus mstatus;
-    int ctrlKey;
-    
-    std::string loadedBuffer;
+
+    struct ExtraResults {
+
+        ExitStatus status;
+        EModificationStatus mstatus;
+        int ctrlKey;
+    };
+
+
+
     std::string filter;
-    
-    
+
+private:
+    EModificationStatus mstatus;
+
+
 
 public:
     void SetHistoryFilter(std::string filter);//Scroll via only with those
     std::string getLine(std::string prompt);
-    std::string getLineWithHistory(std::string prompt,LineHistory & inhistory);
-    ExitStatus GetStatus() { return status; }
-    EModificationStatus GetModificationStatus() { return mstatus; }
-    int GetControlKey(){return ctrlKey;}
-
+    std::string getLineWithHistory(std::string prompt,LineHistory & inhistory,ExtraResults  & extraResults,const  std::string & prefilled="");
+    
     ~LineNoiseWrapper();
     LineNoiseWrapper(LineHistory & linehistory);
     

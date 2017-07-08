@@ -51,12 +51,16 @@ typedef struct linenoiseCompletions {
     
 typedef struct linenoiseOptions {
     int printNewln;//Automatically insert new line at the end of reading
+    const char * preFilledInput;//This string will be added at begining if not null
 } linenoiseOptions;
+
+void linenoiseOptionsInitDefaults(linenoiseOptions * options);//Result will be default options - which doesnot modifies linenoise
     
     
 typedef struct linenoiseResults {
     int printNewln;//Newline is inserted, default 0
     int ctrlKey;//custom ctrlkey
+    int edited;//Any insert or delete key operated
 } linenoiseResults;
 
 

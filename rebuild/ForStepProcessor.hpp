@@ -22,6 +22,7 @@ class ForStepProcessor : public BasicStepProcessor {
     
     std::string remarks;
     PopingLineSentenceHistory popingLineHistory;
+    std::list<Statement*> statementStash;
     bool initConditionPassed;
     
     
@@ -60,6 +61,9 @@ public:
         if(dynamic_cast<NextStatement*>(st)){
             return false;
         }
+        if(dynamic_cast<ErrorStatement*>(st)){
+            return false;
+        }
 
         return true;
 
@@ -90,7 +94,7 @@ public:
     //should be static
     void ExecuteStatments(ForStatment  * forstatement);
     
-    virtual bool Process(class Command* input);
+    virtual CmdResult Process(class Command* input);
     
 
     
