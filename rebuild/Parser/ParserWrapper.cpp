@@ -24,7 +24,7 @@ extern void yy_delete_buffer( YY_BUFFER_STATE buffer);
 
 
 
- Sentence * Parser::Parse(std::string data)
+ SentenceRef Parser::Parse(std::string data)
 {
     YY_BUFFER_STATE buf;
     buf = yy_scan_string(data.c_str());
@@ -35,14 +35,14 @@ extern void yy_delete_buffer( YY_BUFFER_STATE buffer);
             yy_delete_buffer(buf);
 
             yylex_destroy();
-        return  outSentence;
+        return  SentenceRef(outSentence);
         
     } else {
         if(outSentence==nullptr)
-            return new ErrorStatement("");
+            return SentenceRef(new  ErrorStatement(""));
         else{
             outSentence->sourceText = data;
-            return  outSentence;
+            return  SentenceRef(outSentence);
         }
         
     }

@@ -19,11 +19,11 @@
 
 class SentenceHistory:public LineHistory  {
 protected:
-    typedef std::list<Sentence*>::iterator iterator;
-    typedef std::list<Sentence*>::const_iterator const_iterator;
-    typedef std::list<Sentence*>::reverse_iterator reverse_iterator;
-    typedef std::list<Sentence*>::const_reverse_iterator const_reverse_iterator;
-    std::list<Sentence*> history;
+    typedef std::list<SentenceRef>::iterator iterator;
+    typedef std::list<SentenceRef>::const_iterator const_iterator;
+    typedef std::list<SentenceRef>::reverse_iterator reverse_iterator;
+    typedef std::list<SentenceRef>::const_reverse_iterator const_reverse_iterator;
+    std::list<SentenceRef> history;
     iterator historyPointer;
 
     iterator lastStatmentIter;
@@ -38,9 +38,9 @@ public:
     
     SentenceHistory();
    
-    void Add(class Sentence * st);
-    bool ChekDuplicate(class Sentence * st);
-    void InternalAdd(class Sentence * st);
+    void Add(SentenceRef  st);
+    bool ChekDuplicate(SentenceRef  st);
+    void InternalAdd(SentenceRef  st);
     
     std::string Edit(std::string currentBuffer, MoveDirection direction,bool& success);
     
@@ -70,11 +70,7 @@ public:
     void FromJson(nlohmann::json);
     ~SentenceHistory(){
 
-        for(auto & i : history )
-        {
-            delete i;
-
-        }
+       
     }
 };
 
@@ -104,7 +100,7 @@ public:
     std::string Edit(std::string currentBuffer, MoveDirection direction,bool& success);
 
 
-    void Add(class Sentence * st);
+    void Add(SentenceRef);
     void PopExtra();
     
 };

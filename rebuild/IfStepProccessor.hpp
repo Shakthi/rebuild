@@ -20,7 +20,7 @@
 class IfStepProcessor : public BasicStepProcessor {
     
     std::string remarks;
-    IfStatment * ifStatment;//TODO: should be boolean expression
+    std::shared_ptr<IfStatment> ifStatment;//TODO: should be boolean expression
     
     bool passThroughe;
   
@@ -28,7 +28,7 @@ class IfStepProcessor : public BasicStepProcessor {
     
 
 public:
-    IfStepProcessor(Rebuild* aRebuild,IfStatment * aifStatment,VarTable * superVarTable)
+    IfStepProcessor(Rebuild* aRebuild,std::shared_ptr<IfStatment> aifStatment,VarTable * superVarTable)
     : BasicStepProcessor(aRebuild,superVarTable),ifStatment(aifStatment),popingLineHistory(aRebuild->GetHistoryStack())
     {
         // getForVar()=forblock.forBegin->;

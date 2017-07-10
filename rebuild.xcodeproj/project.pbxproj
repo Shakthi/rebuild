@@ -141,6 +141,7 @@
 		536578731E50F0D100A561D9 /* AST.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AST.hpp; sourceTree = "<group>"; };
 		536578751E50F53D00A561D9 /* ParserWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParserWrapper.cpp; path = rebuild/Parser/ParserWrapper.cpp; sourceTree = "<group>"; };
 		536578761E50F53D00A561D9 /* ParserWrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ParserWrapper.hpp; path = rebuild/Parser/ParserWrapper.hpp; sourceTree = "<group>"; };
+		5389A99D1F1140DD003E4917 /* Sentence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sentence.h; sourceTree = "<group>"; };
 		5390BC211EC62A21000E061A /* ReadStepProcessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReadStepProcessor.cpp; sourceTree = "<group>"; };
 		5390BC221EC62A21000E061A /* ReadStepProcessor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ReadStepProcessor.hpp; sourceTree = "<group>"; };
 		5390BC251EC635D7000E061A /* quickbasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = quickbasic.h; path = rebuild/Parser/quickbasic.h; sourceTree = "<group>"; };
@@ -384,6 +385,7 @@
 				531B19191E562EC000F530FA /* Logger.hpp */,
 				536578721E50F0D100A561D9 /* AST.cpp */,
 				536578731E50F0D100A561D9 /* AST.hpp */,
+				5389A99D1F1140DD003E4917 /* Sentence.h */,
 				5363734A1E751CCD0079B2EF /* SentenceHistory.cpp */,
 				5363734B1E751CCD0079B2EF /* SentenceHistory.hpp */,
 				53CB85891E3FC04300E44564 /* Rebuild.hpp */,

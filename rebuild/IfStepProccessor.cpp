@@ -33,17 +33,16 @@ void IfStepProcessor::RunStep()
         std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>if]:",popingLineHistory,results);
         
         BasicParser parser;
-        Sentence * result =  parser.Parse(answer);
+        SentenceRef  result =  parser.Parse(answer);
 
-        auto nextStatemnt = dynamic_cast< NextStatement*>(result);
+        auto nextStatemnt = std::dynamic_pointer_cast< NextStatement>(result);
         if (nextStatemnt) {
-            delete result;
             ExecuteHistory();
             exitProcessing();
             return;
         }
         
-        auto errorStatemnt = dynamic_cast< ErrorStatement*>(result);
+        auto errorStatemnt = std::dynamic_pointer_cast< ErrorStatement>(result);
         if (errorStatemnt) {
             BasicStepProcessor::Evaluate(errorStatemnt);
             popingLineHistory.Add(errorStatemnt);
@@ -51,7 +50,7 @@ void IfStepProcessor::RunStep()
             
             
         }
-        auto statemnt = dynamic_cast< Statement*>(result);
+        auto statemnt = std::dynamic_pointer_cast< Statement>(result);
         
 
         if(BasicStepProcessor::Evaluate(statemnt).addtoHistory)
@@ -63,19 +62,17 @@ void IfStepProcessor::RunStep()
         std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild>if (remarks)]:");
         
         BasicParser parser;
-        Sentence * result =  parser.Parse(answer);
+        SentenceRef result =  parser.Parse(answer);
         
-        auto remarkStatement = dynamic_cast< RemarkStatement*>(result);
+        auto remarkStatement = std::dynamic_pointer_cast< RemarkStatement>(result);
         if (remarkStatement) {
             remarks=remarkStatement->comments;
-            delete result;
             exitProcessing();
             return;
         }
         
         
         
-        delete result;
         exitProcessing();
         return;
     }

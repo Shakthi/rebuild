@@ -20,7 +20,7 @@ SentenceHistory::SentenceHistory()
 
 
 
-bool SentenceHistory::ChekDuplicate( Sentence * entry)
+bool SentenceHistory::ChekDuplicate( SentenceRef entry)
 {
 
     if (!history.empty())
@@ -31,7 +31,7 @@ bool SentenceHistory::ChekDuplicate( Sentence * entry)
     return true;
 }
 
-void SentenceHistory::Add(Sentence * entry)
+void SentenceHistory::Add(SentenceRef entry)
 {
 
 
@@ -42,7 +42,7 @@ void SentenceHistory::Add(Sentence * entry)
 
 }
 
-void SentenceHistory::InternalAdd(Sentence * entry)
+void SentenceHistory::InternalAdd(SentenceRef entry)
 {
     history.push_front(entry);
 
@@ -53,7 +53,7 @@ void SentenceHistory::ReInit()
 
 
 
-    InternalAdd(new UnProcessedStatment);
+    InternalAdd( SentenceRef( new UnProcessedStatment));
     historyPointer = history.begin();
 
 
@@ -75,7 +75,6 @@ void SentenceHistory::ReInitDone()
 
 
 
-    delete history.front();
     history.pop_front();
 
 }
@@ -100,8 +99,7 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
     //save current buffer only if it is at the begning
     if( historyPointer == history.begin())
     {
-        delete *historyPointer;
-        auto anProcessedStatment = new  UnProcessedStatment;
+        auto anProcessedStatment = SentenceRef( new  UnProcessedStatment);
         anProcessedStatment->sourceText = currentBuffer;
         *historyPointer = anProcessedStatment;
     }
@@ -184,7 +182,7 @@ void SentenceHistory::FromJson(nlohmann::json root)
 
     for (int i = 0; i < content.size(); i++) {
 
-        InternalAdd(Sentence::GetFromJson(content[content.size()-i-1]));
+        InternalAdd(SentenceRef( Sentence::GetFromJson(content[content.size()-i-1])));
 
     }
 }
@@ -195,7 +193,7 @@ void SentenceHistory::Splice(SentenceHistory::iterator iter,bool deleteStatement
 {
     if (!history.empty()) {
         if(deleteStatement)
-            delete *iter;
+        {}
         history.erase(iter);
 
     }
@@ -311,7 +309,7 @@ std::string PopingLineSentenceHistory::Edit(std::string currentBuffer,
 
 
 
-void PopingLineSentenceHistory::Add(Sentence * entry)
+void PopingLineSentenceHistory::Add(SentenceRef entry)
 {
     
     

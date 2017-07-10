@@ -14,50 +14,12 @@
 #include <vector>
 #include "VarTable.hpp"
 #include "Value.h"
-#include "nlohmann/json.hpp"
-#include "cereal/cereal.hpp"
 #include "cereal/types/vector.hpp"
 #include "cereal/types/list.hpp"
 
-struct Sentence
-{
-    std::string sourceText; //Debug only
-    virtual ~Sentence(){}
-    virtual Sentence  * clone ()const =0;
+#include "Sentence.h"
 
 
-    
-    
-    nlohmann::json ToJson();
-    static  Sentence * GetFromJson(nlohmann::json );
-    
-    
-    //TODO make visitor pattern 
-    template<class Archive>
-    void serialize( Archive & ar )
-    { ar( CEREAL_NVP(sourceText) ); }
-    
-
-    virtual bool isEqual(const Sentence & that){ return this -> dumpToString()  == that.dumpToString();}
-    virtual std::string dumpToString()const {return sourceText;}
-
-
-
-};
-
-struct Statement:Sentence
-{
-
-    virtual Statement  * clone ()const = 0;
-
-};
-
-struct Command:Sentence
-{
-    virtual Command  * clone ()const = 0;
-
-
-};
 
 
 
@@ -146,7 +108,7 @@ struct ForStatment:public Statement {
         std::string forVar;
         std::unique_ptr<Expression> forBegin,forEnd,forStep;
     
-        std::vector<Statement*>  statements;
+        std::vector<StatementRef>  statements;
         
     
     
@@ -166,11 +128,6 @@ struct ForStatment:public Statement {
         ~ForStatment()
         {
 
-            for(auto & i : statements )
-            {
-                delete i;
-                
-            }
 
         }
 };

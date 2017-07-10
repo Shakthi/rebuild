@@ -27,7 +27,7 @@ void ForStepProcessor::Init()
         initConditionPassed = false;
 }
 
-void ForStepProcessor::ExecuteIncrement(ForStatment* statement)
+void ForStepProcessor::ExecuteIncrement(std::shared_ptr<ForStatment> statement)
 {
     if (statement != nullptr)
         thisForBlock = statement;
@@ -41,12 +41,12 @@ void ForStepProcessor::ArchiveStatements()
     for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
          i++) {
 
-        auto statement = dynamic_cast<Statement*>(*i);
+        auto statement = std::dynamic_pointer_cast<Statement>(*i);
         if (statement) {
 
-            auto errorStatemnt = dynamic_cast<ErrorStatement*>(statement);
+            auto errorStatemnt = std::dynamic_pointer_cast<ErrorStatement>(statement);
             if (!errorStatemnt)
-                thisForBlock->statements.push_back(statement->clone());
+                thisForBlock->statements.push_back(StatementRef( statement->clone()));
         }
     }
 }
@@ -63,7 +63,7 @@ void ForStepProcessor::RunStep()
 
         if(!statementStash.empty()){
 
-            const Statement * statment =  statementStash.back();
+            const StatementRef statment =  statementStash.back();
             prefilled = statment->dumpToString();
 
         }
@@ -77,7 +77,7 @@ void ForStepProcessor::RunStep()
             popingLineHistory,extraResults,prefilled);
         
 
-        Sentence* result = nullptr;
+        SentenceRef result = nullptr;
 
         if (answer == "") {
             if (extraResults.status == LineNoiseWrapper::ExitStatus::ctrl_c) {
@@ -106,7 +106,6 @@ void ForStepProcessor::RunStep()
             BasicParser parser;
             result = parser.Parse(answer);
             if (!statementStash.empty()) {
-                delete  statementStash.back();
                 statementStash.pop_back();
             }
 
@@ -115,7 +114,7 @@ void ForStepProcessor::RunStep()
 
 
 
-        auto nextStatemnt = dynamic_cast<NextStatement*>(result);
+        auto nextStatemnt = std::dynamic_pointer_cast<NextStatement>(result);
         if (nextStatemnt) {
             ExecuteAStep();
             popingLineHistory.Add(result);
@@ -123,23 +122,22 @@ void ForStepProcessor::RunStep()
             return;
         }
 
-        auto endStatement = dynamic_cast<EndStatement*>(result);
+        auto endStatement = std::dynamic_pointer_cast<EndStatement>(result);
         if (endStatement) {
-            delete result;
 
             ArchiveStatements();
             for (ExecuteIncrement() ;CheckCondition(); ExecuteIncrement()) {
                 for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
                      i++) {
 
-                    ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
+                    ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
                 }
             }
             exitProcessing();
             return;
         }
 
-        auto errorStatemnt = dynamic_cast<ErrorStatement*>(result);
+        auto errorStatemnt = std::dynamic_pointer_cast<ErrorStatement>(result);
         if (errorStatemnt) {
             BasicStepProcessor::Evaluate(errorStatemnt);
             popingLineHistory.Add(errorStatemnt);
@@ -147,13 +145,13 @@ void ForStepProcessor::RunStep()
         }
 
         {
-            auto statemnt = dynamic_cast<Statement*>(result);
+            auto statemnt = std::dynamic_pointer_cast<Statement>(result);
             CmdResult res = BasicStepProcessor::Evaluate(statemnt);
             if (statemnt && res.handled) {
                 if (res.addtoHistory)
                     popingLineHistory.Add(result);
             } else {
-                res = Process(dynamic_cast<Command*>(result));
+                res = Process(std::dynamic_pointer_cast<Command>(result));
                 if (res.addtoHistory)
                     popingLineHistory.Add(result);
             }
@@ -164,11 +162,10 @@ void ForStepProcessor::RunStep()
             "[rebuild>forelse]:", popingLineHistory,extraResults);
 
         BasicParser parser;
-        Sentence* result = parser.Parse(answer);
+        SentenceRef result = parser.Parse(answer);
 
-        auto endStatement = dynamic_cast<EndStatement*>(result);
+        auto endStatement = std::dynamic_pointer_cast<EndStatement>(result);
         if (endStatement) {
-            delete result;
             ArchiveStatements();
             //Exucte pending
 
@@ -176,7 +173,7 @@ void ForStepProcessor::RunStep()
                 for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
                      i++) {
 
-                    ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
+                    ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
                 }
             }
 
@@ -185,21 +182,21 @@ void ForStepProcessor::RunStep()
             return;
         }
 
-        auto errorStatemnt = dynamic_cast<ErrorStatement*>(result);
+        auto errorStatemnt = std::dynamic_pointer_cast<ErrorStatement>(result);
         if (errorStatemnt) {
             BasicStepProcessor::Evaluate(errorStatemnt);
             popingLineHistory.Add(errorStatemnt);
             return;
         }
 
-        auto statemnt = dynamic_cast<Statement*>(result);
+        auto statemnt = std::dynamic_pointer_cast<Statement>(result);
 
         if (BasicStepProcessor::Evaluate(statemnt).addtoHistory )
             popingLineHistory.Add(result);
     }
 }
 
-void ForStepProcessor::ExecuteStatments(ForStatment* thisForBlock)
+void ForStepProcessor::ExecuteStatments(std::shared_ptr<ForStatment> thisForBlock)
 {
     // localVarTable.SetSuper(&outer);
 
@@ -215,11 +212,11 @@ void ForStepProcessor::ExecuteStatments(ForStatment* thisForBlock)
     }
 }
 
-BasicStepProcessor::CmdResult ForStepProcessor::Process(Command* input)
+BasicStepProcessor::CmdResult ForStepProcessor::Process(std::shared_ptr<Command> input)
 {
     CmdResult positiveResult{ true, true };
 
-    auto statemnt = dynamic_cast<ListCommand*>(input);
+    auto statemnt = std::dynamic_pointer_cast<ListCommand>(input);
     if (statemnt) {
 
         std::cout << std::endl;
@@ -249,7 +246,7 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(Command* input)
         return positiveResult;
     }
 
-    auto customCommand = dynamic_cast<CustomCommand*>(input);
+    auto customCommand = std::dynamic_pointer_cast<CustomCommand>(input);
     if (customCommand) {
 
         if (customCommand->name == "checkback") {
@@ -257,7 +254,7 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(Command* input)
             for (auto i = popingLineHistory.begin(); i != popingLineHistory.end();
                  i++) {
 
-                auto statmentCasted = dynamic_cast<Statement*>((*i));
+                auto statmentCasted = std::dynamic_pointer_cast<Statement>((*i));
                 if (statmentCasted) {
 
                     statementStash.push_back(statmentCasted);
@@ -273,7 +270,7 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(Command* input)
 
             for (auto i = popingLineHistory.begin(); i != popingLineHistory.end();
                  i++) {
-                if (dynamic_cast<Statement*>((*i))) {
+                if (std::dynamic_pointer_cast<Statement>((*i))) {
                     popingLineHistory.Splice(i);
                     break;
                 }
@@ -287,7 +284,7 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(Command* input)
                 for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
                      i++) {
 
-                    ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
+                    ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
                 }
             }
 
@@ -299,7 +296,7 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(Command* input)
                 for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
                      i++) {
 
-                    ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
+                    ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
                 }
 
                 break;
@@ -340,9 +337,9 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(Command* input)
 }
 
 // excute filterring error
-void ForStepProcessor::ExecuteTheStatment(Statement* st)
+void ForStepProcessor::ExecuteTheStatment(std::shared_ptr<Statement> st)
 {
-    if (dynamic_cast<ErrorStatement*>(st))
+    if (std::dynamic_pointer_cast<ErrorStatement>(st))
         return;
 
     Evaluate(st);
@@ -357,7 +354,7 @@ void ForStepProcessor::ExecuteAStep()
         for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
              i++) {
 
-            ExecuteTheStatment(dynamic_cast<Statement*>((*i)));
+            ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
         }
 
         break;
@@ -374,7 +371,7 @@ void ForStepProcessor::ExecuteHistory()
         for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
              i++) {
 
-            Evaluate(dynamic_cast<Statement*>((*i)));
+            Evaluate(std::dynamic_pointer_cast<Statement>((*i)));
         }
     }
 }

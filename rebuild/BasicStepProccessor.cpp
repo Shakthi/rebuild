@@ -14,6 +14,7 @@
 #include "linenoise/lineNoiseWrapper.hpp"
 #include "Parser/ParserWrapper.hpp"
 #include "Value.h"
+#include "Sentence.h"
 #include "Logger.hpp"
 #include "SentenceHistory.hpp"
 
@@ -31,7 +32,7 @@
 
 
 
-BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
+BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result)
 {
     CmdResult ret{true,true};
 
@@ -41,7 +42,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
         return ret;
     }
     
-    auto endStatement = dynamic_cast< EndStatement*>(result);
+    auto endStatement = std::dynamic_pointer_cast < EndStatement>(result);
     if (endStatement) {
         exitProcessing();
         ret.addtoHistory = false;
@@ -50,7 +51,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
 
     }
     
-    auto readStatemnt = dynamic_cast< ReadStatement*>(result);
+    auto readStatemnt = std::dynamic_pointer_cast < ReadStatement>(result);
     if (readStatemnt) {
         
         ReadStepProcessor* readStepProcessor = new ReadStepProcessor(rebuild, readStatemnt->variableList,readStatemnt->prompt,localVarTable);
@@ -63,7 +64,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
     
     
     
-    auto forStatemnt = dynamic_cast< ForStatment*>(result);
+    auto forStatemnt = std::dynamic_pointer_cast< ForStatment>(result);
     if (forStatemnt) {
         
         if(!forStatemnt->statements.empty())
@@ -74,6 +75,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
             processor->Init();
            processor->ExecuteStatments(forStatemnt);
 
+            delete processor;
             
 
         }
@@ -92,7 +94,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
         return ret; //TODO:need to add to history later
     }
     
-    auto errorStatemnt = dynamic_cast< ErrorStatement*>(result);
+    auto errorStatemnt = std::dynamic_pointer_cast< ErrorStatement>(result);
     if (errorStatemnt) {
         
         std::cout<<Rebuild::prompt<<"! "<<errorStatemnt->description<<std::endl;
@@ -100,7 +102,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
     }
     
     
-    auto ifstment = dynamic_cast< IfStatment*>(result);
+    auto ifstment = std::dynamic_pointer_cast< IfStatment>(result);
     if (ifstment) {
         auto  * stepprocessor = new IfStepProcessor(rebuild,ifstment,&localVarTable);
         
@@ -113,7 +115,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
     
 
     
-    auto printStatemnt = dynamic_cast< PrintStatement*>(result);
+    auto printStatemnt = std::dynamic_pointer_cast< PrintStatement>(result);
     if (printStatemnt) {
         
         for (auto i= printStatemnt->printitems.begin();i!=printStatemnt->printitems.end();i++) {
@@ -130,7 +132,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
             
 
         }
-        if( ! dynamic_cast< PrintElementStatement*>(result))
+        if( ! std::dynamic_pointer_cast< PrintElementStatement>(result))
             std::cout<<std::endl;
         
         return ret;
@@ -139,7 +141,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
    
     
     
-    auto letStatemnt = dynamic_cast< LetStatement*>(result);
+    auto letStatemnt = std::dynamic_pointer_cast< LetStatement>(result);
     if (letStatemnt) {
         if(localVarTable.GetVar(letStatemnt->variablename).valutype == Value::Evaluetype::emptyType)
             localVarTable.GetVar(letStatemnt->variablename)=letStatemnt->rvalue->Evaluate(&localVarTable);
@@ -161,7 +163,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
 
 
 
- BasicStepProcessor::CmdResult BasicStepProcessor::Process(Command  * result)
+ BasicStepProcessor::CmdResult BasicStepProcessor::Process(std::shared_ptr<Command> result)
 {
 
     CmdResult ret{true,true};
@@ -176,7 +178,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
     {
         
        
-        auto statemnt = dynamic_cast< ListCommand*>(result);
+        auto statemnt = std::dynamic_pointer_cast< ListCommand>(result);
         if (statemnt) {
             
             std::cout<<std::endl;
@@ -190,7 +192,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
             
             return ret;
         }
-        auto customCommand = dynamic_cast<CustomCommand*>(result);
+        auto customCommand = std::dynamic_pointer_cast<CustomCommand>(result);
         if (customCommand) {
             
             if(customCommand->name == "restart")
@@ -209,8 +211,8 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(Statement  * result)
             {
                 if (history->GetLastStatmentIter()!= history->end()) {
                     
-                    Sentence * sentence = *(history->GetLastStatmentIter());
-                    auto  forStatment =  dynamic_cast<ForStatment*>(sentence);
+                    SentenceRef sentence = *(history->GetLastStatmentIter());
+                    auto  forStatment =  std::dynamic_pointer_cast<ForStatment>(sentence);
                     if(forStatment)
                     {
                         auto forStepProcessor = new ForStepProcessor(rebuild,forStatment,&localVarTable,ForStepProcessor::InitType::stepin);
@@ -283,7 +285,7 @@ void BasicStepProcessor::RunStep()
         }
     }
 
-    Sentence* sentence;
+    SentenceRef sentence;
     LineNoiseWrapper::EModificationStatus mstats = results.mstatus;
 
     if (results.status == LineNoiseWrapper::ExitStatus::ok && mstats == LineNoiseWrapper::EModificationStatus::history) {
@@ -291,7 +293,7 @@ void BasicStepProcessor::RunStep()
         auto lastiter = history->GetLastStatmentIter();
 
         assert(*lastiter);
-        sentence = (*lastiter)->clone();
+        sentence = SentenceRef((*lastiter)->clone());
 
     } else {
         BasicParser parser;
@@ -300,27 +302,21 @@ void BasicStepProcessor::RunStep()
 
     assert(sentence);
 
-    auto result = Evaluate(dynamic_cast<Statement*>(sentence));
+    auto result = Evaluate(std::dynamic_pointer_cast<Statement>(sentence));
 
     if (result.handled) {
 
         if (result.addtoHistory)
             history->Add(sentence);
-        else
-            delete sentence;
 
     } else {
-        auto result = Process(dynamic_cast<Command*>(sentence));
+        auto result = Process(std::dynamic_pointer_cast<Command>(sentence));
 
         if (result.handled) {
 
             if (!proceedStroke && result.addtoHistory) {
                 history->Add(sentence);
-            } else {
-                delete sentence;
             }
-        } else {
-            delete sentence;
         }
     }
 }

@@ -456,38 +456,10 @@ void ForStatment::serialize( Archive & ar )
 {
     ar( CEREAL_NVP(forVar),CEREAL_NVP(forBegin),CEREAL_NVP(forEnd),CEREAL_NVP(forStep) );
     ar( CEREAL_NVP(sourceText));
-    
-    
-    
-    
-    auto nondeleter=[&](Statement* ){};
-    
-    std::function<void(Statement*)> F = nondeleter;
-    
-    std::vector<std::unique_ptr<Statement,decltype(F)>> statementsptr;
-    statementsptr.reserve(statements.size());
-    
-    
-    for(auto st : statements )
-    {
-        statementsptr.push_back( std::unique_ptr<Statement,decltype(F)>(st,F));
-    
-    }
 
-     ar( CEREAL_NVP(statementsptr));
+     ar( CEREAL_NVP(statements));
     
-    if(statements.empty() && !statementsptr.empty())
-    {
-        statements.reserve(statementsptr.size());
-        for(auto  & st : statementsptr )
-        {
-            statements.push_back(st.release());
-            
-        }
-    
-    }
-    
-    
+
         
 }
 
@@ -577,7 +549,7 @@ ForStatment::ForStatment(const ForStatment & other)
 
     for(const auto &st : other.statements )
     {
-        statements.push_back( st->clone());
+        statements.push_back( StatementRef(st->clone()));
 
     }
 

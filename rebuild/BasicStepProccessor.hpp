@@ -12,6 +12,7 @@
 
 #include "StepProcessor.hpp"
 #include "VarTable.hpp"
+#include "Sentence.h"
 
 class BasicStepProcessor : public StepProcessor {
 
@@ -31,8 +32,8 @@ public:
 
 
     void RunStep();
-    virtual CmdResult Evaluate(class Statement* input);
-    virtual CmdResult Process(class Command* input);
+    virtual CmdResult Evaluate(StatementRef input);
+    virtual CmdResult Process(std::shared_ptr<Command> input);
     virtual std::string ProcessCtrlKeyStroke(int ctrlchar);
 
 

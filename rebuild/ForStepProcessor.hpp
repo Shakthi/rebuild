@@ -18,11 +18,11 @@
 
 
 class ForStepProcessor : public BasicStepProcessor {
-    ForStatment * thisForBlock;
+    std::shared_ptr<ForStatment> thisForBlock;
     
     std::string remarks;
     PopingLineSentenceHistory popingLineHistory;
-    std::list<Statement*> statementStash;
+    std::list<StatementRef> statementStash;
     bool initConditionPassed;
     
     
@@ -31,7 +31,7 @@ public:
     
     enum class InitType {normal,stepin,reload};
     
-    ForStepProcessor(Rebuild* aRebuild, ForStatment * forStatement,VarTable * superTable,InitType initType = InitType::normal)
+    ForStepProcessor(Rebuild* aRebuild, std::shared_ptr<ForStatment> forStatement,VarTable * superTable,InitType initType = InitType::normal)
     : BasicStepProcessor(aRebuild,superTable),thisForBlock(forStatement),popingLineHistory(aRebuild->GetHistoryStack())
     {
         history = &popingLineHistory;
@@ -51,17 +51,17 @@ public:
         return localVarTable.GetVar(thisForBlock->forVar).getNumVal();
     }
 
-    static bool IsListableStatement(Sentence * s)
+    static bool IsListableStatement(SentenceRef s)
     {
-        Statement * st = dynamic_cast<Statement*>(s);
+        StatementRef  st = std::dynamic_pointer_cast<Statement>(s);
         if (!st) {
             return false;
         }
 
-        if(dynamic_cast<NextStatement*>(st)){
+        if(std::dynamic_pointer_cast<NextStatement>(st)){
             return false;
         }
-        if(dynamic_cast<ErrorStatement*>(st)){
+        if(std::dynamic_pointer_cast<ErrorStatement>(st)){
             return false;
         }
 
@@ -84,17 +84,17 @@ public:
     
     void ExecuteHistory();
     void ExecuteAStep();
-    void ExecuteTheStatment(Statement * statment );
+    void ExecuteTheStatment(StatementRef  statment );
     bool CheckCondition();
-    void ExecuteIncrement(ForStatment  * forstatement=nullptr);
+    void ExecuteIncrement(std::shared_ptr<ForStatment>  forstatement=nullptr);
     void ArchiveStatements();
     void UnArchiveStatements();
 
 
     //should be static
-    void ExecuteStatments(ForStatment  * forstatement);
+    void ExecuteStatments(std::shared_ptr<ForStatment> forstatement);
     
-    virtual CmdResult Process(class Command* input);
+    virtual CmdResult Process(std::shared_ptr<Command> input);
     
 
     

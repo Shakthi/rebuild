@@ -18,7 +18,7 @@ class Parser {
     
     
 public:
-     Sentence *  Parse(std::string data);
+     SentenceRef  Parse(std::string data);
 };
 
 
