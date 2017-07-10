@@ -16,6 +16,7 @@ Achivements
 Features
 ------
 - Added checkback feature, undo  last statement in statmentbuffer, with provision to modify it
+- Converted core ast node of rebuild (Sentence) to use smart pointer instead of raw pointer which reduced memory leaks 
 
 
 Development
