@@ -29,12 +29,15 @@ extern void yy_delete_buffer( YY_BUFFER_STATE buffer);
     YY_BUFFER_STATE buf;
     buf = yy_scan_string(data.c_str());
     Sentence * outSentence;
-    if(yyparse(&outSentence)==0){
+    int returnStatus = yyparse(&outSentence);
+    yy_delete_buffer(buf);
+
+    yylex_destroy();
+    
+    if(returnStatus==0){
         if( outSentence != NULL)
             outSentence->sourceText = data;
-            yy_delete_buffer(buf);
 
-            yylex_destroy();
         return  SentenceRef(outSentence);
         
     } else {
