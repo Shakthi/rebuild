@@ -31,7 +31,7 @@ class Rebuild {
     std::string LocalSavePath();
     
 
-    std::stack<class StepProcessor*> processorStack;
+    std::stack<std::shared_ptr<class StepProcessor>> processorStack;
     std::vector<class SentenceHistory *> historyStack;
     std::vector<std::string> arglist;
 
@@ -64,7 +64,7 @@ public:
 
     void RunStep();
     void exitProcessing();
-    void addNewProcessing(StepProcessor*);
+    void addNewProcessing(std::shared_ptr<StepProcessor>);
     
     bool restart();
     

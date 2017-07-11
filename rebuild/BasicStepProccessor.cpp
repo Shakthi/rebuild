@@ -54,7 +54,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
     auto readStatemnt = std::dynamic_pointer_cast < ReadStatement>(result);
     if (readStatemnt) {
         
-        ReadStepProcessor* readStepProcessor = new ReadStepProcessor(rebuild, readStatemnt->variableList,readStatemnt->prompt,localVarTable);
+        auto readStepProcessor = std::shared_ptr<StepProcessor>(new ReadStepProcessor(rebuild, readStatemnt->variableList,readStatemnt->prompt,localVarTable));
         rebuild->addNewProcessing(readStepProcessor);
         return ret; //TODO:need to add to history later
     }
@@ -82,11 +82,11 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
         else
         {
             
-            ForStepProcessor * readStepProcessor = new ForStepProcessor(rebuild,forStatemnt,&localVarTable);
+            auto readStepProcessor =  new ForStepProcessor(rebuild,forStatemnt,&localVarTable);
             readStepProcessor->Init();
             
             
-            rebuild->addNewProcessing(readStepProcessor);
+            rebuild->addNewProcessing(std::shared_ptr<StepProcessor>(readStepProcessor));
 
         
         }
@@ -109,7 +109,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
         stepprocessor->Init();
         
         
-        rebuild->addNewProcessing(stepprocessor);
+        rebuild->addNewProcessing(std::shared_ptr<StepProcessor>(stepprocessor));
         return ret; //TODO:need to add to history later
     }
     
@@ -218,7 +218,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
                         auto forStepProcessor = new ForStepProcessor(rebuild,forStatment,&localVarTable,ForStepProcessor::InitType::stepin);
                         forStepProcessor->Init();
 
-                        rebuild->addNewProcessing(forStepProcessor);
+                        rebuild->addNewProcessing(std::shared_ptr<StepProcessor>(forStepProcessor));
                     }
 
                 }

@@ -69,7 +69,7 @@ Rebuild::Rebuild(const std::vector<std::string> & argv)
     rlog << "Hello world...!("<<__DATE__<<"-"<<__TIME__<< ")"<<std::endl;
     history = new SentenceHistory();
     lineNoiseWrapper = new LineNoiseWrapper(*history);
-    addNewProcessing(new BasicStepProcessor(this,&varTable));
+    addNewProcessing(std::shared_ptr<StepProcessor>(new BasicStepProcessor(this,&varTable)));
     Load();
     
 
@@ -221,15 +221,14 @@ Rebuild::~Rebuild()
 
 void Rebuild::exitProcessing()
 {
-    StepProcessor* last = processorStack.top();
+    auto last = processorStack.top();
     processorStack.pop();
     historyStack.pop_back();
     lastStepProcessorData = last->ToJson();
-    delete last;
 }
 
 
-void Rebuild::addNewProcessing(StepProcessor* stepProcessor)
+void Rebuild::addNewProcessing(std::shared_ptr<StepProcessor> stepProcessor)
 {
     processorStack.push(stepProcessor);
     historyStack.push_back(stepProcessor->GetHistory());
@@ -243,7 +242,7 @@ void Rebuild::RunStep()
         return;
     }
 
-    StepProcessor* stepProcessor = processorStack.top();
+    auto stepProcessor = processorStack.top();
 
     stepProcessor->RunStep();
 }
