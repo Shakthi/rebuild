@@ -72,8 +72,8 @@ void ForStepProcessor::RunStep()
 
 
 
-        std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory(
-            Rebuild::prompt + "for " + thisForBlock->forVar + "]:",
+        std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(
+            Rebuild::GetPrompt() + "for " + thisForBlock->forVar + "]:",
             popingLineHistory,extraResults,prefilled);
         
 
@@ -158,7 +158,7 @@ void ForStepProcessor::RunStep()
         }
             } else {
         LineNoiseWrapper::ExtraResults extraResults;
-        std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory(
+        std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(
             "[rebuild>forelse]:", popingLineHistory,extraResults);
 
         BasicParser parser;

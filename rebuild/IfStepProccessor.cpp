@@ -30,7 +30,7 @@ void IfStepProcessor::RunStep()
     
     if(passThroughe == true){
         LineNoiseWrapper::ExtraResults results;
-        std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>if]:",popingLineHistory,results);
+        std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory("[rebuild>if]:",popingLineHistory,results);
         
         BasicParser parser;
         SentenceRef  result =  parser.Parse(answer);
@@ -59,7 +59,7 @@ void IfStepProcessor::RunStep()
         
     }else
     {
-        std::string answer = rebuild->lineNoiseWrapper->getLine("[rebuild>if (remarks)]:");
+        std::string answer = rebuild->lineNoiseWrapper.getLine("[rebuild>if (remarks)]:");
         
         BasicParser parser;
         SentenceRef result =  parser.Parse(answer);

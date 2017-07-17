@@ -17,10 +17,13 @@ int main(int argc, const char* argv[])
 
     Rebuild rebuild(arguments);
 
+    rebuild.Load();
+
+
     while (rebuild.IsAlive()) {
         rebuild.RunStep();
     }
 
-    rebuild.SaveIfLatest(); //FIXME: Saving is not homlogous to loading?
+    rebuild.SaveIfLatest();
     return rebuild.GetExitStatus();
 }

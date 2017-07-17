@@ -10,7 +10,6 @@
 #define lineNoiseWrapper_hpp
 
 #include "lineHistory.hpp"
-#include "Rebuild.hpp"
 #include <string>
 
 class LineNoiseWrapper  {

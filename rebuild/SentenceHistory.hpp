@@ -9,7 +9,6 @@
 #ifndef SentenceHistory_hpp
 #define SentenceHistory_hpp
 
-#include "Rebuild.hpp"
 #include "nlohmann/json.hpp"
 #include "linenoise/lineHistory.hpp"
 #include "AST.hpp"

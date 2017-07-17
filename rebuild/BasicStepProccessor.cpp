@@ -55,7 +55,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
     if (readStatemnt) {
         
         auto readStepProcessor = std::shared_ptr<StepProcessor>(new ReadStepProcessor(rebuild, readStatemnt->variableList,readStatemnt->prompt,localVarTable));
-        rebuild->addNewProcessing(readStepProcessor);
+        rebuild->AddNewProcessing(readStepProcessor);
         return ret; //TODO:need to add to history later
     }
     
@@ -86,7 +86,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
             readStepProcessor->Init();
             
             
-            rebuild->addNewProcessing(std::shared_ptr<StepProcessor>(readStepProcessor));
+            rebuild->AddNewProcessing(std::shared_ptr<StepProcessor>(readStepProcessor));
 
         
         }
@@ -97,7 +97,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
     auto errorStatemnt = std::dynamic_pointer_cast< ErrorStatement>(result);
     if (errorStatemnt) {
         
-        std::cout<<Rebuild::prompt<<"! "<<errorStatemnt->description<<std::endl;
+        std::cout<<Rebuild::GetPrompt()<<"! "<<errorStatemnt->description<<std::endl;
         return ret;//TODO and as temporary
     }
     
@@ -109,7 +109,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
         stepprocessor->Init();
         
         
-        rebuild->addNewProcessing(std::shared_ptr<StepProcessor>(stepprocessor));
+        rebuild->AddNewProcessing(std::shared_ptr<StepProcessor>(stepprocessor));
         return ret; //TODO:need to add to history later
     }
     
@@ -146,7 +146,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
         if(localVarTable.GetVar(letStatemnt->variablename).valutype == Value::Evaluetype::emptyType)
             localVarTable.GetVar(letStatemnt->variablename)=letStatemnt->rvalue->Evaluate(&localVarTable);
         else
-            std::cout<<Rebuild::prompt<<"! "<<letStatemnt->variablename<<" already defined"<<std::endl;
+            std::cout<<Rebuild::GetPrompt()<<"! "<<letStatemnt->variablename<<" already defined"<<std::endl;
 
 
         return ret;
@@ -197,13 +197,13 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
             
             if(customCommand->name == "restart")
             {
-                rebuild->restart();
+                rebuild->Restart();
             
             }
             else if (customCommand->name == "cls")
             {
                 
-                rebuild->lineNoiseWrapper->ClearScreen();
+                rebuild->lineNoiseWrapper.ClearScreen();
                 return ret;
 
             }
@@ -218,7 +218,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
                         auto forStepProcessor = new ForStepProcessor(rebuild,forStatment,&localVarTable,ForStepProcessor::InitType::stepin);
                         forStepProcessor->Init();
 
-                        rebuild->addNewProcessing(std::shared_ptr<StepProcessor>(forStepProcessor));
+                        rebuild->AddNewProcessing(std::shared_ptr<StepProcessor>(forStepProcessor));
                     }
 
                 }
@@ -269,7 +269,7 @@ std::string BasicStepProcessor::ProcessCtrlKeyStroke(int ctrlchar)
 void BasicStepProcessor::RunStep()
 {
     LineNoiseWrapper::ExtraResults results;
-    std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory(Rebuild::prompt + ":",*rebuild->history,results);
+    std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(Rebuild::GetPrompt() + ":",rebuild->history,results);
 
     bool proceedStroke = false;
 

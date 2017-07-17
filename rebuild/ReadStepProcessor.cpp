@@ -37,13 +37,13 @@ ReadStepProcessor::ReadStepProcessor(Rebuild* aRebuild, std::list<std::string>& 
         if(prompt!="")
         {
 
-            readprompt=Rebuild::prompt+prompt+"";
+            readprompt=Rebuild::GetPrompt()+prompt+"";
         }
 
         else
         {
             // create the prompt for reading
-            readprompt = Rebuild::prompt +"input ";
+            readprompt = Rebuild::GetPrompt() +"input ";
             bool firstParam = true;
             for (auto i = list.begin(); i != list.end(); i++) {
                 if (!firstParam)
@@ -59,7 +59,7 @@ ReadStepProcessor::ReadStepProcessor(Rebuild* aRebuild, std::list<std::string>& 
             readprompt += ":";
         }
 
-        std::string answer = rebuild->lineNoiseWrapper->getLine(readprompt);
+        std::string answer = rebuild->lineNoiseWrapper.getLine(readprompt);
         std::istringstream stream(answer);
 
         for (auto i = list.begin(); i != list.end(); i++) {

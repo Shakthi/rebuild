@@ -12,7 +12,7 @@
 #include "Rebuild.hpp"
 #include <stdio.h>
 
-class StepProcessor : public Rebuild::Serialised {
+class StepProcessor  {
 protected:
     class Rebuild* rebuild;
     class SentenceHistory *  history;
@@ -28,6 +28,8 @@ public:
      SentenceHistory * GetHistory()const{
         return history;
     }
+    virtual nlohmann::json ToJson() = 0;
+    virtual void FromJson(nlohmann::json) = 0;
     virtual void RunStep() {}
     void exitProcessing();
     virtual ~StepProcessor() {}

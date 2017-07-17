@@ -6,22 +6,18 @@
 //  Copyright © 2017 self. All rights reserved.
 //
 
-#include "Rebuild.hpp"
 #include "Logger.hpp"
+#include "Rebuild.hpp"
 
 #include "BasicStepProccessor.hpp"
-#include "linenoise/lineNoiseWrapper.hpp"
-#include "SentenceHistory.hpp"
 #include <exception>
-#include <stdexcept>
 #include <iostream>
+#include <stdexcept>
 
 namespace {
+//Anonymised namespace for utility
     
-    
-    
-    
-
+//https://stackoverflow.com/questions/9527960/how-do-i-construct-an-iso-8601-datetime-in-c
 std::string
 nowTime()
 {
@@ -34,6 +30,7 @@ nowTime()
 
 std::string version = "1.0";
 
+//https://stackoverflow.com/questions/3418231/replace-part-of-a-string-with-another-string
 bool replace(std::string& str, const std::string& from, const std::string& to)
 {
     size_t start_pos = str.find(from);
@@ -42,49 +39,45 @@ bool replace(std::string& str, const std::string& from, const std::string& to)
     str.replace(start_pos, from.length(), to);
     return true;
 }
-    
-    
-    
-    
-}
+}//
 
 
+//Hirarchical loging facility
 log_buffer lbuffer;
-Rlog  rlog(lbuffer);
-
-
+Rlog rlog(lbuffer);
 
 std::string Rebuild::prompt;
 
-Rebuild::Rebuild(const std::vector<std::string> & argv)
+Rebuild::Rebuild(const std::vector<std::string>& argv)
     : exitStatus(exitStatusRIP)
     , alive(true)
-    ,arglist(argv)
+    , arglist(argv)
+    , lineNoiseWrapper(history)
 
 {
     //Rlog rlog;
-    rlog<<arglist.size()<<std::endl;
-    
-    Rebuild::prompt="rebuild]";
-    rlog << "Hello world...!("<<__DATE__<<"-"<<__TIME__<< ")"<<std::endl;
-    history = new SentenceHistory();
-    lineNoiseWrapper = new LineNoiseWrapper(*history);
-    addNewProcessing(std::shared_ptr<StepProcessor>(new BasicStepProcessor(this,&varTable)));
-    Load();
-    
+    rlog << arglist.size() << std::endl;
 
+    Rebuild::prompt = "rebuild]";
+    rlog << "Hello world...!(" << __DATE__ << "-" << __TIME__ << ")" << std::endl;
+
+    AddNewProcessing(std::shared_ptr<StepProcessor>(new BasicStepProcessor(this, &varTable)));
+}
+
+
+Rebuild::~Rebuild()
+{
+    //Note no allocation
 }
 
 std::string
-Rebuild::LocalSavePath()
+Rebuild::GetLocalSavePath()
 {
     const char* localPth = __FILE__;
     std::string original = localPth;
     replace(original, "rebuild/Rebuild.cpp", "");
     return original + "rebuild.alldb.txt";
 }
-
-
 
 std::string
 Rebuild::GetSavePath()
@@ -113,49 +106,36 @@ void Rebuild::SaveIfLatest()
         } else {
             Save();
         }
-    }else {
+    } else {
         Save();
     }
 }
 
-namespace
+namespace {
+
+void Logger_FromJson(nlohmann::json options)
 {
-
-    void Logger_FromJson(nlohmann::json options)
-    {
-        if(!options.is_null())
-        {
-            lbuffer.quit=options["logquite"];
-        }
+    if (!options.is_null()) {
+        lbuffer.quit = options["logquite"];
     }
-    
-    
-    nlohmann::json Logger_ToJson()
-    {
-        nlohmann::json options;
-        options["logquite"]=lbuffer.quit;
-        return options;
-    }
-
-
-
 }
 
-
+nlohmann::json Logger_ToJson()
+{
+    nlohmann::json options;
+    options["logquite"] = lbuffer.quit;
+    return options;
+}
+}
 
 void Rebuild::Load()
 {
     Rlog rlog;
     std::string savepath = GetSavePath();
-    
+
     rlog << "Loading main config:" << savepath << std::endl;
     std::ifstream stream(savepath);
-    
-    
-    
-    
 
-    
     if (stream.good()) {
         nlohmann::json root;
         try {
@@ -164,27 +144,22 @@ void Rebuild::Load()
                 throw version;
             varTable.FromJson(root["globalVariable"]);
 
-            history->FromJson(root["history"]);
+            history.FromJson(root["history"]);
             processorStack.top()->FromJson(root["processor"]);
             Logger_FromJson(root["options"]);
-            
 
             // successfull read lets save backup
-            std::ofstream stream2(LocalSavePath());
-            rlog << "Successfull load config..Backing up db at :" << LocalSavePath() << std::endl;
+            std::ofstream stream2(GetLocalSavePath());
+            rlog << "Successfull load config..Backing up db at :" << GetLocalSavePath() << std::endl;
 
             stream2 << root.dump(4);
 
         } catch (std::exception exception) {
-            
-            
-            rlog << Rlog::type::error<< "Failed load config"<< LocalSavePath() << exception.what() << std::endl;
-            
+
+            rlog << Rlog::type::error << "Failed load config" << GetLocalSavePath() << exception.what() << std::endl;
         }
-    }else
-    {
-         rlog << Rlog::type::error<< "Failed load config"<< LocalSavePath() << std::endl;
-    
+    } else {
+        rlog << Rlog::type::error << "Failed load config" << GetLocalSavePath() << std::endl;
     }
 }
 
@@ -194,7 +169,7 @@ void Rebuild::Save()
     nlohmann::json root;
     //Rlog rlog;
     root["globalVariable"] = varTable.ToJson();
-    root["history"] = history->ToJson();
+    root["history"] = history.ToJson();
 
     root["timestampepoch"] = std::time(0);
     root["timestamp"] = nowTime();
@@ -206,20 +181,13 @@ void Rebuild::Save()
     root["processor"] = lastStepProcessorData;
 
     std::ofstream stream(GetSavePath());
-    rlog << "Saving at "<<GetSavePath()<<"... " << std::endl;
+    rlog << "Saving at " << GetSavePath() << "... " << std::endl;
 
     stream << root.dump(4);
 }
 
-Rebuild::~Rebuild()
-{
-    delete history;
-    delete lineNoiseWrapper;
-}
 
-
-
-void Rebuild::exitProcessing()
+void Rebuild::ExitProcessing()
 {
     auto last = processorStack.top();
     processorStack.pop();
@@ -227,12 +195,10 @@ void Rebuild::exitProcessing()
     lastStepProcessorData = last->ToJson();
 }
 
-
-void Rebuild::addNewProcessing(std::shared_ptr<StepProcessor> stepProcessor)
+void Rebuild::AddNewProcessing(std::shared_ptr<StepProcessor> stepProcessor)
 {
     processorStack.push(stepProcessor);
     historyStack.push_back(stepProcessor->GetHistory());
-
 }
 
 void Rebuild::RunStep()
@@ -249,17 +215,19 @@ void Rebuild::RunStep()
 
 #include <unistd.h>
 
-bool Rebuild::restart()
+bool Rebuild::Restart()
 {
-    Rlog rlog;
-    rlog<<"Restarting "<<std::endl;
-    
-    SaveIfLatest();
-    char *argm[] = {strdup(arglist[0].c_str()), 0};
+    //Note this is hard restart. Loads the rebuilt binary from the disk. Very usefull if the rebuild getting built.
+    //Whith perfect implementation restore
 
-    
-    
-    execvp (argm[0],argm );
+    Rlog rlog;
+    rlog << "Restarting " << std::endl;
+
+    SaveIfLatest();
+    char* argm[] = { strdup(arglist[0].c_str()), 0 };
+
+
+    execvp(argm[0], argm);
 
     return true;
 }
