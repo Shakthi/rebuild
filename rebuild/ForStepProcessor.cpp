@@ -304,7 +304,21 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(std::shared_ptr<Command>
 
             return positiveResult;
 
-        } else if (customCommand->name == "list") {
+        }else if (customCommand->name == "rewind") { // One loop
+
+            for (Init(); CheckCondition();) {
+                for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
+                     i++) {
+
+                    ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
+                }
+
+                break;
+            }
+            
+            return positiveResult;
+        }
+        else if (customCommand->name == "list") {
 
             std::cout << std::endl;
             int count = 1, tabstop = 0;
