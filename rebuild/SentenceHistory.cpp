@@ -99,9 +99,11 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
     //save current buffer only if it is at the begning
     if( historyPointer == history.begin())
     {
-        auto anProcessedStatment = SentenceRef( new  UnProcessedStatment);
-        anProcessedStatment->sourceText = currentBuffer;
-        *historyPointer = anProcessedStatment;
+//        auto anProcessedStatment = SentenceRef( new  UnProcessedStatment);
+//        anProcessedStatment->sourceText = currentBuffer;
+//        *historyPointer = anProcessedStatment;
+
+        this->currentBuffer = currentBuffer;
     }
 
 
@@ -123,10 +125,15 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
     }
 
 
+    if( historyPointer == history.begin())
+    {
+        return  this->currentBuffer;
 
+    }else{
 
+        return (*historyPointer)->dumpToString();
+    }
 
-    return (*historyPointer)->dumpToString();
 }
 
 SentenceHistory::iterator  SentenceHistory::GetLastStatmentIter()
@@ -309,10 +316,42 @@ std::string PopingLineSentenceHistory::Edit(std::string currentBuffer,
 
 
 
+void PopingLineSentenceHistory::ReInit()
+{
+
+
+
+    InternalAdd( SentenceRef( new UnProcessedStatment));
+    historyPointer = history.end();
+    historyPointer--;
+
+
+}
+
+
+void PopingLineSentenceHistory::ReInitDone()
+{
+    if(historyPointer != history.begin())
+    {
+        lastStatmentIter = historyPointer;
+
+    }else
+    {
+        historyPointer++;
+        lastStatmentIter = history.end();
+    }
+
+    
+    
+    
+    
+    history.pop_front();
+    
+}
+
+
 void PopingLineSentenceHistory::Add(SentenceRef entry)
 {
-    
-    
     
     if (ChekDuplicate(entry))
     {

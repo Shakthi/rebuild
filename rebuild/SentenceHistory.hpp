@@ -28,6 +28,8 @@ protected:
 
     iterator lastStatmentIter;
 
+    std::string currentBuffer;
+
 
     
 public:
