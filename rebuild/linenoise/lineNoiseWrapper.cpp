@@ -24,7 +24,15 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
     linenoiseOptions option;
     linenoiseOptionsInitDefaults(&option);
     linenoiseResults results;
-    option.preFilledInput = prefilled.c_str();
+
+    bool success;
+    const std::string & defualtHistory  = inhistory.Edit("", LineHistory::MoveDirection::none, success);
+    if(success)
+        option.preFilledInput = defualtHistory.c_str();
+    else
+        option.preFilledInput = prefilled.c_str();
+
+
     results.ctrlKey=0;
     results.printNewln = false;
 

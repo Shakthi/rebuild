@@ -113,13 +113,17 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
         else
             success = false;
 
-    } else {
+    } else if (direction == MoveDirection::prev) {
 
         historyPointer ++;
         if (historyPointer == history.end()) {
             success = false;
             historyPointer --;
         }
+    }else if (direction == MoveDirection::none) {
+
+        success = true;
+
     }
 
 
