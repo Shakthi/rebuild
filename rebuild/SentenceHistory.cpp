@@ -48,10 +48,11 @@ void SentenceHistory::InternalAdd(SentenceRef entry)
 
 }
 
-void SentenceHistory::ReInit()
+void SentenceHistory:: EditBegin()
 {
 
 
+    
 
     InternalAdd( SentenceRef( new UnProcessedStatment));
     historyPointer = history.begin();
@@ -60,15 +61,16 @@ void SentenceHistory::ReInit()
 }
 
 
-void SentenceHistory::ReInitDone()
+void SentenceHistory:: EditEnd()
 {
-    if(historyPointer == history.begin())
+    if(historyPointer != history.begin())
+    {
+        lastStatmentIter = historyPointer;
+
+    }else
     {
         historyPointer++;
         lastStatmentIter = history.end();
-    }else
-    {
-        lastStatmentIter = historyPointer;
     }
 
 
@@ -99,10 +101,6 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
     //save current buffer only if it is at the begning
     if( historyPointer == history.begin())
     {
-//        auto anProcessedStatment = SentenceRef( new  UnProcessedStatment);
-//        anProcessedStatment->sourceText = currentBuffer;
-//        *historyPointer = anProcessedStatment;
-
         this->currentBuffer = currentBuffer;
     }
 
@@ -316,7 +314,7 @@ std::string PopingLineSentenceHistory::Edit(std::string currentBuffer,
 
 
 
-void PopingLineSentenceHistory::ReInit()
+void PopingLineSentenceHistory:: EditBegin()
 {
 
 
@@ -329,7 +327,7 @@ void PopingLineSentenceHistory::ReInit()
 }
 
 
-void PopingLineSentenceHistory::ReInitDone()
+void PopingLineSentenceHistory:: EditEnd()
 {
     if(historyPointer != history.begin())
     {

@@ -60,7 +60,7 @@ void LineHistoryStr::InternalAdd(std::string entry)
 
 }
 
-void LineHistoryStr::ReInit()
+void LineHistoryStr:: EditBegin()
 {
     
     
@@ -70,7 +70,7 @@ void LineHistoryStr::ReInit()
 }
     
 
-void LineHistoryStr::ReInitDone()
+void LineHistoryStr:: EditEnd()
 {
     history.pop_back();
 }

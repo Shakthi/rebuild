@@ -19,7 +19,7 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
     localHistory = &inhistory;
     
     std::string returnstring;
-    inhistory.ReInit();
+    inhistory.EditBegin();
     
     linenoiseOptions option;
     linenoiseOptionsInitDefaults(&option);
@@ -33,7 +33,7 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
     mstatus = EModificationStatus::ok;
     
     char* result = linenoise(prompt.c_str(),&option,&results);
-    inhistory.ReInitDone();
+    inhistory.EditEnd();
     
     if(option.printNewln==false && results.printNewln == false)
         printf("\n");

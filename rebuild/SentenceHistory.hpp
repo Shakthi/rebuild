@@ -30,12 +30,9 @@ protected:
 
     std::string currentBuffer;
 
-
-    
 public:
-    
-    void ReInit();
-    void ReInitDone();
+    void EditBegin();
+    void EditEnd();
 
     
     SentenceHistory();
