@@ -222,7 +222,7 @@ void SentenceHistory::PopHistory()
 }
 
 
-PopingLineSentenceHistory::PopingLineSentenceHistory(const std::vector<class SentenceHistory*> & stack)
+StackedSentenceHistory::StackedSentenceHistory(const std::vector<class SentenceHistory*> & stack)
 :historyStack(stack),stackPointerInited(false)
 {
 
@@ -233,7 +233,7 @@ PopingLineSentenceHistory::PopingLineSentenceHistory(const std::vector<class Sen
 
 
 
-void PopingLineSentenceHistory::InitHistoryStack()
+void StackedSentenceHistory::InitHistoryStack()
 {
 
     //stack pointer cannot be initialized
@@ -243,7 +243,7 @@ void PopingLineSentenceHistory::InitHistoryStack()
     }
 }
 
-std::string PopingLineSentenceHistory::Edit(std::string currentBuffer,
+std::string StackedSentenceHistory::Edit(std::string currentBuffer,
                                             MoveDirection direction,
                                             bool &success) {
   //     <---move Next ->move prevoious
@@ -323,7 +323,7 @@ std::string PopingLineSentenceHistory::Edit(std::string currentBuffer,
 
 
 
-void PopingLineSentenceHistory:: EditBegin()
+void StackedSentenceHistory:: EditBegin()
 {
 
 
@@ -335,7 +335,7 @@ void PopingLineSentenceHistory:: EditBegin()
 }
 
 
-void PopingLineSentenceHistory:: EditEnd()
+void StackedSentenceHistory:: EditEnd()
 {
     if(historyPointer != history.begin())
     {
@@ -347,16 +347,12 @@ void PopingLineSentenceHistory:: EditEnd()
         lastStatmentIter = history.end();
     }
 
-    
-    
-    
-    
     history.pop_front();
     
 }
 
 
-void PopingLineSentenceHistory::Add(SentenceRef entry)
+void StackedSentenceHistory::Add(SentenceRef entry)
 {
     
     if (ChekDuplicate(entry))

@@ -54,11 +54,11 @@ public:
     void FromJson(nlohmann::json);
 };
 
-class PopingLineHistoryStr : public LineHistoryStr {
+class StackedLineHistoryStr : public LineHistoryStr {
     int extracount;
 
 public:
-    PopingLineHistoryStr()
+    StackedLineHistoryStr()
         : extracount(0)
     {
     }

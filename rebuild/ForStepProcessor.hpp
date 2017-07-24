@@ -21,7 +21,7 @@ class ForStepProcessor : public BasicStepProcessor {
     std::shared_ptr<ForStatment> thisForBlock;
     
     std::string remarks;
-    PopingLineSentenceHistory popingLineHistory;
+    StackedSentenceHistory stackedSentenceHistory;
     std::list<StatementRef> statementStash;
     bool initConditionPassed;
     
@@ -32,13 +32,13 @@ public:
     enum class InitType {normal,stepin,reload};
     
     ForStepProcessor(Rebuild* aRebuild, std::shared_ptr<ForStatment> forStatement,VarTable * superTable,InitType initType = InitType::normal)
-    : BasicStepProcessor(aRebuild,superTable),thisForBlock(forStatement),popingLineHistory(aRebuild->GetHistoryStack())
+    : BasicStepProcessor(aRebuild,superTable),thisForBlock(forStatement),stackedSentenceHistory(aRebuild->GetHistoryStack())
     {
-        history = &popingLineHistory;
+        history = &stackedSentenceHistory;
 
         if(initType!= InitType::reload){
             for (auto st :forStatement->statements ) {
-                popingLineHistory.Add(st);
+                stackedSentenceHistory.Add(st);
             }
         }
 

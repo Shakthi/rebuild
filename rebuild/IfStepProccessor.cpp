@@ -30,7 +30,7 @@ void IfStepProcessor::RunStep()
     
     if(passThroughe == true){
         LineNoiseWrapper::ExtraResults results;
-        std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>if]:",popingLineHistory,results);
+        std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory("[rebuild>if]:",stackedSentenceHistory,results);
         
         BasicParser parser;
         SentenceRef  result =  parser.Parse(answer);
@@ -45,7 +45,7 @@ void IfStepProcessor::RunStep()
         auto errorStatemnt = std::dynamic_pointer_cast< ErrorStatement>(result);
         if (errorStatemnt) {
             BasicStepProcessor::Evaluate(errorStatemnt);
-            popingLineHistory.Add(errorStatemnt);
+            stackedSentenceHistory.Add(errorStatemnt);
             return;
             
             
@@ -54,7 +54,7 @@ void IfStepProcessor::RunStep()
         
 
         if(BasicStepProcessor::Evaluate(statemnt).addtoHistory)
-            popingLineHistory.Add(result);
+            stackedSentenceHistory.Add(result);
         
         
     }else
@@ -84,7 +84,7 @@ void IfStepProcessor::ExecuteHistory()
     
     
     assert(false);//TODO
-//    for(  const auto & statement :popingLineHistory.GetHistory() )
+//    for(  const auto & statement :stackedSentenceHistory.GetHistory() )
 //    {
 //        
 //        Evaluate(dynamic_cast<Statement*>(statement.get()));

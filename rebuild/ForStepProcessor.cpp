@@ -38,7 +38,7 @@ void ForStepProcessor::ExecuteIncrement(std::shared_ptr<ForStatment> statement)
 void ForStepProcessor::ArchiveStatements()
 {
     thisForBlock->statements.clear();
-    for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
+    for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
          i++) {
 
         auto statement = std::dynamic_pointer_cast<Statement>(*i);
@@ -74,7 +74,7 @@ void ForStepProcessor::RunStep()
 
         std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory(
             Rebuild::prompt + "for " + thisForBlock->forVar + "]:",
-            popingLineHistory,extraResults,prefilled);
+            stackedSentenceHistory,extraResults,prefilled);
         
 
         SentenceRef result = nullptr;
@@ -117,7 +117,7 @@ void ForStepProcessor::RunStep()
         auto nextStatemnt = std::dynamic_pointer_cast<NextStatement>(result);
         if (nextStatemnt) {
             ExecuteAStep();
-            popingLineHistory.Add(result);
+            stackedSentenceHistory.Add(result);
 
             return;
         }
@@ -127,7 +127,7 @@ void ForStepProcessor::RunStep()
 
             ArchiveStatements();
             for (ExecuteIncrement() ;CheckCondition(); ExecuteIncrement()) {
-                for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
+                for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
                      i++) {
 
                     ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
@@ -140,7 +140,7 @@ void ForStepProcessor::RunStep()
         auto errorStatemnt = std::dynamic_pointer_cast<ErrorStatement>(result);
         if (errorStatemnt) {
             BasicStepProcessor::Evaluate(errorStatemnt);
-            popingLineHistory.Add(errorStatemnt);
+            stackedSentenceHistory.Add(errorStatemnt);
             return;
         }
 
@@ -149,17 +149,17 @@ void ForStepProcessor::RunStep()
             CmdResult res = BasicStepProcessor::Evaluate(statemnt);
             if (statemnt && res.handled) {
                 if (res.addtoHistory)
-                    popingLineHistory.Add(result);
+                    stackedSentenceHistory.Add(result);
             } else {
                 res = Process(std::dynamic_pointer_cast<Command>(result));
                 if (res.addtoHistory)
-                    popingLineHistory.Add(result);
+                    stackedSentenceHistory.Add(result);
             }
         }
             } else {
         LineNoiseWrapper::ExtraResults extraResults;
         std::string answer = rebuild->lineNoiseWrapper->getLineWithHistory(
-            "[rebuild>forelse]:", popingLineHistory,extraResults);
+            "[rebuild>forelse]:", stackedSentenceHistory,extraResults);
 
         BasicParser parser;
         SentenceRef result = parser.Parse(answer);
@@ -170,7 +170,7 @@ void ForStepProcessor::RunStep()
             //Exucte pending
 
             for (ExecuteIncrement() ;CheckCondition(); ExecuteIncrement()) {
-                for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
+                for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
                      i++) {
 
                     ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
@@ -185,14 +185,14 @@ void ForStepProcessor::RunStep()
         auto errorStatemnt = std::dynamic_pointer_cast<ErrorStatement>(result);
         if (errorStatemnt) {
             BasicStepProcessor::Evaluate(errorStatemnt);
-            popingLineHistory.Add(errorStatemnt);
+            stackedSentenceHistory.Add(errorStatemnt);
             return;
         }
 
         auto statemnt = std::dynamic_pointer_cast<Statement>(result);
 
         if (BasicStepProcessor::Evaluate(statemnt).addtoHistory )
-            popingLineHistory.Add(result);
+            stackedSentenceHistory.Add(result);
     }
 }
 
@@ -251,14 +251,14 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(std::shared_ptr<Command>
 
         if (customCommand->name == "checkback") {
 
-            for (auto i = popingLineHistory.begin(); i != popingLineHistory.end();
+            for (auto i = stackedSentenceHistory.begin(); i != stackedSentenceHistory.end();
                  i++) {
 
                 auto statmentCasted = std::dynamic_pointer_cast<Statement>((*i));
                 if (statmentCasted) {
 
                     statementStash.push_back(statmentCasted);
-                    popingLineHistory.Splice(i,false);
+                    stackedSentenceHistory.Splice(i,false);
 
                     break;
                 }
@@ -268,10 +268,10 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(std::shared_ptr<Command>
 
         } else if (customCommand->name == "popback") {
 
-            for (auto i = popingLineHistory.begin(); i != popingLineHistory.end();
+            for (auto i = stackedSentenceHistory.begin(); i != stackedSentenceHistory.end();
                  i++) {
                 if (std::dynamic_pointer_cast<Statement>((*i))) {
-                    popingLineHistory.Splice(i);
+                    stackedSentenceHistory.Splice(i);
                     break;
                 }
             }
@@ -281,7 +281,7 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(std::shared_ptr<Command>
         } else if (customCommand->name == "runall") { // This command  makes next iteration of loop
 
             for (Init(); CheckCondition(); ExecuteIncrement()) {
-                for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
+                for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
                      i++) {
 
                     ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
@@ -293,7 +293,7 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(std::shared_ptr<Command>
         } else if (customCommand->name == "run") { // One loop
 
             for (Init(); CheckCondition();) {
-                for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
+                for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
                      i++) {
 
                     ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
@@ -307,7 +307,7 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(std::shared_ptr<Command>
         }else if (customCommand->name == "rewind") { // One loop
 
             for (Init(); CheckCondition();) {
-                for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
+                for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
                      i++) {
 
                     ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
@@ -365,7 +365,7 @@ void ForStepProcessor::ExecuteAStep()
     ExecuteIncrement();
     for (; CheckCondition();) {
 
-        for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
+        for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
              i++) {
 
             ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
@@ -382,7 +382,7 @@ void ForStepProcessor::ExecuteHistory()
          getForVar() <= thisForBlock->forEnd->Evaluate(&localVarTable).getNumVal();
          localVarTable.GetVar(thisForBlock->forVar) = getForVar() + thisForBlock->forStep->Evaluate(&localVarTable).getNumVal()) {
 
-        for (auto i = popingLineHistory.rcbegin(); i != popingLineHistory.rcend();
+        for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
              i++) {
 
             Evaluate(std::dynamic_pointer_cast<Statement>((*i)));

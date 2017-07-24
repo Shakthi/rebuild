@@ -139,7 +139,7 @@ std::vector<std::string> & LineHistoryStr::GetHistory()
 }
 
 
-void PopingLineHistoryStr::PopExtra()
+void StackedLineHistoryStr::PopExtra()
 {
     for (int i=0; i<extracount; i++)
     {
@@ -153,7 +153,7 @@ void PopingLineHistoryStr::PopExtra()
 }
 
 
-void PopingLineHistoryStr::Add(std::string entry)
+void StackedLineHistoryStr::Add(std::string entry)
 {
     if (!history.empty())
         if (*(history.rbegin()) == entry) {

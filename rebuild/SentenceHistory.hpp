@@ -76,7 +76,7 @@ public:
 
 
 
-class PopingLineSentenceHistory:public SentenceHistory
+class StackedSentenceHistory:public SentenceHistory
 {
 
 
@@ -94,7 +94,7 @@ class PopingLineSentenceHistory:public SentenceHistory
 
 
 public:
-    PopingLineSentenceHistory(const std::vector<class SentenceHistory*> & stack);
+    StackedSentenceHistory(const std::vector<class SentenceHistory*> & stack);
 
     std::string Edit(std::string currentBuffer, MoveDirection direction,bool& success);
 
