@@ -91,6 +91,10 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
 
     assert(!history.empty());
 
+
+
+
+
     if(history.size() == 1) {  //No other element than current line
         success = false;
         return currentBuffer;
@@ -125,6 +129,7 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
         success = true;
 
     }
+
 
 
     if( historyPointer == history.begin())
@@ -324,8 +329,7 @@ void PopingLineSentenceHistory:: EditBegin()
 
 
     InternalAdd( SentenceRef( new UnProcessedStatment));
-    historyPointer = history.end();
-    historyPointer--;
+    historyPointer = history.begin();
 
 
 }

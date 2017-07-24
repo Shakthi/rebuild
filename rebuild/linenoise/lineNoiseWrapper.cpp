@@ -52,15 +52,17 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
     }
     
     
-    if (errno == EAGAIN)
+    if (errno == EAGAIN){
+
         extraResults.status = ExitStatus::ctrl_c;
-    
+    }
     else if (results.ctrlKey!=0)
     {
         extraResults.status = ExitStatus::ctrl_X;
         extraResults.ctrlKey=results.ctrlKey;
     }
     else{
+        
         extraResults.status = ExitStatus::ok;
 
     }

@@ -100,8 +100,8 @@ public:
 
 
     void Add(SentenceRef);
-    void PopExtra();
-    
+    void EditBegin();
+    void EditEnd();
 };
 
 
