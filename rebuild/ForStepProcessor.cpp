@@ -60,6 +60,8 @@ void ForStepProcessor::RunStep()
 
         std::string prefilled = "";
         bool proceedStroke = false;
+        bool emptyInput = false;
+
 
         if(!statementStash.empty()){
 
@@ -95,10 +97,7 @@ void ForStepProcessor::RunStep()
         if (extraResults.status == LineNoiseWrapper::ExitStatus::ok
             && extraResults.mstatus == LineNoiseWrapper::EModificationStatus::ok) {
 
-            if (!statementStash.empty()) {
-                result =  statementStash.back();
-                statementStash.pop_back();
-            }
+            emptyInput = true;
 
 
         }else {
@@ -306,17 +305,9 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(std::shared_ptr<Command>
 
         }else if (customCommand->name == "rewind") { // One loop
 
-            for (Init(); CheckCondition();) {
-                for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
-                     i++) {
 
-                    ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
-                }
-
-                break;
-            }
-            
-            return positiveResult;
+            stackedSentenceHistory.Rewind();
+                return positiveResult;
         }
         else if (customCommand->name == "list") {
 

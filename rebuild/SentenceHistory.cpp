@@ -95,11 +95,6 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
 
 
 
-    if(history.size() == 1) {  //No other element than current line
-        success = false;
-        return currentBuffer;
-    }
-
 
 
     //save current buffer only if it is at the begning
@@ -206,8 +201,7 @@ void SentenceHistory::FromJson(nlohmann::json root)
 void SentenceHistory::Splice(SentenceHistory::iterator iter,bool deleteStatement)
 {
     if (!history.empty()) {
-        if(deleteStatement)
-        {}
+    
         history.erase(iter);
 
     }
@@ -223,11 +217,10 @@ void SentenceHistory::PopHistory()
 
 
 StackedSentenceHistory::StackedSentenceHistory(const std::vector<class SentenceHistory*> & stack)
-:historyStack(stack),stackPointerInited(false)
+:historyStack(stack),currentStackPointerInited(false)
 {
 
     historyPointerForStack = SentenceHistory::cbegin();
-
 
 }
 
@@ -237,9 +230,16 @@ void StackedSentenceHistory::InitHistoryStack()
 {
 
     //stack pointer cannot be initialized
-    if (!stackPointerInited) {
-        stackPointer = historyStack.rbegin();
-        stackPointerInited = true;
+    if (!currentStackPointerInited) {
+        currentStackPointer = historyStack.rbegin();
+        currentStackPointerInited = true;
+
+
+        SentenceHistory::InternalAdd( SentenceRef( new UnProcessedStatment));
+        historyPointer = history.begin();
+
+
+
     }
 }
 
@@ -249,50 +249,50 @@ std::string StackedSentenceHistory::Edit(std::string currentBuffer,
   //     <---move Next ->move prevoious
   //    ABCDEFGHI | abcdef
   //    historyPointer++->
-  //    stackPointer++->
+  //    currentStackPointer++->
 
   success = true;
   InitHistoryStack();
 
-  if (*stackPointer != this) {
+  if (*currentStackPointer != this) {
 
     if (direction == MoveDirection::prev) {
       const_iterator previousPos = historyPointerForStack;
       ++previousPos;
-      if (previousPos != (*stackPointer)->cend()) // not yet at the end
+      if (previousPos != (*currentStackPointer)->cend()) // not yet at the end
         historyPointerForStack = previousPos;
       else {
-        stack_iterator previousStack = stackPointer;
+        stack_iterator previousStack = currentStackPointer;
         previousStack++;
 
         if (previousStack == historyStack.rend()) {
           success = false;
         } else {
-          stackPointer = previousStack;
-          historyPointerForStack = (*stackPointer)->cbegin();
-          assert(historyPointerForStack != (*stackPointer)->cend());
+          currentStackPointer = previousStack;
+          historyPointerForStack = (*currentStackPointer)->cbegin();
+          assert(historyPointerForStack != (*currentStackPointer)->cend());
         }
       }
 
     } else if (direction == MoveDirection::next) {
 
       if (historyPointerForStack !=
-          (*stackPointer)->cbegin()) // not yet at the begin
+          (*currentStackPointer)->cbegin()) // not yet at the begin
         historyPointerForStack--;
       else {
 
-        if (stackPointer == historyStack.rbegin()) {
+        if (currentStackPointer == historyStack.rbegin()) {
           success = false;
         } else {
-          stackPointer--;
+          currentStackPointer--;
 
-          const_iterator lastIterotr = (*stackPointer)->cend();
-          assert(lastIterotr != (*stackPointer)->cbegin());
+          const_iterator lastIterotr = (*currentStackPointer)->cend();
+          assert(lastIterotr != (*currentStackPointer)->cbegin());
           lastIterotr--;
 
           historyPointerForStack = lastIterotr;
 
-          if (*stackPointer == this) {
+          if (*currentStackPointer == this) {
             iterator nextHistoryPointer = history.end();
             nextHistoryPointer--;
             historyPointer = nextHistoryPointer;
@@ -309,10 +309,10 @@ std::string StackedSentenceHistory::Edit(std::string currentBuffer,
         SentenceHistory::Edit(currentBuffer, direction, success);
     if (!success && direction == MoveDirection::prev) {
 
-      stackPointer++;
-      assert(stackPointer != historyStack.rend());
-      historyPointerForStack = (*stackPointer)->cbegin();
-      assert(historyPointerForStack != (*stackPointer)->cend());
+      currentStackPointer++;
+      assert(currentStackPointer != historyStack.rend());
+      historyPointerForStack = (*currentStackPointer)->cbegin();
+      assert(historyPointerForStack != (*currentStackPointer)->cend());
       result = (*historyPointerForStack)->dumpToString();
       success = true;
     }
@@ -322,14 +322,20 @@ std::string StackedSentenceHistory::Edit(std::string currentBuffer,
 }
 
 
+void StackedSentenceHistory::Rewind()
+{
+
+    historyPointer = history.end();
+    historyPointer--;
+
+}
 
 void StackedSentenceHistory:: EditBegin()
 {
 
 
 
-    InternalAdd( SentenceRef( new UnProcessedStatment));
-    historyPointer = history.begin();
+   // historyPointer = history.begin();
 
 
 }
@@ -343,14 +349,24 @@ void StackedSentenceHistory:: EditEnd()
 
     }else
     {
-        historyPointer++;
+        //historyPointer++;
         lastStatmentIter = history.end();
     }
 
-    history.pop_front();
+    //history.pop_front();
     
 }
 
+
+void StackedSentenceHistory::InternalAdd(SentenceRef entry)
+{
+    auto prevHistoryPointer = historyPointer;
+    prevHistoryPointer++;
+    history.insert(prevHistoryPointer, entry);
+
+}
+
+//U123
 
 void StackedSentenceHistory::Add(SentenceRef entry)
 {

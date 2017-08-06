@@ -65,6 +65,10 @@ public:
             return false;
         }
 
+        if(std::dynamic_pointer_cast<UnProcessedStatment>(st)){
+            return false;
+        }
+
         return true;
 
 

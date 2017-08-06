@@ -82,12 +82,14 @@ class StackedSentenceHistory:public SentenceHistory
 
     const std::vector<class SentenceHistory*> & historyStack;
 
-    std::vector<class SentenceHistory*>::const_reverse_iterator stackPointer;
+    
     typedef typename std::vector<class SentenceHistory*>::const_reverse_iterator stack_iterator;
+
+    stack_iterator currentStackPointer;
     SentenceHistory::const_iterator historyPointerForStack;
 
 
-    bool stackPointerInited;
+    bool currentStackPointerInited;
     void InitHistoryStack();
 
 
@@ -98,10 +100,18 @@ public:
 
     std::string Edit(std::string currentBuffer, MoveDirection direction,bool& success);
 
+    void InternalAdd(SentenceRef entry);
+
 
     void Add(SentenceRef);
     void EditBegin();
     void EditEnd();
+
+    void Rewind();
+
+
+
+    
 };
 
 
