@@ -104,6 +104,8 @@ public:
 
 
     void Add(SentenceRef);
+    void Replace(SentenceRef);
+
     void EditBegin();
     void EditEnd();
 

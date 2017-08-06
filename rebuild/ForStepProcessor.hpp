@@ -24,6 +24,8 @@ class ForStepProcessor : public BasicStepProcessor {
     StackedSentenceHistory stackedSentenceHistory;
     std::list<StatementRef> statementStash;
     bool initConditionPassed;
+    bool needToRewindHistory;
+
     
     
     
@@ -32,7 +34,8 @@ public:
     enum class InitType {normal,stepin,reload};
     
     ForStepProcessor(Rebuild* aRebuild, std::shared_ptr<ForStatment> forStatement,VarTable * superTable,InitType initType = InitType::normal)
-    : BasicStepProcessor(aRebuild,superTable),thisForBlock(forStatement),stackedSentenceHistory(aRebuild->GetHistoryStack())
+    : BasicStepProcessor(aRebuild,superTable),thisForBlock(forStatement),stackedSentenceHistory(aRebuild->GetHistoryStack()),
+    needToRewindHistory(false)
     {
         history = &stackedSentenceHistory;
 
@@ -99,7 +102,9 @@ public:
     void ExecuteStatments(std::shared_ptr<ForStatment> forstatement);
     
     virtual CmdResult Process(std::shared_ptr<Command> input);
-    
+
+    void AddToHistory(SentenceRef entry);
+
 
     
 };

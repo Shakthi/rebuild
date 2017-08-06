@@ -31,6 +31,61 @@
                                         "::base": {
                                             "valuetype": 3
                                         },
+                                        "numVal": 45,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "forStep": {
+                                "polymorphic_id": 2,
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
+                                        "numVal": 1,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "forVar": "aaa",
+                            "sourceText": "for aaa=1 to 45",
+                            "statements": []
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Sentence",
+                "content": {
+                    "polymorphic_id": 2147483649,
+                    "polymorphic_name": "ForStatment",
+                    "ptr_wrapper": {
+                        "data": {
+                            "forBegin": {
+                                "polymorphic_id": 2147483650,
+                                "polymorphic_name": "TerminalExpression",
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
+                                        "numVal": 1,
+                                        "sub.valutype": 3
+                                    },
+                                    "valid": 1
+                                }
+                            },
+                            "forEnd": {
+                                "polymorphic_id": 2,
+                                "ptr_wrapper": {
+                                    "data": {
+                                        "::base": {
+                                            "valuetype": 3
+                                        },
                                         "numVal": 10,
                                         "sub.valutype": 3
                                     },
@@ -3393,8 +3448,8 @@
             }
         ]
     },
-    "timestamp": "2017-07-24T19:48:19Z",
-    "timestampepoch": 1500925699,
+    "timestamp": "2017-08-06T18:03:01Z",
+    "timestampepoch": 1502042581,
     "type": "rebuildalldb",
     "version": "1.0"
 }

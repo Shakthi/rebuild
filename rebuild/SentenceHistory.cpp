@@ -56,6 +56,7 @@ void SentenceHistory:: EditBegin()
 
     InternalAdd( SentenceRef( new UnProcessedStatment));
     historyPointer = history.begin();
+    
 
 
 }
@@ -343,18 +344,8 @@ void StackedSentenceHistory:: EditBegin()
 
 void StackedSentenceHistory:: EditEnd()
 {
-    if(historyPointer != history.begin())
-    {
-        lastStatmentIter = historyPointer;
+    lastStatmentIter = historyPointer;
 
-    }else
-    {
-        //historyPointer++;
-        lastStatmentIter = history.end();
-    }
-
-    //history.pop_front();
-    
 }
 
 
@@ -366,7 +357,12 @@ void StackedSentenceHistory::InternalAdd(SentenceRef entry)
 
 }
 
-//U123
+void StackedSentenceHistory::Replace(SentenceRef entry)
+{
+    *historyPointer = entry;
+    historyPointer--;
+
+}
 
 void StackedSentenceHistory::Add(SentenceRef entry)
 {

@@ -51,6 +51,21 @@ void ForStepProcessor::ArchiveStatements()
     }
 }
 
+void ForStepProcessor::AddToHistory(SentenceRef entry){
+
+    auto lastiter = stackedSentenceHistory.GetLastStatmentIter();
+    if(std::dynamic_pointer_cast<UnProcessedStatment>(*lastiter) )
+    {
+        stackedSentenceHistory.Add(entry);
+    }else{
+        stackedSentenceHistory.Replace(entry);
+
+    }
+
+
+}
+
+
 void ForStepProcessor::RunStep()
 {
 
@@ -98,6 +113,7 @@ void ForStepProcessor::RunStep()
             && extraResults.mstatus == LineNoiseWrapper::EModificationStatus::ok) {
 
             emptyInput = true;
+            result = *(stackedSentenceHistory.GetLastStatmentIter());
 
 
         }else {
@@ -116,7 +132,7 @@ void ForStepProcessor::RunStep()
         auto nextStatemnt = std::dynamic_pointer_cast<NextStatement>(result);
         if (nextStatemnt) {
             ExecuteAStep();
-            stackedSentenceHistory.Add(result);
+            AddToHistory(result);
 
             return;
         }
@@ -139,7 +155,7 @@ void ForStepProcessor::RunStep()
         auto errorStatemnt = std::dynamic_pointer_cast<ErrorStatement>(result);
         if (errorStatemnt) {
             BasicStepProcessor::Evaluate(errorStatemnt);
-            stackedSentenceHistory.Add(errorStatemnt);
+            AddToHistory(errorStatemnt);
             return;
         }
 
@@ -148,11 +164,19 @@ void ForStepProcessor::RunStep()
             CmdResult res = BasicStepProcessor::Evaluate(statemnt);
             if (statemnt && res.handled) {
                 if (res.addtoHistory)
-                    stackedSentenceHistory.Add(result);
+                    AddToHistory(result);
             } else {
                 res = Process(std::dynamic_pointer_cast<Command>(result));
                 if (res.addtoHistory)
-                    stackedSentenceHistory.Add(result);
+                    AddToHistory(result);
+                if(needToRewindHistory)
+                {
+                    stackedSentenceHistory.Rewind();
+                    needToRewindHistory =false;
+                }
+
+
+
             }
         }
             } else {
@@ -184,14 +208,14 @@ void ForStepProcessor::RunStep()
         auto errorStatemnt = std::dynamic_pointer_cast<ErrorStatement>(result);
         if (errorStatemnt) {
             BasicStepProcessor::Evaluate(errorStatemnt);
-            stackedSentenceHistory.Add(errorStatemnt);
+            AddToHistory(errorStatemnt);
             return;
         }
 
         auto statemnt = std::dynamic_pointer_cast<Statement>(result);
 
         if (BasicStepProcessor::Evaluate(statemnt).addtoHistory )
-            stackedSentenceHistory.Add(result);
+            AddToHistory(result);
     }
 }
 
@@ -305,9 +329,8 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(std::shared_ptr<Command>
 
         }else if (customCommand->name == "rewind") { // One loop
 
-
-            stackedSentenceHistory.Rewind();
-                return positiveResult;
+            needToRewindHistory = true;
+            return positiveResult;
         }
         else if (customCommand->name == "list") {
 
