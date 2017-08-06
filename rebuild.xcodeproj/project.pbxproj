@@ -17,6 +17,7 @@
 		5363734C1E751CCD0079B2EF /* SentenceHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5363734A1E751CCD0079B2EF /* SentenceHistory.cpp */; };
 		536578741E50F0D100A561D9 /* AST.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 536578721E50F0D100A561D9 /* AST.cpp */; };
 		536578771E50F53D00A561D9 /* ParserWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 536578751E50F53D00A561D9 /* ParserWrapper.cpp */; };
+		53733ED11F379582006A9892 /* StackedSentenceHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53733ECF1F379582006A9892 /* StackedSentenceHistory.cpp */; };
 		5390BC231EC62A21000E061A /* ReadStepProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5390BC211EC62A21000E061A /* ReadStepProcessor.cpp */; };
 		5390BC281EC635D7000E061A /* quickbasic.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 5390BC261EC635D7000E061A /* quickbasic.lpp */; };
 		5390BC291EC635D7000E061A /* quickbasic.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 5390BC271EC635D7000E061A /* quickbasic.ypp */; };
@@ -141,6 +142,8 @@
 		536578731E50F0D100A561D9 /* AST.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AST.hpp; sourceTree = "<group>"; };
 		536578751E50F53D00A561D9 /* ParserWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParserWrapper.cpp; path = rebuild/Parser/ParserWrapper.cpp; sourceTree = "<group>"; };
 		536578761E50F53D00A561D9 /* ParserWrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ParserWrapper.hpp; path = rebuild/Parser/ParserWrapper.hpp; sourceTree = "<group>"; };
+		53733ECF1F379582006A9892 /* StackedSentenceHistory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StackedSentenceHistory.cpp; sourceTree = "<group>"; };
+		53733ED01F379582006A9892 /* StackedSentenceHistory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StackedSentenceHistory.hpp; sourceTree = "<group>"; };
 		5389A99D1F1140DD003E4917 /* Sentence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sentence.h; sourceTree = "<group>"; };
 		5390BC211EC62A21000E061A /* ReadStepProcessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ReadStepProcessor.cpp; sourceTree = "<group>"; };
 		5390BC221EC62A21000E061A /* ReadStepProcessor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ReadStepProcessor.hpp; sourceTree = "<group>"; };
@@ -388,6 +391,8 @@
 				5389A99D1F1140DD003E4917 /* Sentence.h */,
 				5363734A1E751CCD0079B2EF /* SentenceHistory.cpp */,
 				5363734B1E751CCD0079B2EF /* SentenceHistory.hpp */,
+				53733ECF1F379582006A9892 /* StackedSentenceHistory.cpp */,
+				53733ED01F379582006A9892 /* StackedSentenceHistory.hpp */,
 				53CB85891E3FC04300E44564 /* Rebuild.hpp */,
 				533AE4F71E3FB180008910D4 /* linenoise */,
 				533AE4E01E3CE896008910D4 /* main.cpp */,
@@ -477,6 +482,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				536578741E50F0D100A561D9 /* AST.cpp in Sources */,
+				53733ED11F379582006A9892 /* StackedSentenceHistory.cpp in Sources */,
 				53CB858D1E403E8500E44564 /* lineNoiseWrapper.cpp in Sources */,
 				536578771E50F53D00A561D9 /* ParserWrapper.cpp in Sources */,
 				5390BC231EC62A21000E061A /* ReadStepProcessor.cpp in Sources */,

@@ -12,7 +12,7 @@
 
 #include "BasicStepProccessor.hpp"
 #include "Value.h"
-#include "SentenceHistory.hpp"
+#include "StackedSentenceHistory.hpp"
 #include "AST.hpp"
 
 
