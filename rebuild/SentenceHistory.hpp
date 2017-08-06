@@ -26,6 +26,8 @@ protected:
     std::list<SentenceRef> history;
     iterator historyPointer;
 
+    virtual bool IsAtBeginPosition();
+
     iterator lastStatmentIter;
 
     std::string currentBuffer;

@@ -30,6 +30,8 @@ class StackedSentenceHistory:public SentenceHistory
     void InitHistoryStack();
 
 
+    iterator historyWritePointer;
+    bool IsAtBeginPosition();
 
 
 public:

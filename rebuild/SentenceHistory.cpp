@@ -62,9 +62,15 @@ void SentenceHistory:: EditBegin()
 }
 
 
+ bool SentenceHistory:: IsAtBeginPosition()
+{
+    return historyPointer == history.begin();
+}
+
+
 void SentenceHistory:: EditEnd()
 {
-    if(historyPointer != history.begin())
+    if(!IsAtBeginPosition())
     {
         lastStatmentIter = historyPointer;
 
@@ -99,7 +105,7 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
 
 
     //save current buffer only if it is at the begning
-    if( historyPointer == history.begin())
+    if( IsAtBeginPosition() && direction != MoveDirection::none)
     {
         this->currentBuffer = currentBuffer;
     }
@@ -128,7 +134,7 @@ SentenceHistory::Edit(std::string currentBuffer, MoveDirection direction,
 
 
 
-    if( historyPointer == history.begin())
+    if( IsAtBeginPosition() && direction != MoveDirection::none)
     {
         return  this->currentBuffer;
 

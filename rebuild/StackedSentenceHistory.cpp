@@ -47,7 +47,6 @@ std::string StackedSentenceHistory::Edit(std::string currentBuffer,
     //    currentStackPointer++->
 
     success = true;
-    InitHistoryStack();
 
     if (*currentStackPointer != this) {
 
@@ -116,12 +115,19 @@ std::string StackedSentenceHistory::Edit(std::string currentBuffer,
     }
 }
 
+bool StackedSentenceHistory::IsAtBeginPosition()
+{
+    return historyWritePointer==historyPointer;
+
+}
+
 
 void StackedSentenceHistory::Rewind()
 {
 
     historyPointer = history.end();
     historyPointer--;
+    historyWritePointer = historyPointer;
 
 }
 
@@ -131,7 +137,13 @@ void StackedSentenceHistory:: EditBegin()
     
     
     // historyPointer = history.begin();
-    
+
+    InitHistoryStack();
+
+
+    historyWritePointer = historyPointer;
+
+
     
 }
 
@@ -145,7 +157,7 @@ void StackedSentenceHistory:: EditEnd()
 
 void StackedSentenceHistory::InternalAdd(SentenceRef entry)
 {
-    auto prevHistoryPointer = historyPointer;
+    auto prevHistoryPointer = historyWritePointer;
     prevHistoryPointer++;
     history.insert(prevHistoryPointer, entry);
     
@@ -153,8 +165,11 @@ void StackedSentenceHistory::InternalAdd(SentenceRef entry)
 
 void StackedSentenceHistory::Replace(SentenceRef entry)
 {
-    *historyPointer = entry;
-    historyPointer--;
+    *historyWritePointer = entry;
+    historyWritePointer--;
+
+    historyPointer = historyWritePointer;
+
     
 }
 
