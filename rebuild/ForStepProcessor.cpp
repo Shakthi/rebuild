@@ -53,7 +53,7 @@ void ForStepProcessor::ArchiveStatements()
 
 void ForStepProcessor::AddToHistory(SentenceRef entry){
 
-    auto lastiter = stackedSentenceHistory.GetLastStatmentIter();
+    auto lastiter = stackedSentenceHistory.GetHistoryWritePointer();
     if(std::dynamic_pointer_cast<UnProcessedStatment>(*lastiter) )
     {
         stackedSentenceHistory.Add(entry);
@@ -113,7 +113,7 @@ void ForStepProcessor::RunStep()
             && extraResults.mstatus == LineNoiseWrapper::EModificationStatus::ok) {
 
             emptyInput = true;
-            result = *(stackedSentenceHistory.GetLastStatmentIter());
+            result = *(stackedSentenceHistory.GetHistoryWritePointer());
 
 
         }else {

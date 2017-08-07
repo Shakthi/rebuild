@@ -31,7 +31,7 @@ void StackedSentenceHistory::InitHistoryStack()
 
 
         SentenceHistory::InternalAdd( SentenceRef( new UnProcessedStatment));
-        historyPointer = history.begin();
+        historyWritePointer = history.begin();
 
 
 
@@ -125,9 +125,9 @@ bool StackedSentenceHistory::IsAtBeginPosition()
 void StackedSentenceHistory::Rewind()
 {
 
-    historyPointer = history.end();
-    historyPointer--;
-    historyWritePointer = historyPointer;
+    historyWritePointer = history.end();
+    historyWritePointer--;
+    historyPointer = historyWritePointer;
 
 }
 
@@ -141,7 +141,7 @@ void StackedSentenceHistory:: EditBegin()
     InitHistoryStack();
 
 
-    historyWritePointer = historyPointer;
+    historyPointer = historyWritePointer;
 
 
     
@@ -152,6 +152,11 @@ void StackedSentenceHistory:: EditEnd()
 {
     lastStatmentIter = historyPointer;
     
+}
+
+const StackedSentenceHistory::iterator StackedSentenceHistory::GetHistoryWritePointer()
+{
+    return historyWritePointer;
 }
 
 
@@ -175,7 +180,8 @@ void StackedSentenceHistory::Replace(SentenceRef entry)
 
 void StackedSentenceHistory::Add(SentenceRef entry)
 {
-    
+    InitHistoryStack();//Need to when prepaopulating
+
     if (ChekDuplicate(entry))
     {
         InternalAdd(entry);

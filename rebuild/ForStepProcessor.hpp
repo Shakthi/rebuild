@@ -40,6 +40,7 @@ public:
         history = &stackedSentenceHistory;
 
         if(initType!= InitType::reload){
+            
             for (auto st :forStatement->statements ) {
                 stackedSentenceHistory.Add(st);
             }

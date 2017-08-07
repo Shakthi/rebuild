@@ -34,8 +34,12 @@ class StackedSentenceHistory:public SentenceHistory
     bool IsAtBeginPosition();
 
 
+
+
+
 public:
     StackedSentenceHistory(const std::vector<class SentenceHistory*> & stack);
+    const iterator GetHistoryWritePointer();
 
     std::string Edit(std::string currentBuffer, MoveDirection direction,bool& success);
 
