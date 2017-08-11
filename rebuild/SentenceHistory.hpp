@@ -25,14 +25,15 @@ protected:
     std::list<SentenceRef> history;
     iterator historyPointer;
 
+    virtual bool IsAtBeginPosition();
+
     iterator lastStatmentIter;
 
+    std::string currentBuffer;
 
-    
 public:
-    
-    void ReInit();
-    void ReInitDone();
+    void EditBegin();
+    void EditEnd();
 
     
     SentenceHistory();
@@ -74,35 +75,6 @@ public:
 };
 
 
-
-
-class PopingLineSentenceHistory:public SentenceHistory
-{
-
-
-    const std::vector<class SentenceHistory*> & historyStack;
-
-    std::vector<class SentenceHistory*>::const_reverse_iterator stackPointer;
-    typedef typename std::vector<class SentenceHistory*>::const_reverse_iterator stack_iterator;
-    SentenceHistory::const_iterator historyPointerForStack;
-
-
-    bool stackPointerInited;
-    void InitHistoryStack();
-
-
-
-
-public:
-    PopingLineSentenceHistory(const std::vector<class SentenceHistory*> & stack);
-
-    std::string Edit(std::string currentBuffer, MoveDirection direction,bool& success);
-
-
-    void Add(SentenceRef);
-    void PopExtra();
-    
-};
 
 
 #endif /* SentenceHistory_hpp */

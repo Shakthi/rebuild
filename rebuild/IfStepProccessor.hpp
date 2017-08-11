@@ -12,7 +12,7 @@
 
 #include "BasicStepProccessor.hpp"
 #include "Value.h"
-#include "SentenceHistory.hpp"
+#include "StackedSentenceHistory.hpp"
 #include "AST.hpp"
 
 
@@ -24,12 +24,12 @@ class IfStepProcessor : public BasicStepProcessor {
     
     bool passThroughe;
   
-    PopingLineSentenceHistory popingLineHistory;
+    StackedSentenceHistory stackedSentenceHistory;
     
 
 public:
     IfStepProcessor(Rebuild* aRebuild,std::shared_ptr<IfStatment> aifStatment,VarTable * superVarTable)
-    : BasicStepProcessor(aRebuild,superVarTable),ifStatment(aifStatment),popingLineHistory(aRebuild->GetHistoryStack())
+    : BasicStepProcessor(aRebuild,superVarTable),ifStatment(aifStatment),stackedSentenceHistory(aRebuild->GetHistoryStack())
     {
         // getForVar()=forblock.forBegin->;
        // isInited=false;

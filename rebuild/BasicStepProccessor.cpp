@@ -216,9 +216,10 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
                     if(forStatment)
                     {
                         auto forStepProcessor = new ForStepProcessor(rebuild,forStatment,&localVarTable,ForStepProcessor::InitType::stepin);
-                        forStepProcessor->Init();
 
                         rebuild->AddNewProcessing(std::shared_ptr<StepProcessor>(forStepProcessor));
+                        forStepProcessor->Init();
+
                     }
 
                 }

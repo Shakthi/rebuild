@@ -19,12 +19,20 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
     localHistory = &inhistory;
     
     std::string returnstring;
-    inhistory.ReInit();
+    inhistory.EditBegin();
     
     linenoiseOptions option;
     linenoiseOptionsInitDefaults(&option);
     linenoiseResults results;
-    option.preFilledInput = prefilled.c_str();
+
+    bool success;
+    const std::string & defualtHistory  = inhistory.Edit("", LineHistory::MoveDirection::none, success);
+    if(success)
+        option.preFilledInput = defualtHistory.c_str();
+    else
+        option.preFilledInput = prefilled.c_str();
+
+
     results.ctrlKey=0;
     results.printNewln = false;
 
@@ -33,7 +41,7 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
     mstatus = EModificationStatus::ok;
     
     char* result = linenoise(prompt.c_str(),&option,&results);
-    inhistory.ReInitDone();
+    inhistory.EditEnd();
     
     if(option.printNewln==false && results.printNewln == false)
         printf("\n");
@@ -44,15 +52,17 @@ std::string LineNoiseWrapper::getLineWithHistory(std::string prompt,LineHistory 
     }
     
     
-    if (errno == EAGAIN)
+    if (errno == EAGAIN){
+
         extraResults.status = ExitStatus::ctrl_c;
-    
+    }
     else if (results.ctrlKey!=0)
     {
         extraResults.status = ExitStatus::ctrl_X;
         extraResults.ctrlKey=results.ctrlKey;
     }
     else{
+        
         extraResults.status = ExitStatus::ok;
 
     }
