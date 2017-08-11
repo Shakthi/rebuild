@@ -20,12 +20,20 @@ void ForStepProcessor::Init()
 {
 
 
-    if(initType!= InitType::reload){
+    if(initType != InitType::reload){
 
         for (auto st :thisForBlock->statements ) {
             stackedSentenceHistory.Add(st);
         }
     }
+
+
+    if(initType == InitType::stepin){
+
+        stackedSentenceHistory.Rewind();
+
+    }
+
 
 
 
