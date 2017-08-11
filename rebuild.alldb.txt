@@ -7,6 +7,20 @@
                 "class": "Sentence",
                 "content": {
                     "polymorphic_id": 2147483649,
+                    "polymorphic_name": "ErrorStatement",
+                    "ptr_wrapper": {
+                        "data": {
+                            "description": "syntax error, unexpected $undefined, expecting $end",
+                            "sourceText": "for i = 1 to 10:"
+                        },
+                        "valid": 1
+                    }
+                }
+            },
+            {
+                "class": "Sentence",
+                "content": {
+                    "polymorphic_id": 2147483649,
                     "polymorphic_name": "ForStatment",
                     "ptr_wrapper": {
                         "data": {
@@ -3503,8 +3517,8 @@
             }
         ]
     },
-    "timestamp": "2017-08-06T19:32:17Z",
-    "timestampepoch": 1502047937,
+    "timestamp": "2017-08-07T04:40:01Z",
+    "timestampepoch": 1502080801,
     "type": "rebuildalldb",
     "version": "1.0"
 }

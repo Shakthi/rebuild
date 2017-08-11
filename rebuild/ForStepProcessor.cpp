@@ -19,6 +19,16 @@ bool ForStepProcessor::CheckCondition()
 void ForStepProcessor::Init()
 {
 
+
+    if(initType!= InitType::reload){
+
+        for (auto st :thisForBlock->statements ) {
+            stackedSentenceHistory.Add(st);
+        }
+    }
+
+
+
     localVarTable.GetVar(thisForBlock->forVar) = thisForBlock->forBegin->Evaluate(&localVarTable);
 
     if (CheckCondition())

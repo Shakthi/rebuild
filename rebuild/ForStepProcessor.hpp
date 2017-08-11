@@ -31,20 +31,15 @@ class ForStepProcessor : public BasicStepProcessor {
     
 public:
     
-    enum class InitType {normal,stepin,reload};
+    enum class InitType {normal,stepin,reload} initType;
     
-    ForStepProcessor(Rebuild* aRebuild, std::shared_ptr<ForStatment> forStatement,VarTable * superTable,InitType initType = InitType::normal)
+    ForStepProcessor(Rebuild* aRebuild, std::shared_ptr<ForStatment> forStatement,VarTable * superTable,InitType ainitType = InitType::normal)
     : BasicStepProcessor(aRebuild,superTable),thisForBlock(forStatement),stackedSentenceHistory(aRebuild->GetHistoryStack()),
-    needToRewindHistory(false)
+    needToRewindHistory(false),
+    initType(ainitType)
     {
         history = &stackedSentenceHistory;
 
-        if(initType!= InitType::reload){
-            
-            for (auto st :forStatement->statements ) {
-                stackedSentenceHistory.Add(st);
-            }
-        }
 
 
 
