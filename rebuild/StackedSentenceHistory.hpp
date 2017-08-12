@@ -20,7 +20,7 @@ class StackedSentenceHistory:public SentenceHistory
     const std::vector<class SentenceHistory*> & historyStack;
 
 
-    typedef typename std::vector<class SentenceHistory*>::const_reverse_iterator stack_iterator;
+    typedef size_t stack_iterator;
 
     stack_iterator currentStackPointer;
     SentenceHistory::const_iterator historyPointerForStack;

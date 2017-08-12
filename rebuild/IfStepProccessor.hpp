@@ -31,7 +31,7 @@ public:
     IfStepProcessor(Rebuild* aRebuild,std::shared_ptr<IfStatment> aifStatment,VarTable * superVarTable)
     : BasicStepProcessor(aRebuild,superVarTable),ifStatment(aifStatment),stackedSentenceHistory(aRebuild->GetHistoryStack())
     {
-        // getForVar()=forblock.forBegin->;
+        // GetIValue()=forblock.forBegin->;
        // isInited=false;
     }
     

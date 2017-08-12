@@ -64,16 +64,16 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
     
     
     
-    auto forStatemnt = std::dynamic_pointer_cast< ForStatment>(result);
+    auto forStatemnt = std::dynamic_pointer_cast< ForStatement>(result);
     if (forStatemnt) {
         
         if(!forStatemnt->statements.empty())
         {
         
-            ForStepProcessor * processor = new ForStepProcessor(rebuild,forStatemnt,
-                                                                &localVarTable,ForStepProcessor::InitType::reload);
-            processor->Init();
-           processor->ExecuteStatments(forStatemnt);
+            auto processor = new ForStepProcessor(rebuild,forStatemnt,
+                                                                &localVarTable,ForStepProcessor::InvocationType::reload);
+            processor->Initialize();
+           processor->Execute();
 
             delete processor;
             
@@ -82,11 +82,11 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
         else
         {
             
-            auto readStepProcessor =  new ForStepProcessor(rebuild,forStatemnt,&localVarTable);
-            readStepProcessor->Init();
+            auto processor =  new ForStepProcessor(rebuild,forStatemnt,&localVarTable);
+            processor->Initialize();
             
             
-            rebuild->AddNewProcessing(std::shared_ptr<StepProcessor>(readStepProcessor));
+            rebuild->AddNewProcessing(std::shared_ptr<StepProcessor>(processor));
 
         
         }
@@ -212,13 +212,13 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
                 if (history->GetLastStatmentIter()!= history->end()) {
                     
                     SentenceRef sentence = *(history->GetLastStatmentIter());
-                    auto  forStatment =  std::dynamic_pointer_cast<ForStatment>(sentence);
-                    if(forStatment)
+                    auto  forStatement =  std::dynamic_pointer_cast<ForStatement>(sentence);
+                    if(forStatement)
                     {
-                        auto forStepProcessor = new ForStepProcessor(rebuild,forStatment,&localVarTable,ForStepProcessor::InitType::stepin);
+                        auto forStepProcessor = new ForStepProcessor(rebuild,forStatement,&localVarTable,ForStepProcessor::InvocationType::stepin);
 
                         rebuild->AddNewProcessing(std::shared_ptr<StepProcessor>(forStepProcessor));
-                        forStepProcessor->Init();
+                        forStepProcessor->Initialize();
 
                     }
 
@@ -246,6 +246,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
 }
 
 
+
 std::string BasicStepProcessor::ProcessCtrlKeyStroke(int ctrlchar)
 {
     Rlog rlog;
@@ -265,6 +266,21 @@ std::string BasicStepProcessor::ProcessCtrlKeyStroke(int ctrlchar)
             break;
     }
     
+}
+
+
+std::string BasicStepProcessor::ProcessByMacros(std::string input, LineNoiseWrapper::ExtraResults & result, bool isMacroApplied)
+{
+    Rlog rlog;
+    if (result.status == LineNoiseWrapper::ExitStatus::ctrl_X) {
+        isMacroApplied = true;
+        result.status = LineNoiseWrapper::ExitStatus::ok;
+        char ctrlchar = result.ctrlKey;
+        return ProcessCtrlKeyStroke(ctrlchar);
+
+    }
+
+    return input;
 }
 
 void BasicStepProcessor::RunStep()

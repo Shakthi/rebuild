@@ -57,6 +57,8 @@ struct Command:Sentence
     
 };
 
+typedef std::shared_ptr<Command>   CommandRef;
+
 
 
 #endif /* Sentence_h */

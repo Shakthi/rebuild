@@ -22,7 +22,7 @@ class VarTable {
 public:
     VarTable();
     Value & GetVar(std::string varName);
-    const Value & GetValue(std::string varName);
+    const Value & GetValue(std::string varName)const;
 
     void SetVar(std::string varName, Value && val);
     void SetSuper(VarTable * vt);

@@ -223,9 +223,9 @@ forStataement 	: FOR VAR '=' numexpr TO numexpr  {
     std::string varName = $2;
     float step = 1.0;
     
-    auto fornode = new ForStatment();
+    auto fornode = new ForStatement();
     
-    fornode->forVar = varName;
+    fornode->var = varName;
     fornode->forBegin =  std::unique_ptr<Expression>($4);
     
     auto t=new TerminalExpression();
@@ -244,9 +244,9 @@ forStataement 	: FOR VAR '=' numexpr TO numexpr  {
 {
     std::string varName = $2;
     
-    auto fornode = new ForStatment();
+    auto fornode = new ForStatement();
     
-    fornode->forVar = varName;
+    fornode->var = varName;
     fornode->forBegin =  std::unique_ptr<Expression>($4);
     fornode->forStep =  std::unique_ptr<Expression>($8);
     fornode->forEnd = std::unique_ptr<Expression>($6);

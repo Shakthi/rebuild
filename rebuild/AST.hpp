@@ -103,57 +103,43 @@ struct RemarkStatement:public  Statement{
 
 
 
-struct ForStatment:public Statement {
-    
-        std::string forVar;
-        std::unique_ptr<Expression> forBegin,forEnd,forStep;
-    
-        std::vector<StatementRef>  statements;
-        
-    
-    
-    
-    
-        bool foundNext;
-        template<class Archive>
-        void serialize( Archive & ar );
-    
-        std::string dumpToString()const;
+struct ForStatement : public Statement {
 
-        ForStatment(){}
+    std::string var;
+    std::unique_ptr<Expression> forBegin, forEnd, forStep;
 
-        ForStatment(const ForStatment & other);
-        ForStatment  * clone ()const { return new ForStatment(*this); }
+    std::vector<StatementRef> statements;
 
-        ~ForStatment()
-        {
+    std::string dumpToString() const;
 
+    ForStatement() {}
 
-        }
+    ForStatement(const ForStatement& other);
+    ForStatement* clone() const { return new ForStatement(*this); }
+
+    //Serialization
+    template <class Archive>
+    void serialize(Archive& ar);
 };
 
+typedef std::shared_ptr<ForStatement> ForStatementRef;
 
-
-
-struct ReadStatement:public  Statement{
+struct ReadStatement : public Statement {
 public:
     std::string prompt;
     std::list<std::string> variableList;
-    
-    
-    
-    
-    template<class Archive>
-    void serialize( Archive & ar )
-    { ar( CEREAL_NVP(prompt),CEREAL_NVP(variableList),CEREAL_NVP(sourceText) );
-    }
-    
-    std::string dumpToString()const;
-    ReadStatement  * clone ()const { return new ReadStatement(*this); }
 
+
+    std::string dumpToString() const;
+    ReadStatement* clone() const { return new ReadStatement(*this); }
+
+    template <class Archive>
+    void serialize(Archive& ar)
+    {
+        ar(CEREAL_NVP(prompt), CEREAL_NVP(variableList), CEREAL_NVP(sourceText));
+    }
 
 };
-
 
 
 

@@ -25,11 +25,11 @@ Value & VarTable::GetVar(std::string varName)
 }
 
 
-const Value & VarTable::GetValue(std::string varName)
+const Value & VarTable::GetValue(std::string varName)const
 {
     assert(varName!="");
 
-    VarTable * current = this;
+     const VarTable * current = this;
 
     do {
         auto iter = current->table.find(varName);

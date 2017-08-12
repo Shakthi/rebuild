@@ -7,55 +7,103 @@
 //
 
 #include "ForStepProcessor.hpp"
+#include "Logger.hpp"
 #include "Parser/ParserWrapper.hpp"
 #include "linenoise/lineNoiseWrapper.hpp"
 
-bool ForStepProcessor::CheckCondition()
+ForStepProcessor::ForStepProcessor(Rebuild* aRebuild, ForStatementRef forStatement, VarTable* superTable, InvocationType ainitType)
+    : BasicStepProcessor(aRebuild, superTable)
+    , theStatement(forStatement)
+    , stackedSentenceHistory(aRebuild->GetHistoryStack())
+    , needToRewindHistory(false)
+    , invocationType(ainitType)
 {
-
-    return (getForVar() <= thisForBlock->forEnd->Evaluate(&localVarTable).getNumVal());
+    history = &stackedSentenceHistory;
 }
 
-void ForStepProcessor::Init()
+float ForStepProcessor::GetIValue() const
+{
+    return localVarTable.GetValue(theStatement->var).getNumVal();
+}
+
+
+Value & ForStepProcessor::GetIVar()
+{
+    return localVarTable.GetVar(theStatement->var);
+}
+
+
+bool ForStepProcessor::IsListableStatement(SentenceRef s)
+{
+    auto st = std::dynamic_pointer_cast<Statement>(s);
+    if (!st) {
+        return false;
+    }
+
+    if (std::dynamic_pointer_cast<NextStatement>(st)) {
+        return false;
+    }
+    if (std::dynamic_pointer_cast<ErrorStatement>(st)) {
+        return false;
+    }
+
+    if (std::dynamic_pointer_cast<UnProcessedStatment>(st)) {
+        return false;
+    }
+
+    return true;
+}
+
+bool ForStepProcessor::EvaluateExitConditionI()
+{
+    const auto endvalue = theStatement->forEnd->Evaluate(&localVarTable).getNumVal();
+    const auto forValue = GetIValue();
+
+    return (forValue <= endvalue);
+}
+
+void ForStepProcessor::Initialize()
 {
 
-
-    if(initType != InitType::reload){
-
-        for (auto st :thisForBlock->statements ) {
-            stackedSentenceHistory.Add(st);
-        }
-    }
-
-
-    if(initType == InitType::stepin){
+    UnArchiveStatements();
+    if (invocationType == InvocationType::stepin) {
 
         stackedSentenceHistory.Rewind();
-
     }
+    InitializeI();
+}
 
+void ForStepProcessor::InitializeI()
+{
+    const auto beginvalue = theStatement->forBegin->Evaluate(&localVarTable).getNumVal();
+    GetIVar() = beginvalue;
 
-
-
-    localVarTable.GetVar(thisForBlock->forVar) = thisForBlock->forBegin->Evaluate(&localVarTable);
-
-    if (CheckCondition())
+    if (EvaluateExitConditionI())
         initConditionPassed = true;
     else
         initConditionPassed = false;
 }
 
-void ForStepProcessor::ExecuteIncrement(std::shared_ptr<ForStatment> statement)
+void ForStepProcessor::DoIncrementI()
 {
-    if (statement != nullptr)
-        thisForBlock = statement;
 
-    localVarTable.GetVar(thisForBlock->forVar) = localVarTable.GetValue(thisForBlock->forVar).getNumVal() + thisForBlock->forStep->Evaluate(&localVarTable).getNumVal();
+    const auto forValue = GetIValue();
+
+    GetIVar() = forValue + theStatement->forStep->Evaluate(&localVarTable).getNumVal();
+
+}
+
+void ForStepProcessor::UnArchiveStatements()
+{
+    for (auto st : theStatement->statements) {
+        stackedSentenceHistory.Add(st);
+    }
+
 }
 
 void ForStepProcessor::ArchiveStatements()
 {
-    thisForBlock->statements.clear();
+    theStatement->statements.clear();
     for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
          i++) {
 
@@ -64,185 +112,165 @@ void ForStepProcessor::ArchiveStatements()
 
             auto errorStatemnt = std::dynamic_pointer_cast<ErrorStatement>(statement);
             if (!errorStatemnt)
-                thisForBlock->statements.push_back(StatementRef( statement->clone()));
+                theStatement->statements.push_back(StatementRef(statement->clone()));
         }
     }
 }
 
-void ForStepProcessor::AddToHistory(SentenceRef entry){
+void ForStepProcessor::AddToHistory(SentenceRef entry)
+{
 
     auto lastiter = stackedSentenceHistory.GetHistoryWritePointer();
-    if(std::dynamic_pointer_cast<UnProcessedStatment>(*lastiter) )
-    {
+    if (std::dynamic_pointer_cast<UnProcessedStatment>(*lastiter)) {
         stackedSentenceHistory.Add(entry);
-    }else{
+    } else {
         stackedSentenceHistory.Replace(entry);
+    }
+}
+
+void ForStepProcessor::ProcessSentence(SentenceRef result,bool isMacroExampanded)
+{
+    auto nextStatemnt = std::dynamic_pointer_cast<NextStatement>(result);
+    if (nextStatemnt) {
+        ExecuteAnIteration();
+        AddToHistory(result);
+
+        return;
+    }
+
+    auto endStatement = std::dynamic_pointer_cast<EndStatement>(result);
+    if (endStatement) {
+
+        ArchiveStatements();
+        for (DoIncrementI(); EvaluateExitConditionI(); DoIncrementI()) {
+            for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
+                 i++) {
+
+                ExecuteAStatement(std::dynamic_pointer_cast<Statement>((*i)));
+            }
+        }
+        exitProcessing();
+        return;
+    }
+
+    auto errorStatemnt = std::dynamic_pointer_cast<ErrorStatement>(result);
+    if (errorStatemnt) {
+        BasicStepProcessor::Evaluate(errorStatemnt);
+        AddToHistory(errorStatemnt);
+        return;
+    }
+
+    {
+        auto statemnt = std::dynamic_pointer_cast<Statement>(result);
+        CmdResult res = BasicStepProcessor::Evaluate(statemnt);
+        if (statemnt && res.handled) {
+            if (res.addtoHistory)
+                AddToHistory(result);
+        } else {
+            res = Process(std::dynamic_pointer_cast<Command>(result));
+            if (res.addtoHistory && !isMacroExampanded)
+                AddToHistory(result);
+            if (needToRewindHistory) {
+                stackedSentenceHistory.Rewind();
+                needToRewindHistory = false;
+            }
+        }
+    }
+
+}
+
+SentenceRef ForStepProcessor::SentenceFromInput(std::string input,LineNoiseWrapper::ExtraResults extraResults)
+{
+    SentenceRef result = nullptr;
+
+
+    if(extraResults.status == LineNoiseWrapper::ExitStatus::ok  && extraResults.mstatus == LineNoiseWrapper::EModificationStatus::ok) {
+
+        result = *(stackedSentenceHistory.GetHistoryWritePointer());
+        assert(result);
+
+
+    }else{
+
+        result = Basic_SentenceFromInput(input, extraResults);
+
 
     }
 
 
+    return result;
+
+
 }
+
+
+SentenceRef ForStepProcessor::Basic_SentenceFromInput(std::string input,LineNoiseWrapper::ExtraResults extraResults)
+{
+    SentenceRef result = nullptr;
+
+    if (extraResults.status == LineNoiseWrapper::ExitStatus::ctrl_c) {
+
+        exitProcessing();
+
+    }else if (extraResults.status == LineNoiseWrapper::ExitStatus::ok && extraResults.mstatus == LineNoiseWrapper::EModificationStatus::history) {
+
+        auto lastiter = history->GetLastStatmentIter();
+
+        assert(*lastiter);
+        result = SentenceRef((*lastiter)->clone());
+
+    }else if(extraResults.status == LineNoiseWrapper::ExitStatus::ok ) {
+
+        BasicParser parser;
+        result = parser.Parse(input);
+    }
+
+
+
+
+    return result;
+}
+
 
 
 void ForStepProcessor::RunStep()
 {
-
+    //For statement will execute atleast once
     if (initConditionPassed == true) {
 
         LineNoiseWrapper::ExtraResults extraResults;
 
-        std::string prefilled = "";
-        bool proceedStroke = false;
-        bool emptyInput = false;
+        std::string prompt = Rebuild::GetPrompt() + "for " + theStatement->var + "]:";
+        std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(prompt, stackedSentenceHistory, extraResults);
 
-
-
-        std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(
-            Rebuild::GetPrompt() + "for " + thisForBlock->forVar + "]:",
-            stackedSentenceHistory,extraResults,prefilled);
-
+        bool isInputProcesseedByMacro = false;
+        answer = BasicStepProcessor::ProcessByMacros(answer, extraResults, isInputProcesseedByMacro);
         
 
-        SentenceRef result = nullptr;
+        SentenceRef result = SentenceFromInput(answer, extraResults);
 
-        if (answer == "") {
-            if (extraResults.status == LineNoiseWrapper::ExitStatus::ctrl_c) {
-                exitProcessing();
-                return;
-            }
+        ProcessSentence(result, isInputProcesseedByMacro);
 
+    } else {
+        Rlog rlog;
 
-            if (extraResults.status == LineNoiseWrapper::ExitStatus::ctrl_X) {
-                proceedStroke = true;
-                answer = ProcessCtrlKeyStroke(extraResults.ctrlKey);
-            }
-        }
-
-        if (extraResults.status == LineNoiseWrapper::ExitStatus::ok
-            && extraResults.mstatus == LineNoiseWrapper::EModificationStatus::ok) {
-
-            emptyInput = true;
-            result = *(stackedSentenceHistory.GetHistoryWritePointer());
-
-
-        }else {
-
-            BasicParser parser;
-            result = parser.Parse(answer);
-
-
-
-        }
-
-
-
-        auto nextStatemnt = std::dynamic_pointer_cast<NextStatement>(result);
-        if (nextStatemnt) {
-            ExecuteAStep();
-            AddToHistory(result);
-
-            return;
-        }
-
-        auto endStatement = std::dynamic_pointer_cast<EndStatement>(result);
-        if (endStatement) {
-
-            ArchiveStatements();
-            for (ExecuteIncrement() ;CheckCondition(); ExecuteIncrement()) {
-                for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
-                     i++) {
-
-                    ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
-                }
-            }
-            exitProcessing();
-            return;
-        }
-
-        auto errorStatemnt = std::dynamic_pointer_cast<ErrorStatement>(result);
-        if (errorStatemnt) {
-            BasicStepProcessor::Evaluate(errorStatemnt);
-            AddToHistory(errorStatemnt);
-            return;
-        }
-
-        {
-            auto statemnt = std::dynamic_pointer_cast<Statement>(result);
-            CmdResult res = BasicStepProcessor::Evaluate(statemnt);
-            if (statemnt && res.handled) {
-                if (res.addtoHistory)
-                    AddToHistory(result);
-            } else {
-                res = Process(std::dynamic_pointer_cast<Command>(result));
-                if (res.addtoHistory)
-                    AddToHistory(result);
-                if(needToRewindHistory)
-                {
-                    stackedSentenceHistory.Rewind();
-                    needToRewindHistory =false;
-                }
-
-
-
-            }
-        }
-            } else {
-        LineNoiseWrapper::ExtraResults extraResults;
-        std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(
-            "[rebuild>forelse]:", stackedSentenceHistory,extraResults);
-
-        BasicParser parser;
-        SentenceRef result = parser.Parse(answer);
-
-        auto endStatement = std::dynamic_pointer_cast<EndStatement>(result);
-        if (endStatement) {
-            ArchiveStatements();
-            //Exucte pending
-
-            for (ExecuteIncrement() ;CheckCondition(); ExecuteIncrement()) {
-                for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
-                     i++) {
-
-                    ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
-                }
-            }
-
-
-            exitProcessing();
-            return;
-        }
-
-        auto errorStatemnt = std::dynamic_pointer_cast<ErrorStatement>(result);
-        if (errorStatemnt) {
-            BasicStepProcessor::Evaluate(errorStatemnt);
-            AddToHistory(errorStatemnt);
-            return;
-        }
-
-        auto statemnt = std::dynamic_pointer_cast<Statement>(result);
-
-        if (BasicStepProcessor::Evaluate(statemnt).addtoHistory )
-            AddToHistory(result);
+        rlog << "To be implemented";
     }
 }
 
-void ForStepProcessor::ExecuteStatments(std::shared_ptr<ForStatment> thisForBlock)
+
+void ForStepProcessor::Execute()
 {
-    // localVarTable.SetSuper(&outer);
+    for (InitializeI(); EvaluateExitConditionI(); DoIncrementI()) {
+        for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
+             i++) {
 
-    for (localVarTable.GetVar(thisForBlock->forVar) = localVarTable.GetVar(thisForBlock->forVar).getNumVal();
-         localVarTable.GetValue(thisForBlock->forVar).getNumVal() <= thisForBlock->forEnd->Evaluate(&localVarTable).getNumVal();
-         ExecuteIncrement(thisForBlock)) {
-
-        for (auto i = thisForBlock->statements.begin();
-             i != thisForBlock->statements.end(); i++) {
-
-            Evaluate((*i));
+            ExecuteAStatement(std::dynamic_pointer_cast<Statement>((*i)));
         }
     }
 }
 
-BasicStepProcessor::CmdResult ForStepProcessor::Process(std::shared_ptr<Command> input)
+BasicStepProcessor::CmdResult ForStepProcessor::Process(CommandRef input)
 {
     CmdResult positiveResult{ true, true };
 
@@ -287,34 +315,22 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(std::shared_ptr<Command>
                 auto statmentCasted = std::dynamic_pointer_cast<Statement>((*i));
                 if (statmentCasted) {
 
-//                    statementStash.push_back(statmentCasted);
+                    //                    statementStash.push_back(statmentCasted);
                     stackedSentenceHistory.PopBack();
 
                     break;
                 }
             }
-            positiveResult.addtoHistory =false;
-            return positiveResult;
-
-        } else if (customCommand->name == "popback") {
-
-            for (auto i = stackedSentenceHistory.begin(); i != stackedSentenceHistory.end();
-                 i++) {
-                if (std::dynamic_pointer_cast<Statement>((*i))) {
-                    stackedSentenceHistory.Splice(i);
-                    break;
-                }
-            }
-
+            positiveResult.addtoHistory = false;
             return positiveResult;
 
         } else if (customCommand->name == "runall") { // This command  makes next iteration of loop
 
-            for (Init(); CheckCondition(); ExecuteIncrement()) {
+            for (InitializeI(); EvaluateExitConditionI(); DoIncrementI()) {
                 for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
                      i++) {
 
-                    ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
+                    ExecuteAStatement(std::dynamic_pointer_cast<Statement>((*i)));
                 }
             }
 
@@ -322,11 +338,11 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(std::shared_ptr<Command>
 
         } else if (customCommand->name == "run") { // One loop
 
-            for (Init(); CheckCondition();) {
+            for (InitializeI(); EvaluateExitConditionI();) {
                 for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
                      i++) {
 
-                    ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
+                    ExecuteAStatement(std::dynamic_pointer_cast<Statement>((*i)));
                 }
 
                 break;
@@ -334,12 +350,11 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(std::shared_ptr<Command>
 
             return positiveResult;
 
-        }else if (customCommand->name == "rewind") { // One loop
+        } else if (customCommand->name == "rewind") { // One loop
 
             needToRewindHistory = true;
             return positiveResult;
-        }
-        else if (customCommand->name == "list") {
+        } else if (customCommand->name == "list") {
 
             std::cout << std::endl;
             int count = 1, tabstop = 0;
@@ -371,8 +386,8 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(std::shared_ptr<Command>
     return CmdResult{ false, false };
 }
 
-// excute filterring error
-void ForStepProcessor::ExecuteTheStatment(std::shared_ptr<Statement> st)
+// execute filtering error
+void ForStepProcessor::ExecuteAStatement(StatementRef st)
 {
     if (std::dynamic_pointer_cast<ErrorStatement>(st))
         return;
@@ -380,33 +395,18 @@ void ForStepProcessor::ExecuteTheStatment(std::shared_ptr<Statement> st)
     Evaluate(st);
 }
 
-void ForStepProcessor::ExecuteAStep()
+void ForStepProcessor::ExecuteAnIteration()
 {
 
-    ExecuteIncrement();
-    for (; CheckCondition();) {
+    DoIncrementI();
+    for (; EvaluateExitConditionI();) {
 
         for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
              i++) {
 
-            ExecuteTheStatment(std::dynamic_pointer_cast<Statement>((*i)));
+            ExecuteAStatement(std::dynamic_pointer_cast<Statement>((*i)));
         }
 
         break;
-    }
-}
-
-void ForStepProcessor::ExecuteHistory()
-{
-
-    for (localVarTable.GetVar(thisForBlock->forVar) = getForVar() + thisForBlock->forStep->Evaluate(&localVarTable).getNumVal();
-         getForVar() <= thisForBlock->forEnd->Evaluate(&localVarTable).getNumVal();
-         localVarTable.GetVar(thisForBlock->forVar) = getForVar() + thisForBlock->forStep->Evaluate(&localVarTable).getNumVal()) {
-
-        for (auto i = stackedSentenceHistory.rcbegin(); i != stackedSentenceHistory.rcend();
-             i++) {
-
-            Evaluate(std::dynamic_pointer_cast<Statement>((*i)));
-        }
     }
 }

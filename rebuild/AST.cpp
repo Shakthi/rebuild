@@ -149,7 +149,7 @@ CEREAL_REGISTER_TYPE (EndStatement);
 CEREAL_REGISTER_TYPE (NextStatement);
 CEREAL_REGISTER_TYPE (RemarkStatement);
 CEREAL_REGISTER_TYPE (IfStatment);
-CEREAL_REGISTER_TYPE (ForStatment);
+CEREAL_REGISTER_TYPE (ForStatement);
 CEREAL_REGISTER_TYPE (ReadStatement);
 CEREAL_REGISTER_TYPE(PrintStatement);
 CEREAL_REGISTER_TYPE(PrintElementStatement);
@@ -170,7 +170,7 @@ CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,EndStatement);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,NextStatement);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,RemarkStatement);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,IfStatment);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,ForStatment);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,ForStatement);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,ReadStatement);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Statement,ErrorStatement);
 
@@ -452,9 +452,9 @@ struct ii{}
 ;
 
 template<class Archive>
-void ForStatment::serialize( Archive & ar )
+void ForStatement::serialize( Archive & ar )
 {
-    ar( CEREAL_NVP(forVar),CEREAL_NVP(forBegin),CEREAL_NVP(forEnd),CEREAL_NVP(forStep) );
+    ar( CEREAL_NVP(var),CEREAL_NVP(forBegin),CEREAL_NVP(forEnd),CEREAL_NVP(forStep) );
     ar( CEREAL_NVP(sourceText));
 
      ar( CEREAL_NVP(statements));
@@ -464,8 +464,8 @@ void ForStatment::serialize( Archive & ar )
 }
 
 
- std::string ForStatment::dumpToString()const{
-    return std::string("for ") + forVar + " = "
+ std::string ForStatement::dumpToString()const{
+    return std::string("for ") + var + " = "
     + forBegin->dumpToString()
     + " to "
     + forEnd->dumpToString() + ((statements.empty())?"":":" );
@@ -543,7 +543,7 @@ PrintStatement::PrintStatement(const PrintStatement & other)
 
 
 
-ForStatment::ForStatment(const ForStatment & other)
+ForStatement::ForStatement(const ForStatement & other)
 :Statement(other)
 {
 
@@ -553,7 +553,7 @@ ForStatment::ForStatment(const ForStatment & other)
 
     }
 
-    forVar=other.forVar;
+    var=other.var;
     forBegin = std::unique_ptr<Expression>(other.forBegin->clone());
     forEnd = std::unique_ptr<Expression>(other.forEnd->clone());
     forStep = std::unique_ptr<Expression>(other.forStep->clone());

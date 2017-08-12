@@ -18,7 +18,7 @@ class BasicStepProcessor : public StepProcessor {
 
 protected:
     VarTable  localVarTable;
-
+    
 
 
 
@@ -35,6 +35,8 @@ public:
     virtual CmdResult Evaluate(StatementRef input);
     virtual CmdResult Process(std::shared_ptr<Command> input);
     virtual std::string ProcessCtrlKeyStroke(int ctrlchar);
+
+    std::string ProcessByMacros(std::string input,LineNoiseWrapper::ExtraResults & result,bool isMacroApplied);
 
 
     BasicStepProcessor(Rebuild* aRebuild,VarTable * varTable)
