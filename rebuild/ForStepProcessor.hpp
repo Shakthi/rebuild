@@ -22,13 +22,14 @@ class ForStepProcessor : public BasicStepProcessor {
     
     std::string remarks;
     StackedSentenceHistory stackedSentenceHistory;
-    std::list<StatementRef> statementStash;
     bool initConditionPassed;
     bool needToRewindHistory;
-
     
-    
-    
+    //30
+    //29
+    //10
+    //checkback
+    //##
 public:
     
     enum class InitType {normal,stepin,reload} initType;

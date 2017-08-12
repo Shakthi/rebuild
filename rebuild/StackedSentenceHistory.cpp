@@ -131,6 +131,19 @@ void StackedSentenceHistory::Rewind()
 
 }
 
+
+
+void StackedSentenceHistory::PopBack()
+{
+
+    historyWritePointer++;
+    historyPointer = historyWritePointer;
+    
+}
+
+
+
+
 void StackedSentenceHistory:: EditBegin()
 {
     

@@ -96,16 +96,6 @@ void ForStepProcessor::RunStep()
         bool emptyInput = false;
 
 
-        if(!statementStash.empty()){
-
-            const StatementRef statment =  statementStash.back();
-            prefilled = statment->dumpToString();
-
-        }
-
-
-
-
 
         std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(
             Rebuild::GetPrompt() + "for " + thisForBlock->forVar + "]:",
@@ -139,9 +129,7 @@ void ForStepProcessor::RunStep()
 
             BasicParser parser;
             result = parser.Parse(answer);
-            if (!statementStash.empty()) {
-                statementStash.pop_back();
-            }
+
 
 
         }
@@ -299,13 +287,13 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(std::shared_ptr<Command>
                 auto statmentCasted = std::dynamic_pointer_cast<Statement>((*i));
                 if (statmentCasted) {
 
-                    statementStash.push_back(statmentCasted);
-                    stackedSentenceHistory.Splice(i,false);
+//                    statementStash.push_back(statmentCasted);
+                    stackedSentenceHistory.PopBack();
 
                     break;
                 }
             }
-
+            positiveResult.addtoHistory =false;
             return positiveResult;
 
         } else if (customCommand->name == "popback") {

@@ -53,6 +53,7 @@ public:
     void EditEnd();
     
     void Rewind();
+    void PopBack();
     
     
     
