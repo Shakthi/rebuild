@@ -34,6 +34,8 @@ void IfStepProcessor::RunStep()
         
         BasicParser parser;
         SentenceRef  result =  parser.Parse(answer);
+        StepContext stepContext;
+
 
         auto nextStatemnt = std::dynamic_pointer_cast< NextStatement>(result);
         if (nextStatemnt) {
@@ -44,16 +46,17 @@ void IfStepProcessor::RunStep()
         
         auto errorStatemnt = std::dynamic_pointer_cast< ErrorStatement>(result);
         if (errorStatemnt) {
-            BasicStepProcessor::Evaluate(errorStatemnt);
+            BasicStepProcessor::ProcessStatement(errorStatemnt,stepContext);
             stackedSentenceHistory.Add(errorStatemnt);
             return;
             
             
         }
         auto statemnt = std::dynamic_pointer_cast< Statement>(result);
-        
+        BasicStepProcessor::ProcessStatement(statemnt,stepContext);
 
-        if(BasicStepProcessor::Evaluate(statemnt).addtoHistory)
+
+        if(stepContext.addtoHistory)
             stackedSentenceHistory.Add(result);
         
         

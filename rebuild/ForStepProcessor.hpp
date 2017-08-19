@@ -30,19 +30,27 @@ public:
     //Initialize can be done only after contstrction. After added to history
     void Initialize();
 
-    void RunStep();
+    void RunStep() override;
 
     void Execute();
 
-    virtual CmdResult Process(CommandRef input);
-
 private:
+    //Stores context data which is valid for one step
+    struct ForStepContext : StepContext {
+        bool needToRewindHistory;
+
+        ForStepContext()
+            : needToRewindHistory(false)
+        {
+        }
+    };
+
     //Manipulation of  'I' value
     void InitializeI();
     bool EvaluateExitConditionI();
     void DoIncrementI();
     float GetIValue() const;
-    Value & GetIVar();
+    Value& GetIVar();
 
     //Executes the give statement in the context
     void ExecuteAStatement(StatementRef statment);
@@ -52,30 +60,25 @@ private:
     //Adds or replace current sentence to history
     void AddToHistory(SentenceRef entry);
 
-    //Detects if perticular statement  can consider as item in listing(I mean programmiing listing)
+    //Detects if perticular statement  can consider as item in listing(I mean programming listing)
     static bool IsListableStatement(SentenceRef s);
     //Move statements from the history to forloop
     void ArchiveStatements();
     //Move statements from the forloop to the history
     void UnArchiveStatements();
 
-    void ProcessSentence(SentenceRef,bool);
-
-    std::string ProcessByMacros(std::string ,LineNoiseWrapper::ExtraResults);
-    SentenceRef SentenceFromInput(std::string input,LineNoiseWrapper::ExtraResults);
-    SentenceRef Basic_SentenceFromInput(std::string input,LineNoiseWrapper::ExtraResults); //Will be move to super class
-
-
-
-
-
+    //Run step helpers
+    SentenceRef ProcessInput(std::string, LineNoiseWrapper::ExtraResults, StepContext&) override;
+    void ProcessSentence(SentenceRef, StepContext&) override;
+    void ProcessStatement(StatementRef, StepContext&) override;
+    void ProcessCommand(CommandRef, StepContext&) override;
+    void UpdateHistory(SentenceRef, StepContext&) override;
 
     // Data members
     ForStatementRef theStatement;
     InvocationType invocationType;
     StackedSentenceHistory stackedSentenceHistory;
     bool initConditionPassed;
-    bool needToRewindHistory;
 };
 
 #endif /* ForStepProcessor_hpp */

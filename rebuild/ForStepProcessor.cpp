@@ -15,7 +15,6 @@ ForStepProcessor::ForStepProcessor(Rebuild* aRebuild, ForStatementRef forStateme
     : BasicStepProcessor(aRebuild, superTable)
     , theStatement(forStatement)
     , stackedSentenceHistory(aRebuild->GetHistoryStack())
-    , needToRewindHistory(false)
     , invocationType(ainitType)
 {
     history = &stackedSentenceHistory;
@@ -128,15 +127,34 @@ void ForStepProcessor::AddToHistory(SentenceRef entry)
     }
 }
 
-void ForStepProcessor::ProcessSentence(SentenceRef result,bool isMacroExampanded)
-{
+
+void ForStepProcessor::UpdateHistory(SentenceRef result,StepContext & stepContext){
+
+    ForStepContext & forStepContext = static_cast<ForStepContext &>(stepContext);
+
+    if (result && forStepContext.addtoHistory) {
+        AddToHistory(result);
+    }
+    if(forStepContext.needToRewindHistory){
+
+        stackedSentenceHistory.Rewind();
+
+    }
+
+
+
+}
+
+
+
+void ForStepProcessor::ProcessStatement(StatementRef result,StepContext & stepContext){
+
     auto nextStatemnt = std::dynamic_pointer_cast<NextStatement>(result);
     if (nextStatemnt) {
         ExecuteAnIteration();
-        AddToHistory(result);
-
         return;
     }
+
 
     auto endStatement = std::dynamic_pointer_cast<EndStatement>(result);
     if (endStatement) {
@@ -153,33 +171,22 @@ void ForStepProcessor::ProcessSentence(SentenceRef result,bool isMacroExampanded
         return;
     }
 
-    auto errorStatemnt = std::dynamic_pointer_cast<ErrorStatement>(result);
-    if (errorStatemnt) {
-        BasicStepProcessor::Evaluate(errorStatemnt);
-        AddToHistory(errorStatemnt);
-        return;
-    }
 
-    {
-        auto statemnt = std::dynamic_pointer_cast<Statement>(result);
-        CmdResult res = BasicStepProcessor::Evaluate(statemnt);
-        if (statemnt && res.handled) {
-            if (res.addtoHistory)
-                AddToHistory(result);
-        } else {
-            res = Process(std::dynamic_pointer_cast<Command>(result));
-            if (res.addtoHistory && !isMacroExampanded)
-                AddToHistory(result);
-            if (needToRewindHistory) {
-                stackedSentenceHistory.Rewind();
-                needToRewindHistory = false;
-            }
-        }
-    }
+    return BasicStepProcessor::ProcessStatement(result,stepContext);
 
 }
 
-SentenceRef ForStepProcessor::SentenceFromInput(std::string input,LineNoiseWrapper::ExtraResults extraResults)
+void ForStepProcessor::ProcessSentence(SentenceRef result,StepContext & aStepContext)
+{
+
+    BasicStepProcessor::ProcessSentence(result,aStepContext);
+}
+
+
+
+
+
+SentenceRef ForStepProcessor::ProcessInput(std::string input,LineNoiseWrapper::ExtraResults extraResults,StepContext & aStepContext)
 {
     SentenceRef result = nullptr;
 
@@ -192,7 +199,7 @@ SentenceRef ForStepProcessor::SentenceFromInput(std::string input,LineNoiseWrapp
 
     }else{
 
-        result = Basic_SentenceFromInput(input, extraResults);
+        result = BasicStepProcessor::ProcessInput(input, extraResults,aStepContext);
 
 
     }
@@ -204,32 +211,6 @@ SentenceRef ForStepProcessor::SentenceFromInput(std::string input,LineNoiseWrapp
 }
 
 
-SentenceRef ForStepProcessor::Basic_SentenceFromInput(std::string input,LineNoiseWrapper::ExtraResults extraResults)
-{
-    SentenceRef result = nullptr;
-
-    if (extraResults.status == LineNoiseWrapper::ExitStatus::ctrl_c) {
-
-        exitProcessing();
-
-    }else if (extraResults.status == LineNoiseWrapper::ExitStatus::ok && extraResults.mstatus == LineNoiseWrapper::EModificationStatus::history) {
-
-        auto lastiter = history->GetLastStatmentIter();
-
-        assert(*lastiter);
-        result = SentenceRef((*lastiter)->clone());
-
-    }else if(extraResults.status == LineNoiseWrapper::ExitStatus::ok ) {
-
-        BasicParser parser;
-        result = parser.Parse(input);
-    }
-
-
-
-
-    return result;
-}
 
 
 
@@ -243,17 +224,14 @@ void ForStepProcessor::RunStep()
         std::string prompt = Rebuild::GetPrompt() + "for " + theStatement->var + "]:";
         std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(prompt, stackedSentenceHistory, extraResults);
 
-        bool isInputProcesseedByMacro = false;
-        answer = BasicStepProcessor::ProcessByMacros(answer, extraResults, isInputProcesseedByMacro);
-        
+        ForStepContext stepContext;
 
-        SentenceRef result = SentenceFromInput(answer, extraResults);
+        ProcessStep(answer, extraResults, stepContext);
 
-        ProcessSentence(result, isInputProcesseedByMacro);
 
     } else {
-        Rlog rlog;
 
+        Rlog rlog;
         rlog << "To be implemented";
     }
 }
@@ -270,9 +248,9 @@ void ForStepProcessor::Execute()
     }
 }
 
-BasicStepProcessor::CmdResult ForStepProcessor::Process(CommandRef input)
+void ForStepProcessor::ProcessCommand(CommandRef input,StepContext & stepContext)
 {
-    CmdResult positiveResult{ true, true };
+    ForStepContext & forStepContext = static_cast<ForStepContext &>(stepContext);
 
     auto statemnt = std::dynamic_pointer_cast<ListCommand>(input);
     if (statemnt) {
@@ -301,7 +279,7 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(CommandRef input)
             tabstop++;
         }
 
-        return positiveResult;
+        return ;
     }
 
     auto customCommand = std::dynamic_pointer_cast<CustomCommand>(input);
@@ -321,8 +299,8 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(CommandRef input)
                     break;
                 }
             }
-            positiveResult.addtoHistory = false;
-            return positiveResult;
+            stepContext.addtoHistory = false;
+            return ;
 
         } else if (customCommand->name == "runall") { // This command  makes next iteration of loop
 
@@ -334,7 +312,7 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(CommandRef input)
                 }
             }
 
-            return positiveResult;
+            return ;
 
         } else if (customCommand->name == "run") { // One loop
 
@@ -348,12 +326,12 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(CommandRef input)
                 break;
             }
 
-            return positiveResult;
+            return ;
 
         } else if (customCommand->name == "rewind") { // One loop
 
-            needToRewindHistory = true;
-            return positiveResult;
+            forStepContext.needToRewindHistory = true;
+            return ;
         } else if (customCommand->name == "list") {
 
             std::cout << std::endl;
@@ -379,11 +357,12 @@ BasicStepProcessor::CmdResult ForStepProcessor::Process(CommandRef input)
             }
 
         } else {
-            return BasicStepProcessor::Process(input);
+             BasicStepProcessor::ProcessCommand(input,stepContext);
+            return ;
         }
     }
 
-    return CmdResult{ false, false };
+    return ;
 }
 
 // execute filtering error
@@ -392,7 +371,8 @@ void ForStepProcessor::ExecuteAStatement(StatementRef st)
     if (std::dynamic_pointer_cast<ErrorStatement>(st))
         return;
 
-    Evaluate(st);
+    StepContext cmd;
+    ProcessStatement(st,cmd);
 }
 
 void ForStepProcessor::ExecuteAnIteration()

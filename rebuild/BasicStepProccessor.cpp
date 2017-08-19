@@ -28,26 +28,81 @@
 
 
 
-
-
-
-
-BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result)
+SentenceRef BasicStepProcessor::ProcessInput(std::string input,LineNoiseWrapper::ExtraResults extraResults, StepContext & aStepContext)
 {
-    CmdResult ret{true,true};
+    SentenceRef result = nullptr;
+
+    if (extraResults.status == LineNoiseWrapper::ExitStatus::ctrl_c) {
+
+        exitProcessing();
+
+    }else if (extraResults.status == LineNoiseWrapper::ExitStatus::ok && extraResults.mstatus == LineNoiseWrapper::EModificationStatus::history && !aStepContext.macroSubstituted) {
+
+        auto lastiter = history->GetLastStatmentIter();
+
+        assert(*lastiter);
+        result = SentenceRef((*lastiter)->clone());
+
+    }else if(extraResults.status == LineNoiseWrapper::ExitStatus::ok ) {
+
+        BasicParser parser;
+        result = parser.Parse(input);
+    }
+    
+    
+    
+    
+    return result;
+}
+
+
+
+void BasicStepProcessor::UpdateHistory(SentenceRef result,StepContext & stepContext){
+
+    if (result && stepContext.addtoHistory) {
+            history->Add(result);
+    }
+
+}
+
+
+void BasicStepProcessor::ProcessSentence(SentenceRef result,StepContext & aStepContext){
+
+    StepContext stepContext;
+    auto statement = std::dynamic_pointer_cast<Statement>(result);
+    if (statement) {
+
+        ProcessStatement(statement,stepContext);
+
+    }else{
+
+        auto command = std::dynamic_pointer_cast<Command>(result);
+         ProcessCommand(command,stepContext);
+
+    }
+
+    UpdateHistory(result,stepContext);
+    
+    
+}
+
+
+void BasicStepProcessor::ProcessStatement(StatementRef   result,StepContext & stepContext)
+{
+    stepContext.handled = stepContext.addtoHistory = true;
 
     if (result==nullptr) {
-        ret.addtoHistory = false;
-        ret.handled = false;
-        return ret;
+        stepContext.addtoHistory = false;
+        stepContext.handled = false;
+        return ;
     }
     
     auto endStatement = std::dynamic_pointer_cast < EndStatement>(result);
     if (endStatement) {
         exitProcessing();
-        ret.addtoHistory = false;
-        ret.handled = true;
-        return ret;
+        stepContext.addtoHistory = false;
+        stepContext.handled = true;
+        return ;
 
     }
     
@@ -56,7 +111,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
         
         auto readStepProcessor = std::shared_ptr<StepProcessor>(new ReadStepProcessor(rebuild, readStatemnt->variableList,readStatemnt->prompt,localVarTable));
         rebuild->AddNewProcessing(readStepProcessor);
-        return ret; //TODO:need to add to history later
+        return ; //TODO:need to add to history later
     }
     
     
@@ -91,14 +146,14 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
         
         }
             
-        return ret; //TODO:need to add to history later
+        return ; //TODO:need to add to history later
     }
     
     auto errorStatemnt = std::dynamic_pointer_cast< ErrorStatement>(result);
     if (errorStatemnt) {
         
         std::cout<<Rebuild::GetPrompt()<<"! "<<errorStatemnt->description<<std::endl;
-        return ret;//TODO and as temporary
+        return ;//TODO and as temporary
     }
     
     
@@ -110,7 +165,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
         
         
         rebuild->AddNewProcessing(std::shared_ptr<StepProcessor>(stepprocessor));
-        return ret; //TODO:need to add to history later
+        return ; //TODO:need to add to history later
     }
     
 
@@ -135,7 +190,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
         if( ! std::dynamic_pointer_cast< PrintElementStatement>(result))
             std::cout<<std::endl;
         
-        return ret;
+        return ;
     }
 
    
@@ -149,13 +204,13 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
             std::cout<<Rebuild::GetPrompt()<<"! "<<letStatemnt->variablename<<" already defined"<<std::endl;
 
 
-        return ret;
+        return ;
     }
     
     
     
 
-    return ret;
+    return ;
 }
 
 
@@ -163,20 +218,19 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
 
 
 
- BasicStepProcessor::CmdResult BasicStepProcessor::Process(std::shared_ptr<Command> result)
+ void BasicStepProcessor::ProcessCommand(std::shared_ptr<Command> result,StepContext & stepContext)
 {
 
-    CmdResult ret{true,true};
     if (result==nullptr) {
-        ret.addtoHistory = false;
-        ret.handled = false;
-        return ret;
+        stepContext.addtoHistory = false;
+        stepContext.handled = false;
+        return ;
 
     }
 
     
     {
-        
+
        
         auto statemnt = std::dynamic_pointer_cast< ListCommand>(result);
         if (statemnt) {
@@ -190,7 +244,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
             
             
             
-            return ret;
+            return ;
         }
         auto customCommand = std::dynamic_pointer_cast<CustomCommand>(result);
         if (customCommand) {
@@ -204,7 +258,7 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
             {
                 
                 rebuild->lineNoiseWrapper.ClearScreen();
-                return ret;
+                return ;
 
             }
             else if (customCommand->name == "stepin")
@@ -225,12 +279,13 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
                 }
 
                 
-                return ret;
+                return ;
                 
             }
             else
-            {   rlog<<Rlog::type::error<<"Not found command"<<customCommand->name<<std::endl;
-                return ret;//Need to add temporarray
+            {
+                rlog<<Rlog::type::error<<"Not found command"<<customCommand->name<<std::endl;
+                return ;//Need to add temporarray
             }
             
         }
@@ -238,9 +293,9 @@ BasicStepProcessor::CmdResult BasicStepProcessor::Evaluate(StatementRef   result
 
     }
 
-    ret.addtoHistory = false;
-    ret.handled = false;
-    return ret;
+    stepContext.addtoHistory = false;
+    stepContext.handled = false;
+    return ;
 
 
 }
@@ -269,11 +324,12 @@ std::string BasicStepProcessor::ProcessCtrlKeyStroke(int ctrlchar)
 }
 
 
-std::string BasicStepProcessor::ProcessByMacros(std::string input, LineNoiseWrapper::ExtraResults & result, bool isMacroApplied)
+
+std::string BasicStepProcessor::ProcessByMacros(std::string input, LineNoiseWrapper::ExtraResults & result, StepContext & stepContext)
 {
     Rlog rlog;
     if (result.status == LineNoiseWrapper::ExitStatus::ctrl_X) {
-        isMacroApplied = true;
+        stepContext.macroSubstituted = true;
         result.status = LineNoiseWrapper::ExitStatus::ok;
         char ctrlchar = result.ctrlKey;
         return ProcessCtrlKeyStroke(ctrlchar);
@@ -283,59 +339,31 @@ std::string BasicStepProcessor::ProcessByMacros(std::string input, LineNoiseWrap
     return input;
 }
 
+
+void BasicStepProcessor::ProcessStep(std::string answer,LineNoiseWrapper::ExtraResults & extraResults,StepContext & stepContext)
+{
+
+
+     answer = ProcessByMacros(answer, extraResults, stepContext);
+
+
+    SentenceRef result = ProcessInput(answer, extraResults,stepContext);
+
+    ProcessSentence(result, stepContext);
+
+
+}
+
+
 void BasicStepProcessor::RunStep()
 {
-    LineNoiseWrapper::ExtraResults results;
-    std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(Rebuild::GetPrompt() + ":",rebuild->history,results);
+    LineNoiseWrapper::ExtraResults extraResults;
+    std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(Rebuild::GetPrompt() + ":",rebuild->history,extraResults);
+    StepContext stepContext;
 
-    bool proceedStroke = false;
 
-    if (answer == "") {
-        if (results.status == LineNoiseWrapper::ExitStatus::ctrl_c) {
-            exitProcessing();
-            return;
-        }
+    ProcessStep(answer, extraResults, stepContext);
 
-        if (results.status == LineNoiseWrapper::ExitStatus::ctrl_X) {
-            proceedStroke = true;
-            answer = ProcessCtrlKeyStroke(results.ctrlKey);
-        }
-    }
-
-    SentenceRef sentence;
-    LineNoiseWrapper::EModificationStatus mstats = results.mstatus;
-
-    if (results.status == LineNoiseWrapper::ExitStatus::ok && mstats == LineNoiseWrapper::EModificationStatus::history) {
-
-        auto lastiter = history->GetLastStatmentIter();
-
-        assert(*lastiter);
-        sentence = SentenceRef((*lastiter)->clone());
-
-    } else {
-        BasicParser parser;
-        sentence = parser.Parse(answer);
-    }
-
-    assert(sentence);
-
-    auto result = Evaluate(std::dynamic_pointer_cast<Statement>(sentence));
-
-    if (result.handled) {
-
-        if (result.addtoHistory)
-            history->Add(sentence);
-
-    } else {
-        auto result = Process(std::dynamic_pointer_cast<Command>(sentence));
-
-        if (result.handled) {
-
-            if (!proceedStroke && result.addtoHistory) {
-                history->Add(sentence);
-            }
-        }
-    }
 }
 
 

@@ -107,9 +107,4 @@ L			[a-zA-Z]
 [ \t\v\n\f]		{  }
 .			{  return yytext[0]; }
 
-"t" {
-//    void yyunput (int c, register char * yy_bp );
-  yyunput(1,0);
-  
-}
 %%

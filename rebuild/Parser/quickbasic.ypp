@@ -11,6 +11,9 @@
 
 #if XCODE
 #include "quickbasic.h"
+
+#pragma clang diagnostic ignored "-Wunreachable-code"
+
 #else
 #include "Parser/quickbasic.h"
 #endif

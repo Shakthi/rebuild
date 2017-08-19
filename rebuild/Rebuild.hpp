@@ -16,7 +16,7 @@
 #include "nlohmann/json.hpp"
 
 #include "SentenceHistory.hpp"
-#include "lineNoiseWrapper.hpp"
+#include "linenoise/lineNoiseWrapper.hpp"
 
 class StepProcessor;
 

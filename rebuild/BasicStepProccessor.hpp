@@ -24,19 +24,33 @@ protected:
 
 public:
 
-    struct CmdResult{
+    struct StepContext{
         bool handled;
         bool addtoHistory;
-    };
+        bool macroSubstituted;
 
+        StepContext(){
+            handled =addtoHistory =true;
+            macroSubstituted=false;
+        }
+    } ;
+
+    
 
 
     void RunStep();
-    virtual CmdResult Evaluate(StatementRef input);
-    virtual CmdResult Process(std::shared_ptr<Command> input);
-    virtual std::string ProcessCtrlKeyStroke(int ctrlchar);
+    virtual void ProcessStatement(StatementRef input,StepContext & aStepContext);
+    virtual void ProcessCommand(CommandRef input,StepContext & aStepContext);
+    virtual void ProcessSentence(SentenceRef result,StepContext & aStepContext);
 
-    std::string ProcessByMacros(std::string input,LineNoiseWrapper::ExtraResults & result,bool isMacroApplied);
+    virtual SentenceRef ProcessInput(std::string input,LineNoiseWrapper::ExtraResults extraResults, StepContext & aStepContext);
+    virtual  std::string ProcessCtrlKeyStroke(int ctrlchar);
+    virtual void UpdateHistory(SentenceRef result,StepContext & stepContext);
+
+
+    virtual void ProcessStep(std::string input,LineNoiseWrapper::ExtraResults & result,StepContext & aStepContext);
+
+    virtual std::string ProcessByMacros(std::string input,LineNoiseWrapper::ExtraResults & result,StepContext & aStepContext);
 
 
     BasicStepProcessor(Rebuild* aRebuild,VarTable * varTable)
