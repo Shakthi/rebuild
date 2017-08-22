@@ -228,10 +228,9 @@ void ForStepProcessor::RunStep()
 
         ProcessStep(answer, extraResults, stepContext);
 
-
     } else {
-
         Rlog rlog;
+
         rlog << "To be implemented";
     }
 }
@@ -293,7 +292,6 @@ void ForStepProcessor::ProcessCommand(CommandRef input,StepContext & stepContext
                 auto statmentCasted = std::dynamic_pointer_cast<Statement>((*i));
                 if (statmentCasted) {
 
-                    //                    statementStash.push_back(statmentCasted);
                     stackedSentenceHistory.PopBack();
 
                     break;
@@ -328,8 +326,7 @@ void ForStepProcessor::ProcessCommand(CommandRef input,StepContext & stepContext
 
             return ;
 
-        } else if (customCommand->name == "rewind") { // One loop
-
+        } else if (customCommand->name == "rewind") { 
             forStepContext.needToRewindHistory = true;
             return ;
         } else if (customCommand->name == "list") {

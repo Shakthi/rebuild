@@ -5,6 +5,8 @@ L			[a-zA-Z]
 
 
 %x REMARK
+%option nounput
+
 
 
 %{
