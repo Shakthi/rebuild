@@ -36,7 +36,7 @@ std::string StackedSentenceHistory::Edit(std::string currentBuffer,
     //     <---move Next ->move prevoious
     //    ABCDEFGHI | abcdef
     //    historyPointer++->
-    //    <----currentStackPointer
+    //    <----currentStackPointer--
 
     success = true;
 
@@ -44,7 +44,7 @@ std::string StackedSentenceHistory::Edit(std::string currentBuffer,
 
         std::string result = SentenceHistory::Edit(currentBuffer, direction, success);
         if (success)
-            return result;
+            return result; //All good this just normal history browsing in current stack
 
         //If we are moving above the current stack
         if (direction == MoveDirection::prev) {
@@ -66,10 +66,11 @@ std::string StackedSentenceHistory::Edit(std::string currentBuffer,
     //We are scrolling over previous stack
 
     if (direction == MoveDirection::prev) {
-        const_iterator previousHistoryPointerForStack = historyPointerForStack;
+        auto previousHistoryPointerForStack = historyPointerForStack;
         ++previousHistoryPointerForStack;
-        if (previousHistoryPointerForStack != (historyStack[currentStackPointer])->cend()) // not yet at the end
-        {
+        if (previousHistoryPointerForStack != (historyStack[currentStackPointer])->cend()) {
+            // not yet at the end
+
             historyPointerForStack = previousHistoryPointerForStack;
 
         } else {
@@ -88,8 +89,9 @@ std::string StackedSentenceHistory::Edit(std::string currentBuffer,
 
     } else if (direction == MoveDirection::next) {
 
-        if (historyPointerForStack != (historyStack[currentStackPointer])->cbegin()) // not yet at the begin
-        {
+        if (historyPointerForStack != (historyStack[currentStackPointer])->cbegin()) {
+
+            // not yet at the begin
             historyPointerForStack--;
 
         } else {
@@ -98,7 +100,7 @@ std::string StackedSentenceHistory::Edit(std::string currentBuffer,
 
                 currentStackPointer++;
 
-                const_iterator nextHistoryPointerForStack = (historyStack[currentStackPointer])->cend();
+                auto nextHistoryPointerForStack = (historyStack[currentStackPointer])->cend();
                 assert(nextHistoryPointerForStack != (historyStack[currentStackPointer])->cbegin());
                 nextHistoryPointerForStack--;
 
