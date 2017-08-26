@@ -231,7 +231,9 @@ void ForStepProcessor::RunStep()
     } else {
         Rlog rlog;
 
-        rlog << "To be implemented";
+        rlog << "To be implemented"<<std::endl;
+        exitProcessing();
+
     }
 }
 
@@ -365,11 +367,15 @@ void ForStepProcessor::ProcessCommand(CommandRef input,StepContext & stepContext
 // execute filtering error
 void ForStepProcessor::ExecuteAStatement(StatementRef st)
 {
+    Rlog log;
+
     if (std::dynamic_pointer_cast<ErrorStatement>(st))
         return;
 
-    StepContext cmd;
-    ProcessStatement(st,cmd);
+
+    BasicStepProcessor::ExecuteStatement(st);
+
+
 }
 
 void ForStepProcessor::ExecuteAnIteration()

@@ -201,6 +201,14 @@ void Rebuild::AddNewProcessing(std::shared_ptr<StepProcessor> stepProcessor)
     historyStack.push_back(stepProcessor->GetHistory());
 }
 
+
+bool Rebuild::IsTopStepProcessor(const StepProcessor* process){
+
+    auto stepProcessor = processorStack.top();
+
+    return (stepProcessor.get() == process);
+}
+
 void Rebuild::RunStep()
 {
     if (processorStack.empty()) {

@@ -50,6 +50,8 @@ public:
     SentenceHistory history;
     LineNoiseWrapper lineNoiseWrapper;  //Wrapper to cute linedit library https://github.com/antirez/linenoise
 
+    bool IsTopStepProcessor(const StepProcessor*);
+
 private:
     ExitStatus exitStatus;
     static std::string prompt;
@@ -60,6 +62,7 @@ private:
     std::stack<std::shared_ptr<StepProcessor>> processorStack; //Stack of exection
     std::vector<SentenceHistory*> historyStack;
     std::vector<std::string> arglist;
+
 
     VarTable varTable;
     bool alive;

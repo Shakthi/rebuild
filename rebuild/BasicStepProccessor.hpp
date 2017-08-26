@@ -52,6 +52,8 @@ public:
 
     virtual std::string ProcessByMacros(std::string input,LineNoiseWrapper::ExtraResults & result,StepContext & aStepContext);
 
+    virtual void ExecuteStatement(StatementRef input);
+
 
     BasicStepProcessor(Rebuild* aRebuild,VarTable * varTable)
         : StepProcessor(aRebuild)

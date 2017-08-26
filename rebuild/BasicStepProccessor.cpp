@@ -74,6 +74,22 @@ void BasicStepProcessor::ProcessSentence(SentenceRef result, StepContext& aStepC
     UpdateHistory(result, stepContext);
 }
 
+
+void BasicStepProcessor::ExecuteStatement(StatementRef st){
+
+
+    StepContext cmd;
+    ProcessStatement(st,cmd);
+
+
+    while(!rebuild->IsTopStepProcessor(this)) {
+
+        rebuild->RunStep();
+    }
+
+
+}
+
 void BasicStepProcessor::ProcessStatement(StatementRef result, StepContext& stepContext)
 {
     stepContext.handled = stepContext.addtoHistory = true;
@@ -171,7 +187,6 @@ void BasicStepProcessor::ProcessStatement(StatementRef result, StepContext& step
         return;
     }
 
-    return;
 }
 
 void BasicStepProcessor::ProcessCommand(std::shared_ptr<Command> result, StepContext& stepContext)

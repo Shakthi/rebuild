@@ -145,7 +145,6 @@ void StackedSentenceHistory::PopBack()
 void StackedSentenceHistory::EditBegin()
 {
 
-    // historyPointer = history.begin();
 
     InitHistoryStack();
 
