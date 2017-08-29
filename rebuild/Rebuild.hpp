@@ -50,7 +50,7 @@ public:
     SentenceHistory history;
     LineNoiseWrapper lineNoiseWrapper;  //Wrapper to cute linedit library https://github.com/antirez/linenoise
 
-    bool IsTopStepProcessor(const StepProcessor*);
+    void Substep(const StepProcessor * stepProcessor);
 
 private:
     ExitStatus exitStatus;
@@ -66,6 +66,8 @@ private:
 
     VarTable varTable;
     bool alive;
+
+    bool IsTopStepProcessor(const StepProcessor * stepProcessor)   ;
 };
 
 #endif /* Rebuild_hpp */

@@ -81,12 +81,7 @@ void BasicStepProcessor::ExecuteStatement(StatementRef st){
     StepContext cmd;
     ProcessStatement(st,cmd);
 
-
-    while(!rebuild->IsTopStepProcessor(this)) {
-
-        rebuild->RunStep();
-    }
-
+    rebuild->Substep(this);
 
 }
 
@@ -124,9 +119,10 @@ void BasicStepProcessor::ProcessStatement(StatementRef result, StepContext& step
             auto processor = new ForStepProcessor(rebuild, forStatemnt,
                 &localVarTable, ForStepProcessor::InvocationType::reload);
             processor->Initialize();
-            processor->Execute();
 
-            delete processor;
+            rebuild->AddNewProcessing(std::shared_ptr<StepProcessor>(processor));
+            processor->Execute();
+            processor->exitProcessing();
 
         } else {
 
