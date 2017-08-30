@@ -61,7 +61,9 @@ Rebuild::Rebuild(const std::vector<std::string>& argv)
     Rebuild::prompt = "rebuild]";
     rlog << "Hello world...!(" << __DATE__ << "-" << __TIME__ << ")" << std::endl;
 
-    AddNewProcessing(std::shared_ptr<StepProcessor>(new BasicStepProcessor(this, &varTable)));
+    InitProcessor();
+
+
 }
 
 

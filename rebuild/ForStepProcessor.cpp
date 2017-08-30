@@ -221,7 +221,7 @@ void ForStepProcessor::RunStep()
 
         LineNoiseWrapper::ExtraResults extraResults;
 
-        std::string prompt = Rebuild::GetPrompt() + "for " + theStatement->var + "]:";
+        std::string prompt = rebuild->GetPrompt() + "for " + theStatement->var + "]:";
         std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(prompt, stackedSentenceHistory, extraResults);
 
         ForStepContext stepContext;

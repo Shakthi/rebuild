@@ -40,17 +40,19 @@ public:
     bool Restart();       //Saves current session and hard restarts. Usefull during building the rebuild itself
 
     void RunStep();         //Core step of repl
+    void Substep(const StepProcessor * stepProcessor); //Modal runstep execution
 
     void ExitProcessing();   //Exit the current stack of execution
+
     void AddNewProcessing(std::shared_ptr<StepProcessor>); //Enter new stack of execution
 
     const std::vector<SentenceHistory*>& GetHistoryStack() { return historyStack; }
-    static const std::string& GetPrompt() { return prompt; } //FIXME:should be static?
+    const std::string& GetPrompt() { return prompt; }
 
     SentenceHistory history;
     LineNoiseWrapper lineNoiseWrapper;  //Wrapper to cute linedit library https://github.com/antirez/linenoise
 
-    void Substep(const StepProcessor * stepProcessor);
+    void InitProcessor();
 
 private:
     ExitStatus exitStatus;

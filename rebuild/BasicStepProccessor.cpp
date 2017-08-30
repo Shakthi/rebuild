@@ -138,7 +138,7 @@ void BasicStepProcessor::ProcessStatement(StatementRef result, StepContext& step
     auto errorStatemnt = std::dynamic_pointer_cast<ErrorStatement>(result);
     if (errorStatemnt) {
 
-        std::cout << Rebuild::GetPrompt() << "! " << errorStatemnt->description << std::endl;
+        std::cout << rebuild->GetPrompt() << "! " << errorStatemnt->description << std::endl;
         return; //TODO and as temporary
     }
 
@@ -178,7 +178,7 @@ void BasicStepProcessor::ProcessStatement(StatementRef result, StepContext& step
         if (localVarTable.GetVar(letStatemnt->variablename).valutype == Value::Evaluetype::emptyType)
             localVarTable.GetVar(letStatemnt->variablename) = letStatemnt->rvalue->Evaluate(&localVarTable);
         else
-            std::cout << Rebuild::GetPrompt() << "! " << letStatemnt->variablename << " already defined" << std::endl;
+            std::cout << rebuild->GetPrompt() << "! " << letStatemnt->variablename << " already defined" << std::endl;
 
         return;
     }
@@ -295,7 +295,7 @@ void BasicStepProcessor::ProcessStep(std::string answer, LineNoiseWrapper::Extra
 void BasicStepProcessor::RunStep()
 {
     LineNoiseWrapper::ExtraResults extraResults;
-    std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(Rebuild::GetPrompt() + ":", rebuild->history, extraResults);
+    std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(rebuild->GetPrompt() + ":", rebuild->history, extraResults);
     StepContext stepContext;
 
     ProcessStep(answer, extraResults, stepContext);
@@ -311,4 +311,11 @@ nlohmann::json BasicStepProcessor::ToJson()
 void BasicStepProcessor::FromJson(nlohmann::json j)
 {
     localVarTable.FromJson(j["localvarablelist"]);
+}
+
+
+
+
+void Rebuild::InitProcessor(){
+    AddNewProcessing(std::shared_ptr<StepProcessor>(new BasicStepProcessor(this, &varTable)));
 }

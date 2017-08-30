@@ -13,7 +13,7 @@
 
 void EchoProcessor::RunStep()
 {
-    std::string answer = rebuild->lineNoiseWrapper.getLine(Rebuild::GetPrompt());
+    std::string answer = rebuild->lineNoiseWrapper.getLine(rebuild->GetPrompt());
 
     if (answer != "") {
         std::cout << "rebuild>" << answer << std::endl;
@@ -25,4 +25,9 @@ void EchoProcessor::RunStep()
 void StepProcessor::exitProcessing()
 {
     rebuild->ExitProcessing();
+}
+
+
+SentenceHistory * StepProcessor::GetHistory()const{
+    return history;
 }

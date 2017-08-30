@@ -43,7 +43,7 @@ bool log_buffer::do_caps_and_flush()
 {
     std::ptrdiff_t n = pptr() - pbase();
     pbump(static_cast<int>(-n));
-    std::string prompt=Rebuild::GetPrompt()+"  ///";
+    std::string prompt="rebuild  ///";
     
     sink_.write(prompt.c_str(),prompt.size());
     return sink_.write(pbase(), n).good();

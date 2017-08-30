@@ -25,9 +25,7 @@ public:
     }
 
 
-     SentenceHistory * GetHistory()const{
-        return history;
-    }
+    SentenceHistory * GetHistory()const;
     virtual nlohmann::json ToJson() = 0;
     virtual void FromJson(nlohmann::json) = 0;
     virtual void RunStep() {}
