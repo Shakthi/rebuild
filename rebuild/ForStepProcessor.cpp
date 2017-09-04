@@ -18,6 +18,7 @@ ForStepProcessor::ForStepProcessor(Rebuild* aRebuild, ForStatementRef forStateme
     , invocationType(ainitType)
 {
     history = &stackedSentenceHistory;
+    SetPrompt("for]");
 }
 
 float ForStepProcessor::GetIValue() const
@@ -81,6 +82,7 @@ void ForStepProcessor::InitializeI()
         initConditionPassed = true;
     else
         initConditionPassed = false;
+
 }
 
 void ForStepProcessor::DoIncrementI()
@@ -221,7 +223,7 @@ void ForStepProcessor::RunStep()
 
         LineNoiseWrapper::ExtraResults extraResults;
 
-        std::string prompt = rebuild->GetPrompt() + "for " + theStatement->var + "]:";
+        std::string prompt = SetPrompt( "for " + theStatement->var + "]") +":" ;
         std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(prompt, stackedSentenceHistory, extraResults);
 
         ForStepContext stepContext;

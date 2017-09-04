@@ -46,7 +46,6 @@ bool replace(std::string& str, const std::string& from, const std::string& to)
 log_buffer lbuffer;
 Rlog rlog(lbuffer);
 
-std::string Rebuild::prompt;
 
 Rebuild::Rebuild(const std::vector<std::string>& argv)
     : exitStatus(exitStatusRIP)
@@ -58,10 +57,13 @@ Rebuild::Rebuild(const std::vector<std::string>& argv)
     //Rlog rlog;
     rlog << arglist.size() << std::endl;
 
-    Rebuild::prompt = "rebuild]";
     rlog << "Hello world...!(" << __DATE__ << "-" << __TIME__ << ")" << std::endl;
 
+
     InitProcessor();
+
+
+
 
 
 }
@@ -191,6 +193,16 @@ void Rebuild::Save()
 
 void Rebuild::ExitProcessing()
 {
+
+    if(!lastPromptList.empty())
+        lastPromptList.pop_back();
+
+    lastPromptString="";
+
+    for (const std::string a: lastPromptList) {
+        lastPromptString+=a;
+    }
+
     auto last = processorStack.top();
     processorStack.pop();
     historyStack.pop_back();
@@ -199,8 +211,24 @@ void Rebuild::ExitProcessing()
 
 void Rebuild::AddNewProcessing(std::shared_ptr<StepProcessor> stepProcessor)
 {
+    if(!processorStack.empty())
+        lastPromptList.push_back(processorStack.top()->GetPrompt());
+    lastPromptString="";
+    for (const std::string a: lastPromptList) {
+        lastPromptString+=a;
+    }
+
     processorStack.push(stepProcessor);
     historyStack.push_back(stepProcessor->GetHistory());
+}
+
+
+ const std::string Rebuild::GetPrompt() {
+
+    
+    return lastPromptString;
+
+
 }
 
 void Rebuild::Substep(const StepProcessor * stepProcessor)

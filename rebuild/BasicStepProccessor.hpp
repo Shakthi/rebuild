@@ -18,6 +18,7 @@ class BasicStepProcessor : public StepProcessor {
 
 protected:
     VarTable  localVarTable;
+    std::string prompt;
     
 
 
@@ -53,6 +54,8 @@ public:
     virtual std::string ProcessByMacros(std::string input,LineNoiseWrapper::ExtraResults & result,StepContext & aStepContext);
 
     virtual void ExecuteStatement(StatementRef input);
+    std::string GetPrompt();
+    std::string SetPrompt(std::string prompt);
 
 
     BasicStepProcessor(Rebuild* aRebuild,VarTable * varTable)

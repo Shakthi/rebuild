@@ -47,7 +47,7 @@ public:
     void AddNewProcessing(std::shared_ptr<StepProcessor>); //Enter new stack of execution
 
     const std::vector<SentenceHistory*>& GetHistoryStack() { return historyStack; }
-    const std::string& GetPrompt() { return prompt; }
+    const std::string GetPrompt();
 
     SentenceHistory history;
     LineNoiseWrapper lineNoiseWrapper;  //Wrapper to cute linedit library https://github.com/antirez/linenoise
@@ -56,7 +56,6 @@ public:
 
 private:
     ExitStatus exitStatus;
-    static std::string prompt;
     nlohmann::json lastStepProcessorData; //FIXME: Need to removed. Once full session restore is implemented
     std::string GetSavePath();            // Realved saved data path 
     std::string GetLocalSavePath();          // Saved data relative to project (for vcs)
@@ -64,6 +63,10 @@ private:
     std::stack<std::shared_ptr<StepProcessor>> processorStack; //Stack of exection
     std::vector<SentenceHistory*> historyStack;
     std::vector<std::string> arglist;
+
+    std::list<std::string> lastPromptList;
+    std::string lastPromptString;
+
 
 
     VarTable varTable;

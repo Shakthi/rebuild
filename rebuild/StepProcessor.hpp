@@ -14,7 +14,7 @@
 
 class StepProcessor  {
 protected:
-    class Rebuild* rebuild;
+    class Rebuild* rebuild;//TODO:Should we move? interaface/baseclass
     class SentenceHistory *  history;
 
 
@@ -28,6 +28,8 @@ public:
     SentenceHistory * GetHistory()const;
     virtual nlohmann::json ToJson() = 0;
     virtual void FromJson(nlohmann::json) = 0;
+    virtual std::string  GetPrompt()=0;
+
     virtual void RunStep() {}
     void exitProcessing();
     virtual ~StepProcessor() {}

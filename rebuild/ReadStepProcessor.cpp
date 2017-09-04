@@ -13,6 +13,14 @@
 
 #include "Value.h"
 
+
+std::string ReadStepProcessor::SetPrompt(std::string aprompt)
+{
+    prompt = aprompt;
+    return rebuild->GetPrompt() + aprompt;
+
+}
+
 ReadStepProcessor::ReadStepProcessor(Rebuild* aRebuild, std::list<std::string>& alist,std::string aPrompt,VarTable & aVartable)
     : StepProcessor(aRebuild),prompt(aPrompt)
     , list(alist)
@@ -37,13 +45,13 @@ ReadStepProcessor::ReadStepProcessor(Rebuild* aRebuild, std::list<std::string>& 
         if(prompt!="")
         {
 
-            readprompt=rebuild->GetPrompt()+prompt+"";
+            readprompt=prompt;
         }
 
         else
         {
             // create the prompt for reading
-            readprompt = rebuild->GetPrompt() +"input ";
+            readprompt = "input ";
             bool firstParam = true;
             for (auto i = list.begin(); i != list.end(); i++) {
                 if (!firstParam)
@@ -56,10 +64,9 @@ ReadStepProcessor::ReadStepProcessor(Rebuild* aRebuild, std::list<std::string>& 
 
                 firstParam = false;
             }
-            readprompt += ":";
         }
 
-        std::string answer = rebuild->lineNoiseWrapper.getLine(readprompt);
+        std::string answer = rebuild->lineNoiseWrapper.getLine(SetPrompt(readprompt) + ":");
         std::istringstream stream(answer);
 
         for (auto i = list.begin(); i != list.end(); i++) {

@@ -292,10 +292,12 @@ void BasicStepProcessor::ProcessStep(std::string answer, LineNoiseWrapper::Extra
 
 }
 
+
+
 void BasicStepProcessor::RunStep()
 {
     LineNoiseWrapper::ExtraResults extraResults;
-    std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(rebuild->GetPrompt() + ":", rebuild->history, extraResults);
+    std::string answer = rebuild->lineNoiseWrapper.getLineWithHistory(SetPrompt("rebuild]")+ ":" , rebuild->history, extraResults);
     StepContext stepContext;
 
     ProcessStep(answer, extraResults, stepContext);
@@ -313,7 +315,16 @@ void BasicStepProcessor::FromJson(nlohmann::json j)
     localVarTable.FromJson(j["localvarablelist"]);
 }
 
+std::string BasicStepProcessor::GetPrompt(){
+    return prompt;
+}
 
+std::string BasicStepProcessor::SetPrompt(std::string aprompt)
+{
+    prompt = aprompt;
+    return rebuild->GetPrompt() + aprompt;
+
+}
 
 
 void Rebuild::InitProcessor(){

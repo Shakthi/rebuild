@@ -25,6 +25,8 @@ public:
     ReadStepProcessor(Rebuild* aRebuild, std::list<std::string>& alist,std::string aPrompt, VarTable & aVartable);
     nlohmann::json ToJson();
     void FromJson(nlohmann::json j);
+    std::string  GetPrompt(){ return "input]";}
+    std::string SetPrompt(std::string aprompt);
 
     void RunStep();
 };
